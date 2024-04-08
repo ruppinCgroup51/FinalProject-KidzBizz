@@ -1,4 +1,4 @@
-﻿namespace KidzBizzServer.BAL
+﻿namespace KidzBizzServer.BL
 {
     public class Property
     {
