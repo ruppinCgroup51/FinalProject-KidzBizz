@@ -36,5 +36,20 @@
         public string AvatarPicture { get => avatarPicture; set => avatarPicture = value; }
         public DateTime DateOfBirth { get => dateOfBirth; set => dateOfBirth = value; }
         public string Gender { get => gender; set => gender = value; }
+
+        //User Registration
+        public int Register()
+        {
+            DBservices dbs = new DBservices();
+
+            List<User> users = Read();
+
+            foreach (var user in users)
+            {
+                if (user.username == this.username) { return -1; }
+            }
+
+            return dbs.RegisterUser(this);
+        }
     }
 }
