@@ -36,7 +36,9 @@ export default function Register() {
 
   return (
     <div>
-      <button onClick={() => navigate("/")}>Back to home page</button>
+      <button class="button-29" onClick={() => navigate("/")}>
+        Back to home page
+      </button>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -99,7 +101,9 @@ export default function Register() {
             onChange={handleChange}
           />
         </div>
-        <button type="submit">Proceed</button>
+        <button class="button-29" type="submit">
+          Proceed
+        </button>
       </form>
     </div>
   );

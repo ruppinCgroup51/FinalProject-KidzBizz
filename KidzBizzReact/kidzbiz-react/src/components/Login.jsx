@@ -35,7 +35,7 @@ export default function Login() {
 
   return (
     <div>
-      <button onClick={() => navigate("/")}>Back to home page</button>
+      <button class="button-29" onClick={() => navigate("/")}>Back to home page</button>
       <h2>Login Page</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -59,7 +59,7 @@ export default function Login() {
           />
         </div>
         <div>
-          <button type="submit">Login</button>
+          <button class="button-29" type="submit">Login</button>
           <br />
 
           <button type="button" onClick={handleForgetPassword}>

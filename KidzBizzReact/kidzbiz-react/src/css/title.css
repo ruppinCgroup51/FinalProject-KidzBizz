@@ -1,0 +1,33 @@
+.title-container {
+  text-align: center;
+  margin-top: 50px; /* Adjust margin as needed */
+}
+
+.title {
+  font-family: "Comic Sans MS", cursive; /* Use a playful font */
+  font-size: 4em; /* Adjust font size as needed */
+  color: #ff69b4; /* Pink color, adjust as needed */
+  text-shadow: 2px 2px 4px #000; /* Add shadow for depth */
+  animation: rainbow 3s infinite; /* Add rainbow animation */
+}
+
+@keyframes rainbow {
+  0% {
+    color: #ff69b4;
+  } /* Pink */
+  20% {
+    color: #ffd700;
+  } /* Yellow */
+  40% {
+    color: #7cfc00;
+  } /* Lime */
+  60% {
+    color: #00bfff;
+  } /* Deep Sky Blue */
+  80% {
+    color: #9370db;
+  } /* Medium Purple */
+  100% {
+    color: #ff69b4;
+  } /* Pink */
+}

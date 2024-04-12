@@ -1,15 +1,22 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/title.css";
 
 export default function Home() {
   const navigate = useNavigate();
   return (
     <>
-      <h1>Home</h1>
-      <button onClick={() => navigate("/Register")}>Register</button>
+      <div class="title-container">
+        <h1 class="title">KidzBizz</h1>
+      </div>
+      <button class="button-29" onClick={() => navigate("/Register")}>
+        Register
+      </button>
       <br />
       <br />
-      <button onClick={() => navigate("/Login")}>Login</button>
+      <button class="button-29" onClick={() => navigate("/Login")}>
+        Login
+      </button>
     </>
   );
 }
