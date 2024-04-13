@@ -51,5 +51,33 @@
 
             return dbs.RegisterUser(this);
         }
+
+        public List<User> Read()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadUsers();
+        }
+
+        public User Update()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.UpdateUser(this);
+
+        }
+
+        // login user
+        public User Login(string email, string password)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.LoginUser(email, password);
+
+        }
+
+        ////delete user
+        //public int Delete(string email)
+        //{
+        //    DBservices dbs = new DBservices();
+        //    return dbs.DeleteUserByEmail(email);
+        //}
     }
 }

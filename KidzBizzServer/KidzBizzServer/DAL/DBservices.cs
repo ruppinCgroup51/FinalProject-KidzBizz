@@ -39,7 +39,7 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
-    // This method return all the Users
+    // This method return all the App Users
     //--------------------------------------------------------------------------------------------------
 
     public List<User> ReadUsers()
@@ -60,7 +60,7 @@ public class DBservices
 
         List<User> users = new List<User>();
 
-        cmd = buildReadStoredProcedureCommand(con, "SP_Avia_GetUsers");
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetUsers");
 
         SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -85,6 +85,22 @@ public class DBservices
         return users;
     }
 
+    private SqlCommand buildReadStoredProcedureCommand(SqlConnection con, string spName)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        return cmd;
+
+    }
 
     //-------------------------------------------------------------------------------------------------
     // This method registered user 
@@ -106,7 +122,7 @@ public class DBservices
             throw (ex);
         }
 
-        cmd = CreateRegisterUserWithStoredProcedure("SP_Avia_InsertUser", con, user);             // create the command
+        cmd = CreateRegisterUserWithStoredProcedure("KBSP_InsertUser", con, user);             // create the command
 
         try
         {
@@ -129,7 +145,6 @@ public class DBservices
         }
 
     }
-    //לתקןןןן
     //--------------------------------------------------------------------------------------------------
     // Create the insert user SqlCommand using a stored procedure
     //--------------------------------------------------------------------------------------------------
@@ -146,20 +161,190 @@ public class DBservices
 
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
 
-        cmd.Parameters.AddWithValue("@firstName", user.FirstName);
+        cmd.Parameters.AddWithValue("@Username", user.Username);
 
-        cmd.Parameters.AddWithValue("@lastName", user.LastName);
+        cmd.Parameters.AddWithValue("@Password", user.Password);
 
-        cmd.Parameters.AddWithValue("@email", user.Email);
+        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
 
-        cmd.Parameters.AddWithValue("@password", user.Password);
+        cmd.Parameters.AddWithValue("@LastName", user.LastName);
+
+        cmd.Parameters.AddWithValue("@AvatarPicture", user.AvatarPicture);
+
+        cmd.Parameters.AddWithValue("@DateOfBirth", user.DateOfBirth);
+
+        cmd.Parameters.AddWithValue("@Gender", user.Gender);
 
 
         return cmd;
     }
 
+    //-------------------------------------------------------------------------------------------------
+    // This method update user
+    //-------------------------------------------------------------------------------------------------
+
+    public User UpdateUser(User user)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateUpdateUserCommandWithStoredProcedure("KBSP_UserUpdate", con, user);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery();
+            if (numEffected == 1)
+            {
+                return user;
+            }
+            return null;
+        }
 
 
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    // Create the update user SqlCommand using a stored procedure
+    //--------------------------------------------------------------------------------------------------
+    private SqlCommand CreateUpdateUserCommandWithStoredProcedure(String spName, SqlConnection con, User user)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@Username", user.Username);
+
+        cmd.Parameters.AddWithValue("@Password", user.Password);
+
+        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+
+        cmd.Parameters.AddWithValue("@LastName", user.LastName);
+
+        cmd.Parameters.AddWithValue("@AvatarPicture", user.AvatarPicture);
+
+        cmd.Parameters.AddWithValue("@DateOfBirth", user.DateOfBirth);
+
+        cmd.Parameters.AddWithValue("@Gender", user.Gender);
+
+
+        return cmd;
+    }
+
+    //-------------------------------------------------------------------------------------------------
+    // This method login user
+    //-------------------------------------------------------------------------------------------------
+
+    public User LoginUser(string username, string password)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+        User authenticatedUser = null;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+
+        cmd = buildReadStoredProcedureCommandLoginUser(con, "KBSP_UserLogin", username, password);
+
+        try
+        {
+
+
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            if (dataReader.Read())
+            {
+                authenticatedUser = new User
+                {
+
+                    Username = dataReader["Username"].ToString(),
+                    Password = dataReader["Password"].ToString(),
+                    FirstName = dataReader["FirstName"].ToString(),
+                    LastName = dataReader["LastName"].ToString(),
+                    AvatarPicture = dataReader["AvatarPicture"].ToString(),
+                    DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"]),
+                    Gender = dataReader["Gender"].ToString()
+                };
+
+            }
+            return authenticatedUser;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+
+    }
+
+    private SqlCommand buildReadStoredProcedureCommandLoginUser(SqlConnection con, String spName, string username, string password)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@Username", username);
+        cmd.Parameters.AddWithValue("@Password", password);
+
+        return cmd;
+    }
 
 }
 
