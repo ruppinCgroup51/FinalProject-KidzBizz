@@ -1,0 +1,126 @@
+/* lobi.css */
+
+.lobi-container {
+    padding: 20px;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .navbar-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-btn {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #000;
+    text-decoration: none;
+  }
+  
+  .navbar-btn:hover {
+    color: blue;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-info span {
+    margin-right: 10px;
+  }
+  
+  .user-rating {
+    margin-right: 5px;
+  }
+  
+  .main-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 10px; /* Adjust this value as needed */
+    margin: 250px;
+      
+  }
+  
+  .main-button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 18px;
+    border: 2px dashed #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #fff;
+  }
+  
+  .blue {
+    background-color: #add8e6;
+  }
+  
+  .green {
+    background-color: #4caf50;
+  }
+  
+  .purple {
+    background-color: #800080;
+  }
+  
+  .orange {
+    background-color: #ff8c00;
+  }
+  
+  .main-button:hover {
+    opacity: 0.8;
+  }
+  
+  .main-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px; /* Adjust this value as needed */
+  }
+  
+
+
+  .lobi-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .money-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Make sure it's behind other content */
+    overflow: hidden;
+  }
+  
+  @keyframes moveMoney {
+    0% { background-position: 0 0; }
+    100% { background-position: 1000px 1000px; } /* Adjust the values to control the speed and distance */
+  }
+  
+  .money-background {
+    animation: moveMoney 20s linear infinite; /* Adjust the duration and timing function as needed */
+  }
+  
+  
+  
+  
