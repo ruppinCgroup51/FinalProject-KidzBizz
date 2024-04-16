@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 export default function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    username: "",
+    password: "",
     firstName: "",
     lastName: "",
-    birthDate: "",
-    userName: "",
-    password: "",
-    confirmPassword: "",
+    avatarPicture: "",
+    dateOfBirth: "",
+    gender:""
   });
 
   const handleChange = (e) => {
@@ -20,7 +21,7 @@ export default function Register() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  {/*const handleSubmit = (e) => {
     e.preventDefault();
     // Here you can handle form submission, like sending data to a server
     console.log(formData);
@@ -32,7 +33,32 @@ export default function Register() {
       password: "",
       confirmPassword: "",
     });
-  };
+  */}
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+    
+      try {
+        const response = await fetch('https://localhost:7034/api/Users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+    
+        if (response.ok) {
+          // Registration successful, you can redirect the user or perform other actions
+          console.log('User registered successfully!');
+          navigate('/'); // Redirect to home page
+        } else {
+          // Handle registration error
+          console.error('Failed to register user:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Failed to register user:', error.message);
+      }
+    };
 
   return (
     <div>
@@ -41,6 +67,26 @@ export default function Register() {
       </button>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
+      <div>
+          <label htmlFor="username">User Name:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
         <div>
           <label htmlFor="firstName">First Name:</label>
           <input
@@ -62,42 +108,32 @@ export default function Register() {
           />
         </div>
         <div>
-          <label htmlFor="birthDate">Date of Birth:</label>
-          <input
-            type="date"
-            id="birthDate"
-            name="birthDate"
-            value={formData.birthDate}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="userName">User Name:</label>
+          <label htmlFor="avatarPicture">Avatar Picture:</label>
           <input
             type="text"
-            id="userName"
-            name="userName"
-            value={formData.userName}
+            id="avatarPicture"
+            name="avatarPicture"
+            value={formData.avatarPicture}
             onChange={handleChange}
           />
         </div>
         <div>
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="dateOfBirth">Date of Birth:</label>
           <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
+            type="date"
+            id="dateOfBirth"
+            name="dateOfBirth"
+            value={formData.dateOfBirth}
             onChange={handleChange}
           />
         </div>
         <div>
-          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <label htmlFor="gender">Gender:</label>
           <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
+            type="text"
+            id="gender"
+            name="gender"
+            value={formData.gender}
             onChange={handleChange}
           />
         </div>
@@ -108,3 +144,4 @@ export default function Register() {
     </div>
   );
 }
+

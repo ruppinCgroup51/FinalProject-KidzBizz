@@ -3,13 +3,13 @@ import "./App.css";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Lobi from "./components/Lobi";
+
 
 function App() {
   return (
     <>
-    <Lobi/>
-    {/*
+    {/*<Lobi/>*/}
+   
       <div>
         <Routes>
           <Route path="/" element={<Home />}></Route>
@@ -17,7 +17,7 @@ function App() {
           <Route path="/Login" element={<Login />}></Route>
         </Routes>
       </div>
-      */}
+    
     </>
   );
 }

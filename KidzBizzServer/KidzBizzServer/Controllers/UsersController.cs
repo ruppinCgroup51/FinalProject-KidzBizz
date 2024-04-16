@@ -25,7 +25,7 @@ namespace KidzBizzServer.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
-        public void Post([FromBody] User user )
+        public int Post([FromBody] User user )
         {
             return user.Register();
         }
