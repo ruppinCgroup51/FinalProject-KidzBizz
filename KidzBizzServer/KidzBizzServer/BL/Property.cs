@@ -24,5 +24,12 @@
         public int TypeId { get => typeId; set => typeId = value; }
         public string PropertyName { get => propertyName; set => propertyName = value; }
         public double PropertyPrice { get => propertyPrice; set => propertyPrice = value; }
+
+        public List<Property> Read()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadProperties();
+        }
+
     }
 }

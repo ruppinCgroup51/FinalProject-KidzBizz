@@ -11,9 +11,10 @@ namespace KidzBizzServer.Controllers
     {
         // GET: api/<UsersController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<User> Get()
         {
-            return new string[] { "value1", "value2" };
+            User user = new User();
+            return user.Read();
         }
 
         // GET api/<UsersController>/5
@@ -30,10 +31,32 @@ namespace KidzBizzServer.Controllers
             return user.Register();
         }
 
-        // PUT api/<UsersController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // POST api/<UsersController>
+        [HttpPost]
+        [Route("login")]
+        public ActionResult Login(User user)
         {
+
+            User authenticatedUser = user.Login(user.Username, user.Password);
+
+            if (authenticatedUser != null)
+            {
+                // Return the authenticated user
+                return Ok(authenticatedUser);
+            }
+            else
+            {
+                // Return 404 if user does not exist or credentials are invalid
+                return NotFound("User not found or invalid credentials");
+            }
+        }
+
+
+        // PUT api/<UsersController>/5
+        [HttpPut("update")]
+        public User Put([FromBody] User user)
+        {
+            return user.Update();
         }
 
         // DELETE api/<UsersController>/5

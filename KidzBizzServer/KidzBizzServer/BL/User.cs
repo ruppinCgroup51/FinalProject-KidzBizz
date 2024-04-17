@@ -66,10 +66,10 @@
         }
 
         // login user
-        public User Login(string email, string password)
+        public User Login(string username, string password)
         {
             DBservices dbs = new DBservices();
-            return dbs.LoginUser(email, password);
+            return dbs.LoginUser(username, password);
 
         }
 

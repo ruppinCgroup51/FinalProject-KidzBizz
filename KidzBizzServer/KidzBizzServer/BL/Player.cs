@@ -30,5 +30,12 @@
         public double CurrentBalance { get => currentBalance; set => currentBalance = value; }
         public string PlayerStatus { get => playerStatus; set => playerStatus = value; }
         public int LastDiceResult { get => lastDiceResult; set => lastDiceResult = value; }
+
+
+        public List<Player> Read()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadPlayers();
+        }
     }
 }

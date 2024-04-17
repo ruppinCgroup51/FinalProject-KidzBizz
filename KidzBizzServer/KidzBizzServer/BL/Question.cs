@@ -18,5 +18,11 @@
 
         public int QuestionId { get => questionId; set => questionId = value; }
         public string QuestionText { get => questionText; set => questionText = value; }
+
+        public List<Question> Read()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadQuestions();
+        }
     }
 }

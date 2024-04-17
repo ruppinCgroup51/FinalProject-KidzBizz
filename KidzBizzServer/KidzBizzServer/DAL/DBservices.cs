@@ -346,6 +346,132 @@ public class DBservices
         return cmd;
     }
 
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return all the App Players
+    //--------------------------------------------------------------------------------------------------
+
+    public List<Player> ReadPlayers()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<Player> players = new List<Player>();
+    
+
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetPlayers");
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            Player player = new Player();
+            player.UserId = Convert.ToInt32(dataReader["UserId"]);
+            player.CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]);
+            player.CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]);
+            player.PlayerStatus = dataReader["PlayerStatus"].ToString();
+            player.LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]);
+
+            players.Add(player);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return players;
+    }
+
+    public List<Property> ReadProperties()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<Property> properties = new List<Property>();
+
+
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetProperties");
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            Property p = new Property();
+            p.PropertyId = Convert.ToInt32(dataReader["PropertyId"]);
+            p.TypeId = Convert.ToInt32(dataReader["TypeId"]);
+            p.PropertyName = dataReader["PropertyName"].ToString();
+            p.PropertyPrice = Convert.ToDouble(dataReader["PropertyPrice"]);
+
+            properties.Add(p);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return properties;
+    }
+
+    public List<Question> ReadQuestions()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        List<Question> questions = new List<Question>();
+
+
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetQuestions");
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            Question q = new Question();
+            q.QuestionId = Convert.ToInt32(dataReader["QuestionId"]);
+            q.QuestionText = dataReader["QuestionText"].ToString();
+
+            questions.Add(q);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return questions;
+    }
+
 }
 
 

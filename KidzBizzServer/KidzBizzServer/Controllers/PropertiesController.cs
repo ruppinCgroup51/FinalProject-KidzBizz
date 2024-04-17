@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KidzBizzServer.BL;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,9 +11,11 @@ namespace KidzBizzServer.Controllers
     {
         // GET: api/<PropertiesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Property> Get()
         {
-            return new string[] { "value1", "value2" };
+            Property property = new Property();
+            return property.Read();
+          
         }
 
         // GET api/<PropertiesController>/5
