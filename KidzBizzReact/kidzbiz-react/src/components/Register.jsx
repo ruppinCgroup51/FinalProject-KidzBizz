@@ -105,35 +105,8 @@ export default function Register() {
       return;
     }
 
-    try {
-      const response = await fetch("https://localhost:7034/api/Users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        console.log("User registered successfully!");
-        navigate("/");
-
-        // Reset form data only after successful form submission
-        setFormData({
-          username: "",
-          password: "",
-          firstName: "",
-          lastName: "",
-          avatarPicture: "",
-          dateOfBirth: "",
-          gender: "",
-        });
-      } else {
-        console.error("Failed to register user:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Failed to register user:", error.message);
-    }
+    //Navigate to the chooseAvater page
+    navigate("/ChooseAvatar", { state: { formData } });
   };
 
   return (
@@ -189,16 +162,6 @@ export default function Register() {
             onChange={handleChange}
           />
           {errors.lastName && <p style={{ color: "red" }}>{errors.lastName}</p>}
-        </div>
-        <div>
-          <label htmlFor="avatarPicture">Avatar Picture:</label>
-          <input
-            type="text"
-            id="avatarPicture"
-            name="avatarPicture"
-            value={formData.avatarPicture}
-            onChange={handleChange}
-          />
         </div>
         <div>
           <label htmlFor="dateOfBirth">Date of Birth:</label>
