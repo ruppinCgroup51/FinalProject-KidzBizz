@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -10,8 +12,62 @@ export default function Register() {
     lastName: "",
     avatarPicture: "",
     dateOfBirth: "",
-    gender:""
+    gender: "",
   });
+
+  function validateForm(formData) {
+    const errors = {};
+
+    // Username validation
+    if (!formData.username) {
+      errors.username = "Username is required";
+    } else if (!/^[\u0590-\u05FFa-zA-Z0-9]{3,25}$/.test(formData.username)) {
+      errors.username =
+        "Username must be in English or Hebrew letters and numbers, a minimum of 3 characters up to 25";
+    }
+
+    // Password validation
+    if (!formData.password) {
+      errors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      errors.password = "Password must contain 8 characters or more";
+    }
+
+    // First name validation
+    if (!formData.firstName) {
+      errors.firstName = "First name is required";
+    } else if (!/^[\u0590-\u05FFa-zA-Z]{3,25}$/.test(formData.firstName)) {
+      errors.firstName =
+        "First name must be in English or Hebrew letters, a minimum of 3 characters up to 25";
+    }
+
+    // Last name validation
+    if (!formData.lastName) {
+      errors.lastName = "Last name is required";
+    } else if (!/^[\u0590-\u05FFa-zA-Z]{3,25}$/.test(formData.lastName)) {
+      errors.lastName =
+        "Last name must be in English or Hebrew letters, a minimum of 3 characters up to 25";
+    }
+
+    // Date of birth validation
+    if (!formData.dateOfBirth) {
+      errors.dateOfBirth = "Date of birth is required";
+    } else {
+      const birthDate = new Date(formData.dateOfBirth);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      if (age < 14) {
+        errors.dateOfBirth = "User must be over 14 years old";
+      }
+    }
+
+    // Gender validation
+    if (!formData.gender) {
+      errors.gender = "Gender is required";
+    }
+
+    return errors;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,7 +77,8 @@ export default function Register() {
     }));
   };
 
-  {/*const handleSubmit = (e) => {
+  {
+    /*const handleSubmit = (e) => {
     e.preventDefault();
     // Here you can handle form submission, like sending data to a server
     console.log(formData);
@@ -33,32 +90,51 @@ export default function Register() {
       password: "",
       confirmPassword: "",
     });
-  */}
+  */
+  }
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-    
-      try {
-        const response = await fetch('https://localhost:7034/api/Users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = validateForm(formData);
+
+    // Set errors in state
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
+    try {
+      const response = await fetch("https://localhost:7034/api/Users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        console.log("User registered successfully!");
+        navigate("/");
+
+        // Reset form data only after successful form submission
+        setFormData({
+          username: "",
+          password: "",
+          firstName: "",
+          lastName: "",
+          avatarPicture: "",
+          dateOfBirth: "",
+          gender: "",
         });
-    
-        if (response.ok) {
-          // Registration successful, you can redirect the user or perform other actions
-          console.log('User registered successfully!');
-          navigate('/'); // Redirect to home page
-        } else {
-          // Handle registration error
-          console.error('Failed to register user:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Failed to register user:', error.message);
+      } else {
+        console.error("Failed to register user:", response.statusText);
       }
-    };
+    } catch (error) {
+      console.error("Failed to register user:", error.message);
+    }
+  };
 
   return (
     <div>
@@ -67,7 +143,7 @@ export default function Register() {
       </button>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
-      <div>
+        <div>
           <label htmlFor="username">User Name:</label>
           <input
             type="text"
@@ -76,6 +152,7 @@ export default function Register() {
             value={formData.username}
             onChange={handleChange}
           />
+          {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
         </div>
         <div>
           <label htmlFor="password">Password:</label>
@@ -86,7 +163,9 @@ export default function Register() {
             value={formData.password}
             onChange={handleChange}
           />
+          {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
         </div>
+
         <div>
           <label htmlFor="firstName">First Name:</label>
           <input
@@ -96,6 +175,9 @@ export default function Register() {
             value={formData.firstName}
             onChange={handleChange}
           />
+          {errors.firstName && (
+            <p style={{ color: "red" }}>{errors.firstName}</p>
+          )}
         </div>
         <div>
           <label htmlFor="lastName">Last Name:</label>
@@ -106,6 +188,7 @@ export default function Register() {
             value={formData.lastName}
             onChange={handleChange}
           />
+          {errors.lastName && <p style={{ color: "red" }}>{errors.lastName}</p>}
         </div>
         <div>
           <label htmlFor="avatarPicture">Avatar Picture:</label>
@@ -126,16 +209,24 @@ export default function Register() {
             value={formData.dateOfBirth}
             onChange={handleChange}
           />
+          {errors.dateOfBirth && (
+            <p style={{ color: "red" }}>{errors.dateOfBirth}</p>
+          )}
         </div>
         <div>
           <label htmlFor="gender">Gender:</label>
-          <input
-            type="text"
+          <select
             id="gender"
             name="gender"
             value={formData.gender}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select...</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          {errors.gender && <p style={{ color: "red" }}>{errors.gender}</p>}
         </div>
         <button class="button-29" type="submit">
           Proceed
@@ -144,4 +235,3 @@ export default function Register() {
     </div>
   );
 }
-
