@@ -472,6 +472,47 @@ public class DBservices
         return questions;
     }
 
+    public List<Feedback> ReadFeedback()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        List<Feedback> feedbacks = new List<Feedback>();
+
+
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetFeedback");
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            Feedback f = new Feedback();
+            f.FeedbackId = Convert.ToInt32(dataReader["FeedbackId"]);
+            f.UserId = Convert.ToInt32(dataReader["UserId"]);
+            f.Description = dataReader["Description"].ToString();
+            f.Rating = Convert.ToInt32(dataReader["Rating"]);
+
+            feedbacks.Add(f);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return feedbacks;
+    }
+
+
 }
 
 

@@ -24,5 +24,11 @@
         public int UserId { get => userId; set => userId = value; }
         public string Description { get => description; set => description = value; }
         public int Rating { get => rating; set => rating = value; }
+
+        public List<Feedback> Read()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadFeedback();
+        }
     }
 }
