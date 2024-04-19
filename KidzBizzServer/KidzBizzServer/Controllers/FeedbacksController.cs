@@ -26,8 +26,24 @@ namespace KidzBizzServer.Controllers
 
         // POST api/<FeedbacksController>
         [HttpPost]
-        public void Post([FromBody] string value)
+
+        public IActionResult Post([FromBody] Feedback feedback)
         {
+            try
+            {
+                if (feedback == null)
+                {
+                    return BadRequest("Invalid data provided.");
+                }
+
+                int result = feedback.Insert();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+
         }
 
         // PUT api/<FeedbacksController>/5

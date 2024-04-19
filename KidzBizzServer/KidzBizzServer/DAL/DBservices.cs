@@ -393,6 +393,11 @@ public class DBservices
         return players;
     }
 
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return all the Properties
+    //--------------------------------------------------------------------------------------------------
+
     public List<Property> ReadProperties()
     {
 
@@ -434,6 +439,11 @@ public class DBservices
         return properties;
     }
 
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return all the Questions
+    //--------------------------------------------------------------------------------------------------
+
     public List<Question> ReadQuestions()
     {
 
@@ -471,6 +481,10 @@ public class DBservices
         }
         return questions;
     }
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return all the Feedbacks
+    //--------------------------------------------------------------------------------------------------
 
     public List<Feedback> ReadFeedback()
     {
@@ -511,6 +525,78 @@ public class DBservices
         }
         return feedbacks;
     }
+
+
+    //--------------------------------------------------------------------------------------------------
+    // This method insert feedback
+    //--------------------------------------------------------------------------------------------------
+
+    public int InsertFeedback(Feedback feedback)
+
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+
+        catch (Exception ex)
+
+        {
+            throw (ex);
+        }
+
+        cmd = CreateInsertFeedbackWithStoredProcedure("KBSP_InsertFeedback", con, feedback);             // create the command
+
+        try
+
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+
+        {
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+
+            {
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand CreateInsertFeedbackWithStoredProcedure(string spName, SqlConnection con, Feedback feedback)
+
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;          // can be Select, Insert, Update, Delete
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution. The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@Feedback_ID", feedback.FeedbackId);
+        cmd.Parameters.AddWithValue("@User_ID", feedback.UserId);
+        cmd.Parameters.AddWithValue("@Description", feedback.Description);
+        cmd.Parameters.AddWithValue("@Rating", feedback.Rating);
+
+        return cmd;
+    }
+
+
 
 
 }

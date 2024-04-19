@@ -30,5 +30,13 @@
             DBservices dbs = new DBservices();
             return dbs.ReadFeedback();
         }
+
+        public int Insert()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.InsertFeedback(this);
+        }
+
+
     }
 }
