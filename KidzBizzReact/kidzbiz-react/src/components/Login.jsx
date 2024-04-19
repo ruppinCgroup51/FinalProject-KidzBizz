@@ -16,12 +16,29 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can handle form submission, like sending data to a server
-    console.log(formData);
-    // Optionally, you can clear the form fields after submission
-    // setFormData({ username: '', password: '' });
+    try {
+      const response = await fetch('https://localhost:7034/api/Users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        // User created successfully
+        console.log('User loged in successfully');
+        // You can redirect the user to another page here if needed
+      } else {
+        // Handle error response
+        console.error('Failed to login');
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error('Error:', error);
+    }
+
     setFormData({
       username: "",
       password: "",
