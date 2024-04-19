@@ -587,15 +587,85 @@ public class DBservices
         cmd.CommandTimeout = 10;           // Time to wait for the execution. The default is 30 seconds
 
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-        cmd.Parameters.AddWithValue("@Feedback_ID", feedback.FeedbackId);
         cmd.Parameters.AddWithValue("@User_ID", feedback.UserId);
-        cmd.Parameters.AddWithValue("@Description", feedback.Description);
+        cmd.Parameters.AddWithValue("@FeedbackDescription", feedback.Description);
         cmd.Parameters.AddWithValue("@Rating", feedback.Rating);
 
         return cmd;
     }
 
+
+    //--------------------------------------------------------------------------------------------------
+    // This method insert Answer
+    //--------------------------------------------------------------------------------------------------
+
+
+    public int InsertAnswer(Answer answer)
+
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+
+        catch (Exception ex)
+
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        cmd = CreateInsertAnswerWithStoredProcedure("KBSP_InsertAnswer", con, answer);             // create the command
+
+        try
+
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    private SqlCommand CreateInsertAnswerWithStoredProcedure(String spName, SqlConnection con, Answer answer)
+
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@QuestionID", answer.QuestionId);
+        cmd.Parameters.AddWithValue("@AnswerText", answer.AnswerText);
+        cmd.Parameters.AddWithValue("@IsCorrect", answer.IsCorrect);
+        return cmd;
+
+    }
 
 
 

@@ -24,5 +24,12 @@
         public int QuestionId { get => questionId; set => questionId = value; }
         public string AnswerText { get => answerText; set => answerText = value; }
         public bool IsCorrect { get => isCorrect; set => isCorrect = value; }
+
+        public int Insert()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.InsertAnswer(this);
+
+        }
     }
 }

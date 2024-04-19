@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KidzBizzServer.BL;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,9 +25,36 @@ namespace KidzBizzServer.Controllers
 
         // POST api/<AnswersController>
         [HttpPost]
-        public void Post([FromBody] string value)
+
+        public IActionResult Post([FromBody] Answer answer)
+
         {
+
+            try
+
+            {
+                if (answer == null)
+
+                {
+                    return BadRequest("Invalid data provided."); 
+                }
+
+                int result = answer.Insert(); // Attempt to insert the answer
+
+                return Ok(result); // Return the result of the insertion
+
+            }
+
+            catch (Exception ex)
+
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}"); 
+
+            }
+
         }
+
+
 
         // PUT api/<AnswersController>/5
         [HttpPut("{id}")]
