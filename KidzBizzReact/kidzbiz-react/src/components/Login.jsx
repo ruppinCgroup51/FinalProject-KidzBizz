@@ -18,7 +18,11 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
+  {/* setFormData((prevState) => ({
+      ...prevState, 
+      
+    }))*/}
+     try {
       const response = await fetch('https://localhost:7034/api/Users/login', {
         method: 'POST',
         headers: {
