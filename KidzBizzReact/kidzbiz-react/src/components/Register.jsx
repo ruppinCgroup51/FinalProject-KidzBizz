@@ -13,6 +13,7 @@ export default function Register() {
     avatarPicture: "",
     dateOfBirth: "",
     gender: "",
+
   });
 
   function validateForm(formData) {

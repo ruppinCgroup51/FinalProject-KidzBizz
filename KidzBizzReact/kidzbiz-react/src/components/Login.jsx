@@ -23,6 +23,7 @@ export default function Login() {
       
     }))*/}
      try {
+     {/*משהו פה בחיבור לא עובד, שמדבגים דרך הסוואגר השרת עובד טוב, אני לא מצליחה להבין מה הבעיה עם הקליינט */}
       const response = await fetch('https://localhost:7034/api/Users/login', {
         method: 'POST',
         headers: {
@@ -33,6 +34,7 @@ export default function Login() {
       if (response.ok) {
         // User created successfully
         console.log('User loged in successfully');
+        navigate("/Lobi");
         // You can redirect the user to another page here if needed
       } else {
         // Handle error response
