@@ -9,22 +9,16 @@ import GameGuide from "./components/GameGuide";
 
 function App() {
   return (
-    <> 
-
-    <Routes>
-    <Route path="/Lobi" element={<Lobi />}/>
-    <Route path="/game-guide" element={<GameGuide />} />
-    </Routes>
-  
+    <>
       <div>
-      
-       <Routes>
+        <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/ChooseAvatar" element={<ChooseAvatar />}></Route>
           <Route path="/Register" element={<Register />}></Route>
           <Route path="/Login" element={<Login />}></Route>
+          <Route path="/Lobi" element={<Lobi />} />
+          <Route path="/game-guide" element={<GameGuide />} />
         </Routes>
-
       </div>
     </>
   );

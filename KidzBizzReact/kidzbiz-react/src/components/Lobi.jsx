@@ -1,31 +1,49 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCog, faBook, faUniversalAccess, faSearch, faFlagCheckered, faDice, faTrophy, faMedal } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCog,
+  faBook,
+  faUniversalAccess,
+  faSearch,
+  faFlagCheckered,
+  faDice,
+  faTrophy,
+  faMedal,
+} from "@fortawesome/free-solid-svg-icons";
 import "../css/Lobi.css";
 
 export default function Lobi() {
+  const location = useLocation();
+  console.log("location : ", location.state.user);
+  const user = location.state.user;
+
   return (
     <div className="lobi-container">
       <nav className="navbar">
         <div className="navbar-left">
           <Link to="/game-settings" className="navbar-btn">
-          <FontAwesomeIcon icon={faCog} />
+            <FontAwesomeIcon icon={faCog} />
           </Link>
           <Link to="/game-guide" className="navbar-btn">
             <FontAwesomeIcon icon={faBook} />
           </Link>
           <Link to="/accessibility" className="navbar-btn">
-          <FontAwesomeIcon icon={faUniversalAccess} />
+            <FontAwesomeIcon icon={faUniversalAccess} />
           </Link>
           <Link to="/find-friends" className="navbar-btn">
-          <FontAwesomeIcon icon={faSearch} />
+            <FontAwesomeIcon icon={faSearch} />
           </Link>
         </div>
         <div className="navbar-right">
           <div className="user-info">
-            <span>Hello, username</span>
-           {/* <Avatar /> */}
+            <span>Hello,{user.firstName + " " + user.lastName} </span>
+            <div className="avatar-container">
+              {" "}
+              {/* Add this line */}
+              <img src={user.avatarPicture} alt="User avatar" />
+            </div>{" "}
+            {/* Add this line */}
             <span className="user-rating">36th place</span>
             <i className="fas fa-trophy"></i>
           </div>
@@ -46,7 +64,6 @@ export default function Lobi() {
         </Link>
       </div>
       <div class="money-background"></div>
-
     </div>
   );
 }

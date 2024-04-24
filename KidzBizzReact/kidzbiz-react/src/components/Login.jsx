@@ -33,8 +33,10 @@ export default function Login() {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
+        const formData = await response.json();
+        console.log('userData : ', formData)
         console.log("User logged in successfully");
-        navigate("/Lobi");
+        navigate("/Lobi", { state: { user: formData } });
       } else {
         // Handle error response
         const errorData = await response.json();
