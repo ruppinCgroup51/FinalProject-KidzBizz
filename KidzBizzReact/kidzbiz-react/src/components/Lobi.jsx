@@ -50,7 +50,7 @@ export default function Lobi() {
         </div>
       </nav>
       <div className="main-buttons">
-        <Link to="/playing-alone" className="main-button blue">
+        <Link to="/GameBoard" className="main-button blue">
           Playing alone <FontAwesomeIcon icon={faFlagCheckered} />
         </Link>
         <Link to="/playing-with-friends" className="main-button green">

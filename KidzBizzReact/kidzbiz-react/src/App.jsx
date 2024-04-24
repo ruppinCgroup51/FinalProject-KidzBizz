@@ -6,6 +6,7 @@ import Register from "./components/Register";
 import ChooseAvatar from "./components/ChooseAvatar";
 import Lobi from "./components/Lobi";
 import GameGuide from "./components/GameGuide";
+import GameBoard from "./components/GameBoard";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/Login" element={<Login />}></Route>
           <Route path="/Lobi" element={<Lobi />} />
           <Route path="/game-guide" element={<GameGuide />} />
+          <Route path="/GameBoard" element={<GameBoard />} />
         </Routes>
       </div>
     </>
