@@ -4,8 +4,14 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    userId: 0,
     username: "",
     password: "",
+    firstName: "",
+    lastName: "",
+    avatarPicture: "",
+    dateOfBirth: new Date().toISOString(),
+    gender: "",
   });
 
   const handleChange = (e) => {
@@ -18,36 +24,35 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  {/* setFormData((prevState) => ({
-      ...prevState, 
-      
-    }))*/}
-     try {
-     {/*משהו פה בחיבור לא עובד, שמדבגים דרך הסוואגר השרת עובד טוב, אני לא מצליחה להבין מה הבעיה עם הקליינט */}
-      const response = await fetch('https://localhost:7034/api/Users/login', {
-        method: 'POST',
+    try {
+      const response = await fetch("https://localhost:7034/api/Users/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        // User created successfully
-        console.log('User loged in successfully');
+        console.log("User logged in successfully");
         navigate("/Lobi");
-        // You can redirect the user to another page here if needed
       } else {
         // Handle error response
-        console.error('Failed to login');
+        const errorData = await response.json();
+        console.error("Error:", errorData);
       }
     } catch (error) {
-      // Handle network or other errors
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
 
     setFormData({
+      userId: 0,
       username: "",
       password: "",
+      firstName: "",
+      lastName: "",
+      avatarPicture: "",
+      dateOfBirth: new Date().toISOString(),
+      gender: "",
     });
   };
 
@@ -58,7 +63,9 @@ export default function Login() {
 
   return (
     <div>
-      <button class="button-29" onClick={() => navigate("/")}>Back to home page</button>
+      <button class="button-29" onClick={() => navigate("/")}>
+        Back to home page
+      </button>
       <h2>Login Page</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -82,7 +89,9 @@ export default function Login() {
           />
         </div>
         <div>
-          <button class="button-29" type="submit">Login</button>
+          <button class="button-29" type="submit" onClick={handleSubmit}>
+            Login
+          </button>
           <br />
 
           <button type="button" onClick={handleForgetPassword}>

@@ -17,13 +17,13 @@ function App() {
     </Routes>
   
       <div>
-      {/* צריך להחזיר את זה שהלוגין יעבוד ולבדוק שאחרי הלוגין זה מנווט ללובי*/}
-       {/* <Routes>
+      
+       <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/ChooseAvatar" element={<ChooseAvatar />}></Route>
           <Route path="/Register" element={<Register />}></Route>
           <Route path="/Login" element={<Login />}></Route>
-        </Routes>*/}
+        </Routes>
 
       </div>
     </>
