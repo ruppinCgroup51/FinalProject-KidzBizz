@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home";
@@ -7,22 +8,29 @@ import ChooseAvatar from "./components/ChooseAvatar";
 import Lobi from "./components/Lobi";
 import GameGuide from "./components/GameGuide";
 import GameBoard from "./components/GameBoard";
+import UserContext from "./components/UserContext";
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
   return (
-    <>
+    <UserContext.Provider value={user}>
       <div>
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/ChooseAvatar" element={<ChooseAvatar />}></Route>
-          <Route path="/Register" element={<Register />}></Route>
-          <Route path="/Login" element={<Login />}></Route>
+          <Route path="/" element={<Home />} />
+          <Route path="/ChooseAvatar" element={<ChooseAvatar />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/Login" element={<Login onLogin={handleLogin} />} />
           <Route path="/Lobi" element={<Lobi />} />
           <Route path="/game-guide" element={<GameGuide />} />
           <Route path="/GameBoard" element={<GameBoard />} />
         </Routes>
       </div>
-    </>
+    </UserContext.Provider>
   );
 }
 

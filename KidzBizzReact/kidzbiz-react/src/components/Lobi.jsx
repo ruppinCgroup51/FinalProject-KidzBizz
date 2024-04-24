@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCog,
@@ -12,11 +12,10 @@ import {
   faMedal,
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/Lobi.css";
+import UserContext from "./UserContext" // Import the UserContext
 
 export default function Lobi() {
-  const location = useLocation();
-  console.log("location : ", location.state.user);
-  const user = location.state.user;
+  const user = useContext(UserContext); // Access the user context
 
   return (
     <div className="lobi-container">
@@ -37,13 +36,10 @@ export default function Lobi() {
         </div>
         <div className="navbar-right">
           <div className="user-info">
-            <span>Hello,{user.firstName + " " + user.lastName} </span>
+            <span>Hello, {user.firstName} {user.lastName}</span>
             <div className="avatar-container">
-              {" "}
-              {/* Add this line */}
               <img src={user.avatarPicture} alt="User avatar" />
-            </div>{" "}
-            {/* Add this line */}
+            </div>
             <span className="user-rating">36th place</span>
             <i className="fas fa-trophy"></i>
           </div>
@@ -63,7 +59,7 @@ export default function Lobi() {
           Player ratings <FontAwesomeIcon icon={faMedal} />
         </Link>
       </div>
-      <div class="money-background"></div>
+      <div className="money-background"></div>
     </div>
   );
 }

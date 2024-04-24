@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login({ onLogin }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userId: 0,
@@ -36,7 +36,8 @@ export default function Login() {
         const formData = await response.json();
         console.log('userData : ', formData)
         console.log("User logged in successfully");
-        navigate("/Lobi", { state: { user: formData } });
+        onLogin(formData); 
+        navigate("/Lobi");
       } else {
         // Handle error response
         const errorData = await response.json();
