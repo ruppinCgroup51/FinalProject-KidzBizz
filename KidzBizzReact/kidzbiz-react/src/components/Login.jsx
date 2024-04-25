@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/home.css";
+import "../css/Login.css";
 
 export default function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -65,8 +67,8 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div>
-      <button class="button-29" onClick={() => navigate("/")}>
+    <div className="main-div">
+      <button class="main-button red" onClick={() => navigate("/")}>
         Back to home page
       </button>
       <h2>Login Page</h2>
@@ -92,12 +94,12 @@ export default function Login({ onLogin }) {
           />
         </div>
         <div>
-          <button class="button-29" type="submit" onClick={handleSubmit}>
+          <button class="main-button red" type="submit" onClick={handleSubmit}>
             Login
           </button>
           <br />
 
-          <button type="button" onClick={handleForgetPassword}>
+          <button type="button" class="main-button red forget-password-button" onClick={handleForgetPassword}>
             Forget Password
           </button>
         </div>

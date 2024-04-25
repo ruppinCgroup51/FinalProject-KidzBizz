@@ -1,0 +1,18 @@
+/* Set background color like the home page */
+body {
+    background: linear-gradient(#47b3a1, #d9eed9);
+}
+
+/* Make the main div cover the entire page */
+.main-div {
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Make the forget password button smaller */
+.forget-password-button {
+    font-size: 14px;
+    padding: 5px 10px;
+}

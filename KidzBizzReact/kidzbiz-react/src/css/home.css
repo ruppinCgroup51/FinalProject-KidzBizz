@@ -1,21 +1,27 @@
-.title-container {
-    background-color: red;
-    border-radius: 50%;
-    padding: 20px;
-    border: 2px dashed white;
-  }
-  
-  .title {
-    color: white;
-    margin: 0;
-  }
-  
+
   .home-container {
-    background-color: turquoise;
+    background: linear-gradient(#47b3a1, #d9eed9);
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
+  
+
+  .main-button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 18px;
+    border: 2px dashed #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .red {
+    background-color: red
+  }
+  
   

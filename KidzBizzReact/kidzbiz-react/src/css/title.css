@@ -2,13 +2,29 @@
   text-align: center;
 }
 
-.title {
-  font-family: "Comic Sans MS", cursive; /* Use a playful font */
-  font-size: 4em; /* Adjust font size as needed */
-  color: #ff69b4; /* Pink color, adjust as needed */
-  text-shadow: 2px 2px 4px #000; /* Add shadow for depth */
-  animation: rainbow 3s infinite; /* Add rainbow animation */
+.title-container {
+  background-color: red;
+  border-radius: 30px;
+  border: 2px dashed white;
+
 }
+
+.title {
+  color: white;
+  margin: 0;
+}
+.title {
+  font-family: Jazz LET, fantasy;
+  font-size: 6em; /* Increase font size */
+  font-weight: bold; /* Make the font bold */
+  color: white;
+  text-shadow: 2px 2px 4px #000;
+  animation: rainbow 3s infinite;
+  width:20%;
+  padding: 20px;
+  
+}
+
 
 @keyframes rainbow {
   0% {
