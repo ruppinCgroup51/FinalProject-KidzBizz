@@ -21,42 +21,42 @@ export default function Lobi() {
     <div className="lobi-container">
       <nav className="navbar">
         <div className="navbar-left">
-          <Link to="/game-settings" className="navbar-btn">
+          <Link to="/game-settings" className="navbar-btn gray">
             <FontAwesomeIcon icon={faCog} />
           </Link>
-          <Link to="/game-guide" className="navbar-btn">
+          <Link to="/game-guide" className="navbar-btn darkpurple">
             <FontAwesomeIcon icon={faBook} />
           </Link>
           <Link to="/accessibility" className="navbar-btn">
             <FontAwesomeIcon icon={faUniversalAccess} />
           </Link>
-          <Link to="/find-friends" className="navbar-btn">
+          <Link to="/find-friends" className="navbar-btn deepblue">
             <FontAwesomeIcon icon={faSearch} />
           </Link>
         </div>
         <div className="navbar-right">
           <div className="user-info">
-            <span>Hello, {user.firstName} {user.lastName}</span>
+            <span>{user.username} ,שלום</span>
             <div className="avatar-container">
               <img src={user.avatarPicture} alt="User avatar" />
             </div>
-            <span className="user-rating">36th place</span>
+            <span className="user-rating"> <FontAwesomeIcon icon={faTrophy} /> מקום 36 </span>
             <i className="fas fa-trophy"></i>
           </div>
         </div>
       </nav>
       <div className="main-buttons">
         <Link to="/GameBoard" className="main-button blue">
-          Playing alone <FontAwesomeIcon icon={faFlagCheckered} />
+          <FontAwesomeIcon icon={faFlagCheckered} /> משחק לבד 
         </Link>
         <Link to="/playing-with-friends" className="main-button green">
-          Playing with friends <FontAwesomeIcon icon={faDice} />
+        <FontAwesomeIcon icon={faDice} /> משחק מול חברים
         </Link>
         <Link to="/my-achievements" className="main-button purple">
-          My achievements <FontAwesomeIcon icon={faTrophy} />
+        <FontAwesomeIcon icon={faTrophy} /> ההישגים שלי 
         </Link>
         <Link to="/player-ratings" className="main-button orange">
-          Player ratings <FontAwesomeIcon icon={faMedal} />
+       <FontAwesomeIcon icon={faMedal} /> דירוגי שחקנים 
         </Link>
       </div>
       <div className="money-background"></div>
