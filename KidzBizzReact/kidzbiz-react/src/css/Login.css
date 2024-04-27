@@ -9,6 +9,8 @@ body {
     height: 100vh;
     justify-content: center;
     align-items: center;
+    position: relative;
+    top: 200px;
 }
 
 /* Make the forget password button smaller */
@@ -24,3 +26,13 @@ body {
     height: 40px;
 
 }
+h2{
+    font-size: 50px;
+    color: red;
+    font-family: Jazz LET, fantasy;
+}
+
+#forget-password-button{
+   font-size: 15px;
+}
+

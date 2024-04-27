@@ -69,11 +69,14 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="main-div">
+    <>
+    <div>
      <Link to="/" className="arrow-button">
      <TiArrowLeftThick size={70} color="red" />
     </Link>
-    
+    </div>
+    <div className="main-div">
+
       <h2>Login Page</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -102,11 +105,12 @@ export default function Login({ onLogin }) {
           </button>
           <br />
 
-          <button type="button" className="main-button red forget-password-button" onClick={handleForgetPassword}>
+          <button id="forget-password-button" type="button" className="main-button red" onClick={handleForgetPassword}>
             Forget Password
           </button>
         </div>
       </form>
     </div>
+    </>
   );
 }
