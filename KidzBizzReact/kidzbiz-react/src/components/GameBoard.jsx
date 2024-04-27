@@ -7,7 +7,7 @@ export default function GameBoard() {
 
   return (
     <>
-      <div class="frame">
+      <div className="frame">
         <div className="board">
           {numSquares.map((num) => (
             <GameSquare key={num} id={num} />

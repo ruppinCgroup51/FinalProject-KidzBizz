@@ -5,7 +5,6 @@
 
 body {
   overflow-x: hidden;
-  
 }
 
 .lobi-container {
@@ -62,8 +61,8 @@ body {
 }
 
 .main-button {
-  padding: 10px 20px;
-  margin: 10px;
+  padding: 50px 50px;
+  margin: 50px;
   font-size: 18px;
   border: 2px dashed #fff;
   border-radius: 10px;
@@ -145,14 +144,62 @@ body {
   height: 50px; /* Adjust as needed */
 }
 
-.deepblue{
+.deepblue {
   color: #0c77aa; /* Replace with a valid color value */
 }
 
-.darkpurple{
-  color: #a970ad
+.darkpurple {
+  color: #a970ad;
 }
 
-.gray{
-  color:rgb(94, 93, 93)
+.gray {
+  color: rgb(94, 93, 93);
+}
+
+.navbar-right {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+  direction: rtl; /* Add this line */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-container {
+  margin-right: 10px;
+}
+
+.avatar-image {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.greeting {
+  font-size: 14px;
+  font-weight: bold;
+  color: #888;
+}
+
+.user-rating {
+  display: flex;
+  align-items: center;
+}
+
+.trophy-icon {
+  margin-right: 5px;
 }

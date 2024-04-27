@@ -4,8 +4,21 @@ import "../css/home.css";
 import "../css/Login.css";
 import { TiArrowLeftThick } from "react-icons/ti";
 import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
+import { PersonAdd as PersonAddIcon } from "@mui/icons-material";
+import { LockReset } from "@mui/icons-material";
+import TextField from "@mui/material/TextField";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import swal from "sweetalert";
 
 export default function Login({ onLogin }) {
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#d32f2f", // Change this to the color you want
+      },
+    },
+  });
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userId: 0,
@@ -18,12 +31,11 @@ export default function Login({ onLogin }) {
     gender: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -38,29 +50,54 @@ export default function Login({ onLogin }) {
       });
       if (response.ok) {
         const formData = await response.json();
-        console.log('userData : ', formData)
+        console.log("userData : ", formData);
         console.log("User logged in successfully");
-        onLogin(formData); 
+        onLogin(formData);
         navigate("/Lobi");
       } else {
         // Handle error response
         const errorData = await response.json();
         console.error("Error:", errorData);
+        swal({
+          title: "שגיאה",
+          text: "אחד או יותר מהפרטים שהזנת שגויים. אנא נסה שוב.",
+          icon: "error",
+          dangerMode: true,
+        }) // Display an error popup
+          .then(() => {
+            setFormData({
+              userId: 0,
+              username: "",
+              password: "",
+              firstName: "",
+              lastName: "",
+              avatarPicture: "",
+              dateOfBirth: new Date().toISOString(),
+              gender: "",
+            }); // Reset the form
+          });
       }
     } catch (error) {
       console.error("Error:", error);
+      swal({
+        title: "שגיאה",
+        text: "אחד או יותר מהפרטים שהזנת שגויים. אנא נסה שוב.",
+        icon: "error",
+        dangerMode: true,
+      }) // Display an error popup
+        .then(() => {
+          setFormData({
+            userId: 0,
+            username: "",
+            password: "",
+            firstName: "",
+            lastName: "",
+            avatarPicture: "",
+            dateOfBirth: new Date().toISOString(),
+            gender: "",
+          }); // Reset the form
+        });
     }
-
-    setFormData({
-      userId: 0,
-      username: "",
-      password: "",
-      firstName: "",
-      lastName: "",
-      avatarPicture: "",
-      dateOfBirth: new Date().toISOString(),
-      gender: "",
-    });
   };
 
   const handleForgetPassword = () => {
@@ -70,47 +107,73 @@ export default function Login({ onLogin }) {
 
   return (
     <>
-    <div>
-     <Link to="/" className="arrow-button">
-     <TiArrowLeftThick size={70} color="red" />
-    </Link>
-    </div>
-    <div className="main-div">
+      <div>
+        <Link to="/" className="arrow-button">
+          <TiArrowLeftThick size={70} color="red" />
+        </Link>
+      </div>
+      <div className="main-div">
+        <h2>Login Page</h2>
+        <form onSubmit={handleSubmit}>
+          <ThemeProvider theme={theme}>
+            <TextField
+              name="username"
+              id="username"
+              label="שם משתמש"
+              variant="standard"
+              value={formData.username}
+              onChange={handleChange}
+              sx={{
+                fontSize: "16px",
+                width: "20%",
+                
+              }}
+              
+            />
+            <br />
+            <ThemeProvider theme={theme}>
+              <TextField
+                name="password"
+                id="password"
+                label="סיסמא"
+                type="password"
+                variant="standard"
+                value={formData.password}
+                onChange={handleChange}
+                sx={{
+                  fontSize: "16px",
+                  width: "20%",
+                }}
+              />
+            </ThemeProvider>
 
-      <h2>Login Page</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <button className="main-button red" type="submit" onClick={handleSubmit}>
-            Login
-          </button>
-          <br />
+            <br />
 
-          <button id="forget-password-button" type="button" className="main-button red" onClick={handleForgetPassword}>
-            Forget Password
-          </button>
-        </div>
-      </form>
-    </div>
+            <Button startIcon={<LockReset />} onClick={handleForgetPassword}>
+              שחזור סיסמא
+            </Button>
+          </ThemeProvider>
+          <div>
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<PersonAddIcon sx={{ fontSize: 40 }} />}
+              type="submit"
+              onClick={handleSubmit}
+              sx={{
+                fontSize: "30px",
+                padding: "20px",
+                "&:hover": {
+                  backgroundColor: "#d32f2f",
+                  boxShadow: "0 0 10px #d32f2f",
+                },
+              }}
+            >
+              התחברות
+            </Button>
+          </div>
+        </form>
+      </div>
     </>
   );
 }

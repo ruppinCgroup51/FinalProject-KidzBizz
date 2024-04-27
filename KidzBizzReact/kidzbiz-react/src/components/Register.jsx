@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import "../css/register.css";
+import { TiArrowLeftThick } from "react-icons/ti";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -13,7 +15,6 @@ export default function Register() {
     avatarPicture: "",
     dateOfBirth: "",
     gender: "",
-
   });
 
   function validateForm(formData) {
@@ -112,90 +113,100 @@ export default function Register() {
 
   return (
     <div>
-      <button class="button-29" onClick={() => navigate("/")}>
-        Back to home page
-      </button>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">User Name:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-          />
-          {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
-        </div>
+      <div>
+        <Link to="/" className="arrow-button">
+          <TiArrowLeftThick size={70} color="red" />
+        </Link>
+      </div>
+      <div className="main-div">
+        <h2>Register</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="username">User Name:</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+            />
+            {errors.username && (
+              <p style={{ color: "red" }}>{errors.username}</p>
+            )}
+          </div>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            {errors.password && (
+              <p style={{ color: "red" }}>{errors.password}</p>
+            )}
+          </div>
 
-        <div>
-          <label htmlFor="firstName">First Name:</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-          {errors.firstName && (
-            <p style={{ color: "red" }}>{errors.firstName}</p>
-          )}
-        </div>
-        <div>
-          <label htmlFor="lastName">Last Name:</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-          />
-          {errors.lastName && <p style={{ color: "red" }}>{errors.lastName}</p>}
-        </div>
-        <div>
-          <label htmlFor="dateOfBirth">Date of Birth:</label>
-          <input
-            type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleChange}
-          />
-          {errors.dateOfBirth && (
-            <p style={{ color: "red" }}>{errors.dateOfBirth}</p>
-          )}
-        </div>
-        <div>
-          <label htmlFor="gender">Gender:</label>
-          <select
-            id="gender"
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-          >
-            <option value="">Select...</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-          {errors.gender && <p style={{ color: "red" }}>{errors.gender}</p>}
-        </div>
-        <button class="button-29" type="submit">
-          Proceed
-        </button>
-      </form>
+          <div>
+            <label htmlFor="firstName">First Name:</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+            />
+            {errors.firstName && (
+              <p style={{ color: "red" }}>{errors.firstName}</p>
+            )}
+          </div>
+          <div>
+            <label htmlFor="lastName">Last Name:</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+            />
+            {errors.lastName && (
+              <p style={{ color: "red" }}>{errors.lastName}</p>
+            )}
+          </div>
+          <div>
+            <label htmlFor="dateOfBirth">Date of Birth:</label>
+            <input
+              type="date"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+            />
+            {errors.dateOfBirth && (
+              <p style={{ color: "red" }}>{errors.dateOfBirth}</p>
+            )}
+          </div>
+          <div>
+            <label htmlFor="gender">Gender:</label>
+            <select
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+            >
+              <option value="">Select...</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            {errors.gender && <p style={{ color: "red" }}>{errors.gender}</p>}
+          </div>
+          <button class="button-29" type="submit">
+            Proceed
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
