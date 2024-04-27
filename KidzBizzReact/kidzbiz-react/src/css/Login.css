@@ -16,3 +16,11 @@ body {
     font-size: 14px;
     padding: 5px 10px;
 }
+.arrow-button {
+    position: relative;    
+    right:47%;
+    top: 2%;
+    width: 40px;
+    height: 40px;
+
+}

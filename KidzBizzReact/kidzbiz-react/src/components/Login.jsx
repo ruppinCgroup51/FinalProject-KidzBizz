@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/home.css";
 import "../css/Login.css";
+import { TiArrowLeftThick } from "react-icons/ti";
+import { Link } from "react-router-dom";
 
 export default function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -68,9 +70,10 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="main-div">
-      <button class="main-button red" onClick={() => navigate("/")}>
-        Back to home page
-      </button>
+     <Link to="/" className="arrow-button">
+     <TiArrowLeftThick size={70} color="red" />
+    </Link>
+    
       <h2>Login Page</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -94,12 +97,12 @@ export default function Login({ onLogin }) {
           />
         </div>
         <div>
-          <button class="main-button red" type="submit" onClick={handleSubmit}>
+          <button className="main-button red" type="submit" onClick={handleSubmit}>
             Login
           </button>
           <br />
 
-          <button type="button" class="main-button red forget-password-button" onClick={handleForgetPassword}>
+          <button type="button" className="main-button red forget-password-button" onClick={handleForgetPassword}>
             Forget Password
           </button>
         </div>
