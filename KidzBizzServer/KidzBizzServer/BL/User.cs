@@ -73,6 +73,13 @@
 
         }
 
+        
+        public User ReadByUsername(string username)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadUserByUsername(username);
+        }
+
         ////delete user
         //public int Delete(string email)
         //{

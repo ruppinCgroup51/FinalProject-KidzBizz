@@ -3,16 +3,16 @@
     public class Player
     {
         int playerId;
-        int userId;
+        User user;
         int currentPosition;
         double currentBalance;
         string playerStatus;
         int lastDiceResult;
 
-        public Player(int playerId, int userId, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult)
+        public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult)
         {
             this.playerId = playerId;
-            this.userId = userId;
+            this.user = user;
             this.currentPosition = currentPosition;
             this.currentBalance = currentBalance;
             this.playerStatus = playerStatus;
@@ -25,7 +25,8 @@
         }
 
         public int PlayerId { get => playerId; set => playerId = value; }
-        public int UserId { get => userId; set => userId = value; }
+        
+        public User User { get => user; set => user = value; }
         public int CurrentPosition { get => currentPosition; set => currentPosition = value; }
         public double CurrentBalance { get => currentBalance; set => currentBalance = value; }
         public string PlayerStatus { get => playerStatus; set => playerStatus = value; }

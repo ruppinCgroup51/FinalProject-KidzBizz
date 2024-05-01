@@ -64,5 +64,12 @@ namespace KidzBizzServer.Controllers
         public void Delete(int id)
         {
         }
+
+        [HttpGet("{username}")]
+        public User Get(string username)
+        {
+            User user = new User();
+            return user.ReadByUsername(username);
+        }
     }
 }

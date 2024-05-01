@@ -667,6 +667,136 @@ public class DBservices
 
     }
 
+    // this method insert game
+    public int InsertGame(Game game)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateInsertGameWithStoredProcedure("KBSP_InsertGame", con, game);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }   
+
+    private SqlCommand CreateInsertGameWithStoredProcedure(String spName, SqlConnection con, Game game)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@NumberOfPlayers", game.NumberOfPlayers);
+
+        cmd.Parameters.AddWithValue("@GameDuration", game.GameDuration);
+
+        cmd.Parameters.AddWithValue("@GameStatus", game.GameStatus);
+
+        cmd.Parameters.AddWithValue("@GameTimestamp", game.GameTimestamp);
+
+        return cmd;
+    }
+
+   // this method read user by username 
+
+
+    public User ReadUserByUsername(string username)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        User user = null;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = buildReadStoredProcedureCommandReadUserByUsername(con, "KBSP_GetUserByUsername", username);
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            if (dataReader.Read())
+            {
+                user = new User
+                {
+                    Username = dataReader["Username"].ToString(),
+                    Password = dataReader["Password"].ToString(),
+                    FirstName = dataReader["FirstName"].ToString(),
+                    LastName = dataReader["LastName"].ToString(),
+                    AvatarPicture = dataReader["AvatarPicture"].ToString(),
+                    DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"])
+                };
+            } return user;
+        }
+        catch (Exception ex)
+               {
+            throw (ex);
+        }
+               finally
+               {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand buildReadStoredProcedureCommandReadUserByUsername(SqlConnection con, string spName, string username)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@username", username);
+
+        return cmd;
+    }
+
 
 
 }
