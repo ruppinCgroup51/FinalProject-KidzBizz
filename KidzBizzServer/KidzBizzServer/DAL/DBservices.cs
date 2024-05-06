@@ -377,7 +377,7 @@ public class DBservices
         while (dataReader.Read())
         {
             Player player = new Player();
-            player.UserId = Convert.ToInt32(dataReader["UserId"]);
+            player.User.Username = dataReader["Username"].ToString();
             player.CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]);
             player.CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]);
             player.PlayerStatus = dataReader["PlayerStatus"].ToString();
@@ -796,6 +796,116 @@ public class DBservices
 
         return cmd;
     }
+
+    // this method read users scores
+    public List<UserScore> ReadUsersScores()
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<UserScore> usersScores = new List<UserScore>();
+
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetUserScores");
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            UserScore userScore = new UserScore();
+            userScore.Score = Convert.ToInt32(dataReader["Score"]);
+            userScore.LastUpdated1 = Convert.ToDateTime(dataReader["LastUpdated"]);
+            userScore.Username = dataReader["Username"].ToString();
+            userScore.UserId = Convert.ToInt32(dataReader["UserId"]);
+
+            usersScores.Add(userScore);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return usersScores;
+    }
+
+
+    // this method add user score
+    public int addUserScore(UserScore userScore)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateAddUserScoreWithStoredProcedure("KBSP_InsertUserScore", con, userScore);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery();
+            return numEffected;// execute the command
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand CreateAddUserScoreWithStoredProcedure(String spName, SqlConnection con, UserScore userScore)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@Score", userScore.Score);
+
+        cmd.Parameters.AddWithValue("@LastUpdated", userScore.LastUpdated1);
+
+        cmd.Parameters.AddWithValue("@Username", userScore.Username);
+
+        cmd.Parameters.AddWithValue("@UserId", userScore.UserId);
+
+        return cmd;
+    }
+
+
+
+     
+
+
+
+
 
 
 

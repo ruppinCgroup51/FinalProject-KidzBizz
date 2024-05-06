@@ -9,6 +9,7 @@ import Lobi from "./components/Lobi";
 import GameGuide from "./components/GameGuide";
 import GameBoard from "./components/GameBoard";
 import UserContext from "./components/UserContext";
+import PlayersRating from "./components/PlayersRating";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,6 +29,7 @@ function App() {
           <Route path="/Lobi" element={<Lobi />} />
           <Route path="/game-guide" element={<GameGuide />} />
           <Route path="/GameBoard" element={<GameBoard />} />
+          <Route path="/PlayersRating" element={<PlayersRating />} />
         </Routes>
       </div>
     </UserContext.Provider>

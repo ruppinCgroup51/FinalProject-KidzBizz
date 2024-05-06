@@ -75,10 +75,10 @@ export default function Lobi() {
         <Link to="/playing-with-friends" className="main-button green">
           <FontAwesomeIcon icon={faDice} /> משחק מול חברים
         </Link>
-        <Link to="/my-achievements" className="main-button purple">
+        <Link to="/MyAchievements" className="main-button purple">
           <FontAwesomeIcon icon={faTrophy} /> ההישגים שלי
         </Link>
-        <Link to="/player-ratings" className="main-button orange">
+        <Link to="/PlayersRating" className="main-button orange">
           <FontAwesomeIcon icon={faMedal} /> דירוגי שחקנים
         </Link>
       </div>

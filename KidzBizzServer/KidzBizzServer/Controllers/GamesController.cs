@@ -72,9 +72,9 @@ namespace KidzBizzServer.Controllers
             Player humanPlayer = new Player { User = humanUser, CurrentPosition = 0, CurrentBalance = 1500, PlayerStatus = "Active" };
             Player aiPlayer = new Player { User = aiUser, CurrentPosition = 0, CurrentBalance = 1500, PlayerStatus = "Active" };
 
-            // Insert players to the database
-            InsertPlayer(humanPlayer, game.GameId);
-            InsertPlayer(aiPlayer, game.GameId);
+            //// Insert players to the database
+            //InsertPlayer(humanPlayer, game.GameId);
+            //InsertPlayer(aiPlayer, game.GameId);
 
             // Return the game and the players
             return Ok(new { Game = game, Players = new[] { humanPlayer, aiPlayer } });

@@ -11,6 +11,7 @@
         DateTime dateOfBirth;
         string gender;
 
+
         public User(int userId, string username, string password, string firstName, string lastName, string avatarPicture, DateTime dateOfBirth, string gender)
         {
             this.userId = userId;
