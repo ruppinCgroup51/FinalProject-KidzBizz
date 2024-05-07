@@ -382,7 +382,10 @@ public class DBservices
             player.CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]);
             player.PlayerStatus = dataReader["PlayerStatus"].ToString();
             player.LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]);
-
+            player.TotalGamesPlayed = Convert.ToInt32(dataReader["TotalGamesPlayed"]);  // Ensure these are included in your SQL result set
+            player.TotalPropertiesOwned = Convert.ToInt32(dataReader["TotalPropertiesOwned"]);
+            player.TotalWins = Convert.ToInt32(dataReader["TotalWins"]);
+            player.TotalLosses = Convert.ToInt32(dataReader["TotalLosses"]);
             players.Add(player);
         }
         if (con != null)
