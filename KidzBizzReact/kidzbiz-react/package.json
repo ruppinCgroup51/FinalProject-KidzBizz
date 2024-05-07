@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "node.js.linterPath": "/usr/local/bin/node",
   "scripts": {
     "dev": "vite",
     "build": "react-scripts build",
@@ -11,6 +12,7 @@
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
+  
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",

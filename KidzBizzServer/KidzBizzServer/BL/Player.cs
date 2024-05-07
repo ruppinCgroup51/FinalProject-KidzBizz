@@ -13,7 +13,10 @@
         int totalWins;
         int totalLosses;
 
-        public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult)
+        List<Property> properties = new List<Property>();
+     
+
+        public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties)
         {
             this.playerId = playerId;
             this.user = user;
@@ -25,6 +28,8 @@
             this.totalPropertiesOwned = 0;
             this.totalWins = 0;
             this.totalLosses = 0;
+
+            this.properties = properties;
         }
 
         public Player()
@@ -42,6 +47,10 @@
         public int TotalPropertiesOwned { get => totalPropertiesOwned; set => totalPropertiesOwned = value; }
         public int TotalWins { get => totalWins; set => totalWins = value; }
         public int TotalLosses { get => totalLosses; set => totalLosses = value; }
+
+
+        public List<Property> Properties { get => properties; set => properties = value; }
+
 
         public List<Player> Read()
         {
