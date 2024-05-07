@@ -1,5 +1,4 @@
-﻿using KidzBizzServer.BL;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -7,36 +6,35 @@ namespace KidzBizzServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayersController : ControllerBase
+    public class AIPlayerSelectorController : ControllerBase
     {
-        // GET: api/<PlayersController>
+        // GET: api/<AIPlayerSelectorController>
         [HttpGet]
-        public IEnumerable<Player> Get()
+        public IEnumerable<string> Get()
         {
-            Player player = new Player();
-            return player.Read();
+            return new string[] { "value1", "value2" };
         }
 
-        // GET api/<PlayersController>/5
+        // GET api/<AIPlayerSelectorController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<PlayersController>
+        // POST api/<AIPlayerSelectorController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<PlayersController>/5
+        // PUT api/<AIPlayerSelectorController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<PlayersController>/5
+        // DELETE api/<AIPlayerSelectorController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
