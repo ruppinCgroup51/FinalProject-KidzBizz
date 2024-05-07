@@ -352,6 +352,7 @@ public class DBservices
     }
 
 
+
     //--------------------------------------------------------------------------------------------------
     // This method return all the App Players
     //--------------------------------------------------------------------------------------------------
@@ -387,7 +388,7 @@ public class DBservices
             player.CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]);
             player.PlayerStatus = dataReader["PlayerStatus"].ToString();
             player.LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]);
-
+            player.Properties = ReadPropertiesByPlayer(player.PlayerId);
             players.Add(player);
         }
         if (con != null)
@@ -398,6 +399,65 @@ public class DBservices
         return players;
     }
 
+    public List<Property> ReadPropertiesByPlayer(int playerId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<Property> properties = new List<Property>();
+
+        cmd = buildReadStoredProcedureCommandReadPropertiesByPlayer(con, "KBSP_GetPropertiesByPlayer", playerId);
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            Property p = new Property();
+            p.PropertyId = Convert.ToInt32(dataReader["PropertyId"]);
+            p.TypeId = Convert.ToInt32(dataReader["TypeId"]);
+            p.PropertyName = dataReader["PropertyName"].ToString();
+            p.PropertyPrice = Convert.ToDouble(dataReader["PropertyPrice"]);
+
+            properties.Add(p);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return properties;
+    }
+
+  // need to write KBSP_GetPropertiesByPlayer
+  
+
+
+    private SqlCommand buildReadStoredProcedureCommandReadPropertiesByPlayer(SqlConnection con, string spName, int playerId)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@PlayerId", playerId);
+
+        return cmd;
+    }
 
     //--------------------------------------------------------------------------------------------------
     // This method return all the Properties
@@ -600,77 +660,77 @@ public class DBservices
     }
 
 
-    //--------------------------------------------------------------------------------------------------
-    // This method insert Answer
-    //--------------------------------------------------------------------------------------------------
+    ////--------------------------------------------------------------------------------------------------
+    //// This method insert Answer
+    ////--------------------------------------------------------------------------------------------------
 
 
-    public int InsertAnswer(Answer answer)
+    //public int InsertAnswer(Answer answer)
 
-    {
+    //{
 
-        SqlConnection con;
-        SqlCommand cmd;
+    //    SqlConnection con;
+    //    SqlCommand cmd;
 
-        try
+    //    try
 
-        {
-            con = connect("myProjDB"); // create the connection
-        }
+    //    {
+    //        con = connect("myProjDB"); // create the connection
+    //    }
 
-        catch (Exception ex)
+    //    catch (Exception ex)
 
-        {
-            // write to log
-            throw (ex);
+    //    {
+    //        // write to log
+    //        throw (ex);
 
-        }
+    //    }
 
-        cmd = CreateInsertAnswerWithStoredProcedure("KBSP_InsertAnswer", con, answer);             // create the command
+    //    cmd = CreateInsertAnswerWithStoredProcedure("KBSP_InsertAnswer", con, answer);             // create the command
 
-        try
+    //    try
 
-        {
-            int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            return numEffected;
-        }
+    //    {
+    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
+    //        return numEffected;
+    //    }
 
-        catch (Exception ex)
+    //    catch (Exception ex)
 
-        {
-            // write to log
-            throw (ex);
-        }
+    //    {
+    //        // write to log
+    //        throw (ex);
+    //    }
 
-        finally
-        {
-            if (con != null)
+    //    finally
+    //    {
+    //        if (con != null)
 
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
+    //        {
+    //            // close the db connection
+    //            con.Close();
+    //        }
+    //    }
 
-    }
+    //}
 
-    private SqlCommand CreateInsertAnswerWithStoredProcedure(String spName, SqlConnection con, Answer answer)
+    //private SqlCommand CreateInsertAnswerWithStoredProcedure(String spName, SqlConnection con, Answer answer)
 
-    {
-        SqlCommand cmd = new SqlCommand(); // create the command object
+    //{
+    //    SqlCommand cmd = new SqlCommand(); // create the command object
 
-        cmd.Connection = con;              // assign the connection to the command object
-        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete
-        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+    //    cmd.Connection = con;              // assign the connection to the command object
+    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete
+    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
 
-        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
 
-        cmd.Parameters.AddWithValue("@QuestionID", answer.QuestionId);
-        cmd.Parameters.AddWithValue("@AnswerText", answer.AnswerText);
-        cmd.Parameters.AddWithValue("@IsCorrect", answer.IsCorrect);
-        return cmd;
+    //    cmd.Parameters.AddWithValue("@QuestionID", answer.QuestionId);
+    //    cmd.Parameters.AddWithValue("@AnswerText", answer.AnswerText);
+    //    cmd.Parameters.AddWithValue("@IsCorrect", answer.IsCorrect);
+    //    return cmd;
 
-    }
+    //}
 
     // this method insert game
     public int InsertGame(Game game)
@@ -734,8 +794,6 @@ public class DBservices
     }
 
    // this method read user by username 
-
-
     public User ReadUserByUsername(string username)
     {
         SqlConnection con;
