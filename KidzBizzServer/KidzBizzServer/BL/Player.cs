@@ -8,6 +8,7 @@
         double currentBalance;
         string playerStatus;
         int lastDiceResult;
+        //רשימה נכסים
 
         public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult)
         {
