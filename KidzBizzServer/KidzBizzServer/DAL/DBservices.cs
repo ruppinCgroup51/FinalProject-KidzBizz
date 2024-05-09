@@ -74,6 +74,7 @@ public class DBservices
             u.AvatarPicture = dataReader["AvatarPicture"].ToString();
             u.DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"]);
             u.Gender = dataReader["Gender"].ToString();
+            u.Score = Convert.ToInt32(dataReader["Score"]);
 
             users.Add(u);
         }
@@ -175,6 +176,8 @@ public class DBservices
 
         cmd.Parameters.AddWithValue("@Gender", user.Gender);
 
+        cmd.Parameters.AddWithValue("@Score", user.Score);
+
 
         return cmd;
     }
@@ -259,6 +262,8 @@ public class DBservices
 
         cmd.Parameters.AddWithValue("@Gender", user.Gender);
 
+        cmd.Parameters.AddWithValue("@Score", user.Score);
+
 
         return cmd;
     }
@@ -304,7 +309,9 @@ public class DBservices
                     LastName = dataReader["LastName"].ToString(),
                     AvatarPicture = dataReader["AvatarPicture"].ToString(),
                     DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"]),
-                    Gender = dataReader["Gender"].ToString()
+                    Gender = dataReader["Gender"].ToString(),
+                    Score = Convert.ToInt32(dataReader["Score"])
+
                 };
 
             }
@@ -382,7 +389,7 @@ public class DBservices
             player.CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]);
             player.PlayerStatus = dataReader["PlayerStatus"].ToString();
             player.LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]);
-
+            player.Properties = ReadPropertiesByPlayerId(player.PlayerId);
             players.Add(player);
         }
         if (con != null)
@@ -393,7 +400,65 @@ public class DBservices
         return players;
     }
 
+    public List<Property> ReadPropertiesByPlayer(int playerId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
 
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<Property> properties = new List<Property>();
+
+        cmd = buildReadStoredProcedureCommandReadPropertiesByPlayer(con, "KBSP_GetPropertiesByPlayer", playerId);
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            Property p = new Property();
+            p.PropertyId = Convert.ToInt32(dataReader["PropertyId"]);
+            p.TypeId = Convert.ToInt32(dataReader["TypeId"]);
+            p.PropertyName = dataReader["PropertyName"].ToString();
+            p.PropertyPrice = Convert.ToDouble(dataReader["PropertyPrice"]);
+
+            properties.Add(p);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return properties;
+    }
+
+   
+
+
+
+    private SqlCommand buildReadStoredProcedureCommandReadPropertiesByPlayer(SqlConnection con, string spName, int playerId)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@PlayerId", playerId);
+
+        return cmd;
+    }
     //--------------------------------------------------------------------------------------------------
     // This method return all the Properties
     //--------------------------------------------------------------------------------------------------
@@ -762,7 +827,8 @@ public class DBservices
                     FirstName = dataReader["FirstName"].ToString(),
                     LastName = dataReader["LastName"].ToString(),
                     AvatarPicture = dataReader["AvatarPicture"].ToString(),
-                    DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"])
+                    DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"]),
+                    Score = Convert.ToInt32(dataReader["Score"])
                 };
             } return user;
         }
