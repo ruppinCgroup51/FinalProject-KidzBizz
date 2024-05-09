@@ -1,8 +1,8 @@
-﻿internal static class PlayerStatisticsHelpers
-{
+﻿//internal static class PlayerStatisticsHelpers
+//{
 
-    public static PlayerStatistics FetchStatistics(int userId)
-    {
-        // קוד פה לאחזור נתונים מהDB
-    }
-}
+//    public static PlayerStatistics FetchStatistics(int userId)
+//    {
+//        // קוד פה לאחזור נתונים מהDB
+//    }
+//}

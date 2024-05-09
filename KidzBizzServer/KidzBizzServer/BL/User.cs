@@ -10,10 +10,10 @@
         string avatarPicture;
         DateTime dateOfBirth;
         string gender;
-        double score;
+        int score;
 
 
-        public User(int userId, string username, string password, string firstName, string lastName, string avatarPicture, DateTime dateOfBirth, string gender, double score)
+        public User(int userId, string username, string password, string firstName, string lastName, string avatarPicture, DateTime dateOfBirth, string gender, int score)
         {
             this.userId = userId;
             this.username = username;
@@ -39,7 +39,7 @@
         public string AvatarPicture { get => avatarPicture; set => avatarPicture = value; }
         public DateTime DateOfBirth { get => dateOfBirth; set => dateOfBirth = value; }
         public string Gender { get => gender; set => gender = value; }
-        public double Score { get => score; set => score = value; }
+        public int Score { get => score; set => score = value; }
 
         //User Registration
         public int Register()
