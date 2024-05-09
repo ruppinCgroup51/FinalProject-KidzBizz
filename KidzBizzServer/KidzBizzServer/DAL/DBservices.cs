@@ -38,6 +38,10 @@ public class DBservices
         return con;
     }
 
+    //-------------------------------------------------------------------------------------------------
+    // !!! USER !!!
+    //-------------------------------------------------------------------------------------------------
+
     //--------------------------------------------------------------------------------------------------
     // This method return all the App Users
     //--------------------------------------------------------------------------------------------------
@@ -353,6 +357,82 @@ public class DBservices
         return cmd;
     }
 
+    //-------------------------------------------------------------------------------------------------
+    // This method read user by username
+    //-------------------------------------------------------------------------------------------------
+
+    public User ReadUserByUsername(string username)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        User user = null;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = buildReadStoredProcedureCommandReadUserByUsername(con, "KBSP_GetUserByUsername", username);
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            if (dataReader.Read())
+            {
+                user = new User
+                {
+                    Username = dataReader["Username"].ToString(),
+                    Password = dataReader["Password"].ToString(),
+                    FirstName = dataReader["FirstName"].ToString(),
+                    LastName = dataReader["LastName"].ToString(),
+                    AvatarPicture = dataReader["AvatarPicture"].ToString(),
+                    DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"]),
+                    Gender = dataReader["Gender"].ToString(),
+                    Score = Convert.ToInt32(dataReader["Score"])
+                };
+            }
+            return user;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand buildReadStoredProcedureCommandReadUserByUsername(SqlConnection con, string spName, string username)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@username", username);
+
+        return cmd;
+    }
+
+    //-------------------------------------------------------------------------------------------------
+    // !!! PLAYER !!!
+    //-------------------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------------------
     // This method return all the App Players
@@ -384,7 +464,9 @@ public class DBservices
         while (dataReader.Read())
         {
             Player player = new Player();
+            player.User = new User();
             player.User.Username = dataReader["Username"].ToString();
+            player.User.AvatarPicture = dataReader["AvatarPicture"].ToString();
             player.CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]);
             player.CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]);
             player.PlayerStatus = dataReader["PlayerStatus"].ToString();
@@ -400,7 +482,15 @@ public class DBservices
         return players;
     }
 
-    public List<Property> ReadPropertiesByPlayer(int playerId)
+
+    //-------------------------------------------------------------------------------------------------
+    // !!! PROPERTY !!!
+    //-------------------------------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return properties by id
+    //--------------------------------------------------------------------------------------------------
+    public List<Property> ReadPropertiesByPlayerId(int playerId)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -439,10 +529,6 @@ public class DBservices
         return properties;
     }
 
-   
-
-
-
     private SqlCommand buildReadStoredProcedureCommandReadPropertiesByPlayer(SqlConnection con, string spName, int playerId)
     {
         SqlCommand cmd = new SqlCommand(); // create the command object
@@ -459,6 +545,8 @@ public class DBservices
 
         return cmd;
     }
+
+
     //--------------------------------------------------------------------------------------------------
     // This method return all the Properties
     //--------------------------------------------------------------------------------------------------
@@ -505,6 +593,10 @@ public class DBservices
     }
 
 
+    //-------------------------------------------------------------------------------------------------
+    // !!! QUESTION !!!
+    //-------------------------------------------------------------------------------------------------
+
     //--------------------------------------------------------------------------------------------------
     // This method return all the Questions
     //--------------------------------------------------------------------------------------------------
@@ -546,6 +638,10 @@ public class DBservices
         }
         return questions;
     }
+
+    //-------------------------------------------------------------------------------------------------
+    // !!! FEEDBACK !!!
+    //-------------------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------------------
     // This method return all the Feedbacks
@@ -659,6 +755,9 @@ public class DBservices
         return cmd;
     }
 
+    //-------------------------------------------------------------------------------------------------
+    // !!! ANSWER !!!
+    //-------------------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------------------
     // This method insert Answer
@@ -732,6 +831,10 @@ public class DBservices
 
     }
 
+    //-------------------------------------------------------------------------------------------------
+    // !!! GAME !!!
+    //-------------------------------------------------------------------------------------------------
+
     // this method insert game
     public int InsertGame(Game game)
     {
@@ -793,75 +896,6 @@ public class DBservices
         return cmd;
     }
 
-   // this method read user by username 
-
-
-    public User ReadUserByUsername(string username)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-        User user = null;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        cmd = buildReadStoredProcedureCommandReadUserByUsername(con, "KBSP_GetUserByUsername", username);
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            if (dataReader.Read())
-            {
-                user = new User
-                {
-                    Username = dataReader["Username"].ToString(),
-                    Password = dataReader["Password"].ToString(),
-                    FirstName = dataReader["FirstName"].ToString(),
-                    LastName = dataReader["LastName"].ToString(),
-                    AvatarPicture = dataReader["AvatarPicture"].ToString(),
-                    DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"]),
-                    Score = Convert.ToInt32(dataReader["Score"])
-                };
-            } return user;
-        }
-        catch (Exception ex)
-               {
-            throw (ex);
-        }
-               finally
-               {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-    }
-
-    private SqlCommand buildReadStoredProcedureCommandReadUserByUsername(SqlConnection con, string spName, string username)
-    {
-        SqlCommand cmd = new SqlCommand(); // create the command object
-
-        cmd.Connection = con;              // assign the connection to the command object
-
-        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-        cmd.Parameters.AddWithValue("@username", username);
-
-        return cmd;
-    }
 
  
 

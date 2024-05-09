@@ -65,7 +65,9 @@ namespace KidzBizzServer.Controllers
         {
         }
 
-        [HttpGet("{username}")]
+        [HttpGet]
+        [Route("GetByUsername")]
+
         public User Get(string username)
         {
             User user = new User();
