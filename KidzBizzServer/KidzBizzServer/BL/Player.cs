@@ -1,4 +1,6 @@
-﻿namespace KidzBizzServer.BL
+﻿using System.Text.RegularExpressions;
+
+namespace KidzBizzServer.BL
 {
     public class Player
     {
@@ -37,6 +39,48 @@
         public List<Property> Properties { get => properties; set => properties = value; }
 
 
+        // מיישמת את ההשפעות של כרטיס הפתעה
+        public void ApplySurpriseEffect(Card card)
+        {
+            // הפעולות המוסיפות כסף
+            if (card.Description.Contains("קבל") || card.Description.Contains("הרווח"))
+            {
+                this.currentBalance += card.Amount;
+            }
+            // הפעולות המחסירות כסף
+            else if (card.Description.Contains("שלם") || card.Description.Contains("השקיעו")|| card.Description.Contains("הפסדת "))
+            {
+                this.currentBalance -= card.Amount;
+            }
+            // פעולות המשפיעות על ערך הנכסים
+            if (card.Description.Contains("ערכי הנכסים יורדים"))
+            {
+                int percentage = ExtractPercentage(card.Description);
+                foreach (var property in properties)
+                {
+                    property.PropertyPrice -= property.PropertyPrice * percentage / 100;
+                }
+            }
+            // מיוחד: משחק קוביות עם מתחרה
+            if (card.Description.Contains("בחר מתחרה אחד"))
+            {
+                PlayDiceWithRival();
+            }
+        }
+
+        private int ExtractPercentage(string description)
+        {
+            var match = Regex.Match(description, @"\d+%");
+            return int.Parse(match.Value.TrimEnd('%'));
+        }
+
+        private void PlayDiceWithRival()
+        {
+            // יש לממש את פונקציית ההטלות בהתאם ללוגיקה של המשחק
+        }
+
+        // קריאה ועדכון נתוני שחקן מהדאטאבייס
+     
         public List<Player> Read()
         {
             DBservices dbs = new DBservices();
