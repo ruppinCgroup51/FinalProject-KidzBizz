@@ -674,7 +674,7 @@ public class DBservices
             Feedback f = new Feedback();
             f.FeedbackId = Convert.ToInt32(dataReader["FeedbackId"]);
             f.UserId = Convert.ToInt32(dataReader["UserId"]);
-            f.Description = dataReader["Description"].ToString();
+            f.FeedbackDescription = dataReader["FeedbackDescription"].ToString();
             f.Rating = Convert.ToInt32(dataReader["Rating"]);
 
             feedbacks.Add(f);
@@ -748,8 +748,8 @@ public class DBservices
         cmd.CommandTimeout = 10;           // Time to wait for the execution. The default is 30 seconds
 
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-        cmd.Parameters.AddWithValue("@User_ID", feedback.UserId);
-        cmd.Parameters.AddWithValue("@FeedbackDescription", feedback.Description);
+        cmd.Parameters.AddWithValue("@UserId", feedback.UserId);
+        cmd.Parameters.AddWithValue("@FeedbackDescription", feedback.FeedbackDescription);
         cmd.Parameters.AddWithValue("@Rating", feedback.Rating);
 
         return cmd;
@@ -762,6 +762,9 @@ public class DBservices
     //--------------------------------------------------------------------------------------------------
     // This method insert Answer
     //--------------------------------------------------------------------------------------------------
+
+    // לא בטוחה שצריך פונקציה כזאת של הכנסת תשובה מהקליינט 
+
 
 
     public int InsertAnswer(Answer answer)
