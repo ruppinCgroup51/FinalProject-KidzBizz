@@ -40,7 +40,7 @@ namespace KidzBizzServer.BL
 
 
         // Method to retrieve all cards from the database
-        public static List<Card> ReadAllCards()
+        public List<Card> ReadAllCards()
         {
             DBservices dbs = new DBservices();
             return dbs.ReadCards();
