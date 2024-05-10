@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KidzBizzServer.BL;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,9 +11,10 @@ namespace KidzBizzServer.Controllers
     {
         // GET: api/<CardsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Card> Get()
         {
-            return new string[] { "value1", "value2" };
+            Card card = new Card();
+            return card.ReadAllCards();
         }
 
         // GET api/<CardsController>/5

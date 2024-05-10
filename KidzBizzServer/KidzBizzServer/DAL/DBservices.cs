@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Text;
 using KidzBizzServer.BL;
-using System.Net; 
+using System.Net;
 
 
 
@@ -455,7 +455,7 @@ public class DBservices
         }
 
         List<Player> players = new List<Player>();
-    
+
 
         cmd = buildReadStoredProcedureCommand(con, "KBSP_GetPlayers");
 
@@ -874,7 +874,7 @@ public class DBservices
                 con.Close();
             }
         }
-    }   
+    }
 
     private SqlCommand CreateInsertGameWithStoredProcedure(String spName, SqlConnection con, Game game)
     {
@@ -900,17 +900,79 @@ public class DBservices
     }
 
 
- 
 
-     
+    //-------------------------------------------------------------------------------------------------
+    // !!! Card !!!
+    //-------------------------------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------------------------------
+    // This method return all the App Cards
+    //--------------------------------------------------------------------------------------------------
+
+    public List<Card> ReadCards()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<Card> cards = new List<Card>();
+
+        cmd = buildReadCardStoredProcedureCommand(con, "KBSP_GetCards");
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+        ;
+        while (dataReader.Read())
+        {
+            Card card = new Card();
+            card.CardId = Convert.ToInt32(dataReader["CardID"]);
+            card.Description = dataReader["Description"].ToString();
+            card.Action = (CardAction)Convert.ToInt32(dataReader["ActionType"]);
+            card.Amount = Convert.ToInt32(dataReader["Amount"]);
 
 
+            cards.Add(card);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return cards;
+    }
 
+    private SqlCommand buildReadCardStoredProcedureCommand(SqlConnection con, string spName)
+    {
 
+        SqlCommand cmd = new SqlCommand(); // create the command object
 
+        cmd.Connection = con;              // assign the connection to the command object
 
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        return cmd;
+
+    }
 }
+
+
+
+
+
+
 
 
 
