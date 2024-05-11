@@ -49,14 +49,15 @@
 //            }
 //        }
 
-//        private void MakeConservativeDecision(GameState gameState)
-//        {
-//            // Implement decision-making logic for a conservative player
-//            Random random = new Random();
-//            bool buyAsset = random.Next(4) == 0; // 25% chance of buying asset
-//            decisionHistory.Add(buyAsset);
-//            Console.WriteLine("Conservative player decides to " + (buyAsset ? "save money." : "buy an asset."));
-//        }
+//private void MakeConservativeDecision(GameState gameState)
+//{
+//    Implement decision-making logic for a conservative player
+
+//   Random random = new Random();
+//    bool buyAsset = random.Next(4) == 0; // 25% chance of buying asset
+//    decisionHistory.Add(buyAsset);
+//    Console.WriteLine("Conservative player decides to " + (buyAsset ? "save money." : "buy an asset."));
+//}
 
 //        private void MakeAdventurousDecision(GameState gameState)
 //        {
@@ -120,13 +121,16 @@ namespace KidzBizzServer.BL
         Adventurous,   // שחקן הרפתקן
         Balanced       // שחקן מאוזן
     }
-
     // מחלקת AIPlayer מייצגת שחקן אוטונומי במערכת
-    public class AIPlayer
+    public class AIPlayer : Player
     {
         // תכונה ציבורית לקבלת סוג השחקן
         public PlayerType PlayerType { get; private set; }
 
+        public AIPlayer()
+        {
+                
+        }
         // בנאי שמקבל סוג שחקן ומאתחל את השחקן עם סוג זה
         public AIPlayer(PlayerType type)
         {
