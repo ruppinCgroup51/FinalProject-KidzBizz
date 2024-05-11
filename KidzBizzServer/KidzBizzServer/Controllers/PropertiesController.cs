@@ -18,11 +18,12 @@ namespace KidzBizzServer.Controllers
           
         }
 
-        // GET api/<PropertiesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        [Route("ReadPropertiesByPlayerId")]
+        public IEnumerable<Property> Get(int id)
         {
-            return "value";
+           Property property = new Property();
+            return property.ReadPropertiesByPlayerId(id);
         }
 
         // POST api/<PropertiesController>

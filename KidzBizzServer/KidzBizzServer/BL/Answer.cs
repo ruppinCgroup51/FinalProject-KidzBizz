@@ -31,5 +31,11 @@
             return dbs.InsertAnswer(this);
 
         }
+
+        public List<Answer> Read()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadAnswers();
+        }
     }
 }

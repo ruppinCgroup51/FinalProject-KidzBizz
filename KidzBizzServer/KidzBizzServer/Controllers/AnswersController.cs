@@ -11,9 +11,10 @@ namespace KidzBizzServer.Controllers
     {
         // GET: api/<AnswersController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Answer> Get()
         {
-            return new string[] { "value1", "value2" };
+            Answer answer = new Answer();
+            return answer.Read();
         }
 
         // GET api/<AnswersController>/5

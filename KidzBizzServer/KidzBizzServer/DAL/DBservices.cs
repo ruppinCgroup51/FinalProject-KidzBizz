@@ -964,6 +964,50 @@ public class DBservices
         return cmd;
 
     }
+
+    //-------------------------------------------------------------------------------------------------
+
+    public List<Answer> ReadAnswers()
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+    
+        try
+        {
+          con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+                // write to log
+           throw (ex);
+        }
+    
+            List<Answer> answers = new List<Answer>();
+    
+            cmd = buildReadStoredProcedureCommand(con, "KBSP_GetAnswers");
+    
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+    
+            while (dataReader.Read())
+        {
+                Answer a = new Answer();
+                a.AnswerId = Convert.ToInt32(dataReader["AnswerId"]);
+                a.QuestionId = Convert.ToInt32(dataReader["QuestionId"]);
+                a.AnswerText = dataReader["AnswerText"].ToString();
+                a.IsCorrect = Convert.ToBoolean(dataReader["IsCorrect"]);
+    
+                answers.Add(a);
+            }
+            if (con != null)
+        {
+                // close the db connection
+                con.Close();
+            }
+            return answers;
+
+    }
+
+
 }
 
 

@@ -27,6 +27,12 @@
             DBservices dbs = new DBservices();
             return dbs.ReadProperties();
         }
+
+        public List<Property> ReadPropertiesByPlayerId(int id)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadPropertiesByPlayerId(id);
+        }
      
 
     }

@@ -92,7 +92,7 @@ namespace KidzBizzServer.BL
             // Move the current player
             MovePlayer(diceRoll);
             // Update player details
-            UpdatePlayerDetails();
+            //UpdatePlayerDetails();
 
            
     
@@ -148,69 +148,69 @@ namespace KidzBizzServer.BL
                     }
                     break;
 
-                case "מלונות": // when we know the index of hotel we will change it 
-                    // Check if the property is available for purchase
-                    if (currentPlayerIndex == 0)
-                    {
-                        // Determine the property the player landed on based on their current position
-                        Property property = GetPropertyAtPosition(currentPosition);
+                //case "מלונות": // when we know the index of hotel we will change it 
+                //    // Check if the property is available for purchase
+                //    if (currentPlayerIndex == 0)
+                //    {
+                //        // Determine the property the player landed on based on their current position
+                //        Property property = GetPropertyAtPosition(currentPosition);
 
-                        // Check if the property belongs to the other player
-                        if (IsPropertyOwnedByOtherPlayer(property))
-                        {
-                            // Deduct 10% of the property value from the current player's balance
-                            int rentAmount = (int)(property.PropertyPrice * 0.1);
-                            player.CurrentBalance -= rentAmount;
+                //        // Check if the property belongs to the other player
+                //        if (IsPropertyOwnedByOtherPlayer(property))
+                //        {
+                //            // Deduct 10% of the property value from the current player's balance
+                //            int rentAmount = (int)(property.PropertyPrice * 0.1);
+                //            player.CurrentBalance -= rentAmount;
 
-                            // Add the rent amount to the other player's balance
-                            aiPlayer.CurrentBalance += rentAmount;
-                        }
-                        else
-                        {
-                            // Prompt the player to buy or not
-                            // For example, you could implement a UI prompt or return a boolean from a function
-                            bool shouldBuy = AskPlayerToBuyProperty(property);
-                            if (shouldBuy)
-                            {
-                                // Deduct the property price from the player's balance and add the property to their list
-                                player.CurrentBalance -= property.Price;
-                                player.Properties.Add(property);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Activate AI player's functions for handling property
-                        // This logic should also include checking if the property belongs to the player
-                        // If not, AI player should decide whether to buy or not
-                        ActivateAIPlayerFunctionForProperty(currentPosition);
-                    }
-                    break;
+                //            // Add the rent amount to the other player's balance
+                //            aiPlayer.CurrentBalance += rentAmount;
+                //        }
+                //        else
+                //        {
+                //            // Prompt the player to buy or not
+                //            // For example, you could implement a UI prompt or return a boolean from a function
+                //            bool shouldBuy = AskPlayerToBuyProperty(property);
+                //            if (shouldBuy)
+                //            {
+                //                // Deduct the property price from the player's balance and add the property to their list
+                //                player.CurrentBalance -= property.Price;
+                //                player.Properties.Add(property);
+                //            }
+                //        }
+                //    }
+                //    else
+                //    {
+                //        // Activate AI player's functions for handling property
+                //        // This logic should also include checking if the property belongs to the player
+                //        // If not, AI player should decide whether to buy or not
+                //        ActivateAIPlayerFunctionForProperty(currentPosition);
+                //    }
+                //    break;
 
-                case "הידעת":
-                    // Decide whether to answer a question
-                    if (currentPlayerIndex == 0)
-                    {
-                        // Prompt the player to answer a question
-                        // For example, you could implement a UI prompt or return a boolean from a function
-                        bool shouldAnswer = AskPlayerToAnswerQuestion();
-                        if (shouldAnswer)
-                        {
-                            // Display question to the player and handle correct answer
-                            bool answeredCorrectly = DisplayAndCheckQuestion();
-                            if (answeredCorrectly)
-                            {
-                                // Win money if answered correctly
-                                player.CurrentBalance += 100; // For example, add NIS 100
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Activate AI player's functions for handling knowledge slot
-                        ActivateAIPlayerFunctionForKnowledge();
-                    }
-                    break;
+                //case "הידעת":
+                //    // Decide whether to answer a question
+                //    if (currentPlayerIndex == 0)
+                //    {
+                //        // Prompt the player to answer a question
+                //        // For example, you could implement a UI prompt or return a boolean from a function
+                //        bool shouldAnswer = AskPlayerToAnswerQuestion();
+                //        if (shouldAnswer)
+                //        {
+                //            // Display question to the player and handle correct answer
+                //            bool answeredCorrectly = DisplayAndCheckQuestion();
+                //            if (answeredCorrectly)
+                //            {
+                //                // Win money if answered correctly
+                //                player.CurrentBalance += 100; // For example, add NIS 100
+                //            }
+                //        }
+                //    }
+                //    else
+                //    {
+                //        // Activate AI player's functions for handling knowledge slot
+                //        ActivateAIPlayerFunctionForKnowledge();
+                //    }
+                //    break;
                     
                     //נניח שתא מס' 30 זה הכלא אז נפעיל את הפונקציה לעשות סקיפ ל3 טורות
                 case 15:
@@ -248,24 +248,24 @@ namespace KidzBizzServer.BL
             if (currentPlayerIndex == 0)
             {
                 // Check if the property exists in the AI player's list of properties
-                foreach (var property in aiPlayer.Properties)
-                {
-                    if (property.PropertyId == property.PropertyId)
-                    {
-                        return true; // Property belongs to the AI player
-                    }
-                }
+                //foreach (var property in aiPlayer.Properties)
+                //{
+                //    if (property.PropertyId == property.PropertyId)
+                //    {
+                //        return true; // Property belongs to the AI player
+                //    }
+                //}
             }
             else
             {
                 // Check if the property exists in the player's list of properties
-                foreach (var property in player.Properties)
-                {
-                    if (property.PropertyId == property.PropertyId)
-                    {
-                        return true; // Property belongs to the player
-                    }
-                }
+                //foreach (var property in player.Properties)
+                //{
+                //    if (property.PropertyId == property.PropertyId)
+                //    {
+                //        return true; // Property belongs to the player
+                //    }
+                //}
             }
 
             return false; // Property does not belong to the other player
@@ -273,50 +273,51 @@ namespace KidzBizzServer.BL
 
 
         //בהתאם למיקום לקבל את הנכס שדרכתי עליו,להביא את הדירות מהדאטה בייס
-        private Property GetPropertyAtPosition(int position)
-        {
-            // Placeholder logic to retrieve property based on position
-            // You need to implement the actual logic to map positions to propertys
-            // This could involve accessing a predefined list of propertys or querying a database
+        //private Property GetPropertyAtPosition(int position)
+        //{
+        //    // Placeholder logic to retrieve property based on position
+        //    // You need to implement the actual logic to map positions to propertys
+        //    // This could involve accessing a predefined list of propertys or querying a database
 
-            // For demonstration purposes, let's assume propertys are predefined
-            // and we have a list of propertys where each property corresponds to a specific position
+        //    // For demonstration purposes, let's assume propertys are predefined
+        //    // and we have a list of propertys where each property corresponds to a specific position
 
-            // Example hardcoded list of propertys (for demonstration only)
-            List<Property> propertys = new List<Property>
-              {
-                     new Property { PropertyId = 1, Name = "Park Lane", Price = 350 },
-                       new Property { PropertyId = 2, Name = "Mayfair", Price = 400 },
-                    // Add more propertys as needed
-                 };
+        //    // Example hardcoded list of propertys (for demonstration only)
+        //    //List<Property> propertys = new List<Property>
+        //    //  {
 
-            // Retrieve the property at the specified position
-            // Assuming position is 0-based index
-            int index = position % propertys.Count; // Modulo operation to handle circular board
-            return propertys[index];
-        }
+        //    //         new Property { PropertyId = 1, Name = "Park Lane", Price = 350 },
+        //    //           new Property { PropertyId = 2, Name = "Mayfair", Price = 400 },
+        //    //        // Add more propertys as needed
+        //    //     };
+
+        //    // Retrieve the property at the specified position
+        //    // Assuming position is 0-based index
+        //    //int index = position % propertys.Count; // Modulo operation to handle circular board
+        //    //return propertys[index];
+        //}
     
 
         // מימוש פונקציה שתשאל את השחקן האם לקנות את הנכס
-        private bool AskPlayerToBuyProperty(Property property)
-        {
-            // Implement logic to prompt the player to buy or not (e.g., show a UI dialog)
-            // Return true if the player chooses to buy, false otherwise
-        }
+        //private bool AskPlayerToBuyProperty(Property property)
+        //{
+        //    // Implement logic to prompt the player to buy or not (e.g., show a UI dialog)
+        //    // Return true if the player chooses to buy, false otherwise
+        //}
 
 
-        private bool AskPlayerToAnswerQuestion()
-        {
-            // Implement logic to prompt the player to answer a question (e.g., show a UI dialog)
-            // Return true if the player chooses to answer, false otherwise
-        }
+        //private bool AskPlayerToAnswerQuestion()
+        //{
+        //    // Implement logic to prompt the player to answer a question (e.g., show a UI dialog)
+        //    // Return true if the player chooses to answer, false otherwise
+        //}
 
         //מימוש פונקציה שתראה על המסך את השאלה לשחקן
-        private bool DisplayAndCheckQuestion()
-        {
-            // Implement logic to display a question to the player and check if they answered correctly
-            // Return true if the player answers correctly, false otherwise
-        }
+        //private bool DisplayAndCheckQuestion()
+        //{
+        //    // Implement logic to display a question to the player and check if they answered correctly
+        //    // Return true if the player answers correctly, false otherwise
+        //}
 
         // מימוש פונקציה הסתברותית ששחקן האיהיי יקנה את הנכס
         private void ActivateAIPlayerFunctionForProperty(Property property)
