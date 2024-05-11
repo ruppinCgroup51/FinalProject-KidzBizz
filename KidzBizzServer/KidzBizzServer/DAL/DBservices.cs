@@ -515,7 +515,6 @@ public class DBservices
         {
             Property p = new Property();
             p.PropertyId = Convert.ToInt32(dataReader["PropertyId"]);
-            p.TypeId = Convert.ToInt32(dataReader["TypeId"]);
             p.PropertyName = dataReader["PropertyName"].ToString();
             p.PropertyPrice = Convert.ToDouble(dataReader["PropertyPrice"]);
 
@@ -578,7 +577,6 @@ public class DBservices
         {
             Property p = new Property();
             p.PropertyId = Convert.ToInt32(dataReader["PropertyId"]);
-            p.TypeId = Convert.ToInt32(dataReader["TypeId"]);
             p.PropertyName = dataReader["PropertyName"].ToString();
             p.PropertyPrice = Convert.ToDouble(dataReader["PropertyPrice"]);
 

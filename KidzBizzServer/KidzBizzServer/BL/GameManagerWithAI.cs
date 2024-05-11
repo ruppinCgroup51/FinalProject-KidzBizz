@@ -95,7 +95,7 @@ namespace KidzBizzServer.BL
             UpdatePlayerDetails();
 
            
-            
+    
         }
 
 
@@ -136,7 +136,7 @@ namespace KidzBizzServer.BL
         {
             switch (currentPos)
             {
-                case 0:
+                case 0: // when enter the "GO" slot the user gets 200 NIS
                     // Add NIS 200 to the player's balance
                     if (currentPlayerIndex == 0)
                     {
@@ -148,7 +148,7 @@ namespace KidzBizzServer.BL
                     }
                     break;
 
-                case "מלונות":
+                case "מלונות": // when we know the index of hotel we will change it 
                     // Check if the property is available for purchase
                     if (currentPlayerIndex == 0)
                     {
