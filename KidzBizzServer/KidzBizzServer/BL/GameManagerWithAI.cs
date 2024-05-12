@@ -8,6 +8,7 @@ namespace KidzBizzServer.BL
         AIPlayer aiPlayer = new AIPlayer();
         int currentPlayerIndex;
         int diceRoll;
+        private Game game; // הוספת תכונה למחלקה
 
 
         public GameManagerWithAI(Player player, AIPlayer aiPlayer, int currentPlayerIndex,int diceRoll)
@@ -16,6 +17,7 @@ namespace KidzBizzServer.BL
             AiPlayer = aiPlayer;
             CurrentPlayerIndex = currentPlayerIndex;
             DiceRoll = diceRoll;
+            this.game = new Game(); // אתחול בקונסטרקטור
 
         }
 
@@ -51,6 +53,8 @@ namespace KidzBizzServer.BL
             aiPlayer.CurrentPosition = 0;
             player.Properties = new List<Property>();
             aiPlayer.Properties = new List<Property>();
+                        
+
 
             currentPlayerIndex = new Random().Next(0, 2);  // פעולה שמגרילה מי השחקן שיתחיל ראשון
 
@@ -66,8 +70,56 @@ namespace KidzBizzServer.BL
         // פעולה למעבר לתור השחקן הבא
         public void MoveToNextPlayer()
         {
-            // לוגיקת מעבר לשחקן הבא
+            // עדכון אינדקס השחקן הנוכחי לשחקן הבא
+            currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+
+            // הדפסת מידע על מעבר התור
+            Console.WriteLine($"תור השחקן הבא: {(currentPlayerIndex == 0 ? player.User.Username : aiPlayer.User.Username)}");
+
+            //  אם מדובר בסוף משחק
+            if (CheckIfGameOver())
+            {
+                EndGame(); // סיום המשחק אם התקיים תנאי מסוים
+            }
+            else
+            {
+               
+                RollDice(); // זריקת קובייה לתחילת התור החדש
+            }
         }
+
+        // פונקציה שבודקת אם המשחק הסתיים
+    private bool CheckIfGameOver()
+{
+    // תחילה בדיקת הזמן - אם חצי שעה חלפה מאז התחלת המשחק
+    if ((DateTime.Now - game.GameTimestamp).TotalMinutes >= 30)
+    {
+        Console.WriteLine("המשחק הסתיים , עברו 30 דקות.");
+        return true;
+    }
+
+    // בדיקה אם לאחד השחקנים נגמר כל הכסף
+    if (player.CurrentBalance <= 0 || aiPlayer.CurrentBalance <= 0)
+    {
+        Console.WriteLine("המשחק הסתיים - לאחד השחקנים נגמר כל הכסף.");
+        return true;
+    }
+
+    // בדיקה אם לאחד השחקנים אין נכסים למשכן
+    if (player.Properties.Count == 0 || aiPlayer.Properties.Count == 0)
+    {
+        Console.WriteLine("המשחק הסתיים -  אחד השחקנים נשאר ללא נכסים למשכן.");
+        return true;
+    }
+
+
+    return false; // אם אף אחד מהתנאים לא התקיים
+}
+
+
+
+
+
 
         // פעולה לזריקת קובייה
         public void RollDice()
@@ -351,15 +403,54 @@ namespace KidzBizzServer.BL
         }
 
         // פעולה לסיום משחק
+        // פעולה לסיום משחק
         public void EndGame()
         {
-            // לוגיקת סיום משחק
+            game.GameStatus = "Completed"; // עדכון סטטוס המשחק להושלם
+
+            // קביעת מי המנצח על פי כמות הכסף והנכסים
+            string winner = DetermineWinner();
+            Console.WriteLine($"המשחק הסתיים. המנצח הוא {winner}.");
+
+            // שמירת פרטי המשחק או פעולות נוספות לסגירת המשחק
         }
+
+        private string DetermineWinner()
+        {
+            // קודם כל בדיקה לפי כסף
+            if (player.CurrentBalance > aiPlayer.CurrentBalance)
+            {
+                return player.User.Username; // שם משתמש של השחקן האנושי אם יש לו יותר כסף
+            }
+            else if (aiPlayer.CurrentBalance > player.CurrentBalance)
+            {
+                return "מחשב"; // או כל שם שנתתם ל-AIPlayer
+            }
+            else
+            {
+                // במקרה של שוויון בכסף, בודקים על פי נכסים
+                if (player.Properties.Count > aiPlayer.Properties.Count)
+                {
+                    return player.User.Username; // השחקן עם יותר נכסים מנצח
+                }
+                else if (aiPlayer.Properties.Count > player.Properties.Count)
+                {
+                    return "מחשב";
+                }
+                else
+                {
+                    return "שוויון"; // האם להכניס אצלנו מצב כזה?
+                }
+            }
+        }
+
+
 
         // פעולה להפסקת משחק
         public void PauseGame()
         {
-            // לוגיקת הפסקת משחק
+            game.GameStatus = "Completed";
+            Console.WriteLine("המשחק הסתיים.  !");
         }
 
         // פעולה להמשך משחק

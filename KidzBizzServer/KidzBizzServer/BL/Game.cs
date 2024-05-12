@@ -23,6 +23,8 @@
 
         }
 
+
+
         public int GameId { get => gameId; set => gameId = value; }
         public int NumberOfPlayers { get => numberOfPlayers; set => numberOfPlayers = value; }
         public TimeSpan GameDuration { get => gameDuration; set => gameDuration = value; }
