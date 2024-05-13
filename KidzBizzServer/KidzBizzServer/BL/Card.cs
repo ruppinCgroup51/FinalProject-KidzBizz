@@ -41,6 +41,7 @@ namespace KidzBizzServer.BL
         public string Description { get => description; set => description = value; }
         public CardAction Action { get => action; set => action = value; }
         public double Amount { get => amount; set => amount = value; }
+        public int MoveTo { get => moveTo; set => moveTo = value; }
 
 
         // Method to retrieve all cards from the database
@@ -49,6 +50,35 @@ namespace KidzBizzServer.BL
             DBservices dbs = new DBservices();
             return dbs.ReadCards();
         }
+        public bool UpdateCard(int cardId)
+        {
+            DBservices dbs = new DBservices();
+            if (CheckCard(cardId))
+            {
+                Card updatedsuccess = dbs.UpdateCard(this);
+                return updatedsuccess != null;
+            }
+            else
+            {
+                
+                return false;
+            }
+        }
+
+        private bool CheckCard(int cardId)
+        {
+            DBservices dbs = new DBservices();
+            List<Card> cards = dbs.ReadCards();
+            foreach (Card card in cards)
+            {
+                if (card.CardId == cardId)
+                {
+                    return true;  
+                }
+            }
+            return false;  
+        }
+
     }
 }
 

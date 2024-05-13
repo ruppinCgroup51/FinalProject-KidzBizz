@@ -32,12 +32,25 @@ namespace KidzBizzServer.Controllers
 
         // PUT api/<CardsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] Card card)
         {
+            if (card == null)
+            {
+                return BadRequest("Invalid card data");
+            }
+
+            bool status = card.UpdateCard(id);
+            if (!status)
+            {
+                return NotFound("Card not found");
+            }
+            return Ok("Card updated successfully");
         }
 
-        // DELETE api/<CardsController>/5
-        [HttpDelete("{id}")]
+    
+
+    // DELETE api/<CardsController>/5
+    [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }
