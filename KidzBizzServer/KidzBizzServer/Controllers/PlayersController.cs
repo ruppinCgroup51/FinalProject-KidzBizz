@@ -26,16 +26,37 @@ namespace KidzBizzServer.Controllers
 
         // POST api/<PlayersController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Player player)
         {
+            if (player == null)
+            {
+                return BadRequest("Invalid player data");
+            }
+
+            bool status = player.Insert();
+            if (!status)
+            {
+                return Conflict("Player already exists");
+            }
+            return Ok("Player added successfully");
         }
 
         // PUT api/<PlayersController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] Player player)
         {
-        }
+            if (player == null)
+            {
+                return BadRequest("Invalid player data");
+            }
 
+            bool status = player.UpdatePlayer(id);
+            if (!status)
+            {
+                return NotFound("Player not found");
+            }
+            return Ok("Player updated successfully");
+        }
         // DELETE api/<PlayersController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
