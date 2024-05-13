@@ -29,7 +29,7 @@ namespace KidzBizzServer.BL
         }
 
         public int PlayerId { get => playerId; set => playerId = value; }
-        
+
         public User User { get => user; set => user = value; }
         public int CurrentPosition { get => currentPosition; set => currentPosition = value; }
         public double CurrentBalance { get => currentBalance; set => currentBalance = value; }
@@ -48,7 +48,7 @@ namespace KidzBizzServer.BL
                 this.currentBalance += card.Amount;
             }
             // הפעולות המחסירות כסף
-            else if (card.Description.Contains("שלם") || card.Description.Contains("השקיעו")|| card.Description.Contains("הפסדת "))
+            else if (card.Description.Contains("שלם") || card.Description.Contains("השקיעו") || card.Description.Contains("הפסדת "))
             {
                 this.currentBalance -= card.Amount;
             }
@@ -80,11 +80,55 @@ namespace KidzBizzServer.BL
         }
 
         // קריאה ועדכון נתוני שחקן מהדאטאבייס
-     
+
         public List<Player> Read()
         {
             DBservices dbs = new DBservices();
             return dbs.ReadPlayers();
         }
+        public bool Insert()
+        {
+            DBservices dbs = new DBservices();
+            if (!CheckPlayer(this.playerId))
+            {
+                Player insertedPlayer = dbs.InsertPlayer(this);  
+                return insertedPlayer != null;  
+            }
+            return false;  
+        }
+
+
+        public bool UpdatePlayer(int playerId)
+        {
+            DBservices dbs = new DBservices();
+            if (CheckPlayer(playerId))
+            {
+                Player updatedPlayer = dbs.UpdatePlayer(this);  
+                return updatedPlayer != null; 
+            }
+            return false;  
+        }
+
+
+        private bool CheckPlayer(int playerId)
+        {
+            DBservices dbs = new DBservices();
+            List<Player> players = dbs.ReadPlayers();
+            foreach (Player player in players)
+            {
+                if (player.PlayerId == playerId)
+                {
+                    return true;  // Player exists
+                }
+            }
+            return false;  // Player does not exist
+        }
     }
 }
+
+
+
+
+
+    
+
