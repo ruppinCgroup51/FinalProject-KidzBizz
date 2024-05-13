@@ -433,6 +433,66 @@ public class DBservices
     //-------------------------------------------------------------------------------------------------
     // !!! PLAYER !!!
     //-------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------
+    // This method insert player  
+    //-------------------------------------------------------------------------------------------------
+    public Player InsertPlayer(Player player)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // יצירת חיבור למסד נתונים
+        }
+        catch (Exception ex)
+        {
+            // כתיבה ללוג
+            throw (ex);
+        }
+
+        cmd = CreateInsertPlayerCommand("KBSP_InsertPlayer", con, player); // יצירת פקודת SQL
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // ביצוע הפקודה
+            if (numEffected == 1)
+            {
+                return player; // החזרת השחקן אם הוספה בוצעה בהצלחה
+            }
+            return null; // אם לא הושפעו שורות
+        }
+        catch (Exception ex)
+        {
+            // כתיבה ללוג
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close(); // סגירת חיבור למסד נתונים
+            }
+        }
+    }
+
+    private SqlCommand CreateInsertPlayerCommand(String spName, SqlConnection con, Player player)
+    {
+        SqlCommand cmd = new SqlCommand(); // יצירת אובייקט פקודה
+
+        cmd.Connection = con;            // הגדרת החיבור לפקודה
+        cmd.CommandText = spName;        // שם ה-Stored Procedure
+        cmd.CommandType = CommandType.StoredProcedure; // סוג הפקודה
+
+        // הוספת פרמטרים לפקודה
+        cmd.Parameters.AddWithValue("@UserId", player.User.UserId);
+        cmd.Parameters.AddWithValue("@CurrentPosition", player.CurrentPosition);
+        cmd.Parameters.AddWithValue("@CurrentBalance", player.CurrentBalance);
+        cmd.Parameters.AddWithValue("@PlayerStatus", player.PlayerStatus);
+        cmd.Parameters.AddWithValue("@LastDiceResult", player.LastDiceResult);
+
+        return cmd;
+    }
 
     //--------------------------------------------------------------------------------------------------
     // This method return all the App Players
@@ -482,6 +542,66 @@ public class DBservices
         return players;
     }
 
+    //-------------------------------------------------------------------------------------------------
+    // This method update Player
+    //-------------------------------------------------------------------------------------------------
+    public Player UpdatePlayer(Player player)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // יצירת חיבור למסד נתונים
+        }
+        catch (Exception ex)
+        {
+            // כתיבה ללוג
+            throw (ex);
+        }
+
+        cmd = CreateUpdatePlayerCommand("KBSP_UpdatePlayer", con, player); // יצירת פקודת SQL
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // ביצוע הפקודה
+            if (numEffected == 1)
+            {
+                return player; // החזרת השחקן אם הוספה בוצעה בהצלחה
+            }
+            return null; // אם לא הושפעו שורות
+        }
+        catch (Exception ex)
+        {
+            // כתיבה ללוג
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close(); // סגירת חיבור למסד נתונים
+            }
+        }
+    }
+
+    private SqlCommand CreateUpdatePlayerCommand(String spName, SqlConnection con, Player player)
+    {
+        SqlCommand cmd = new SqlCommand(); // יצירת אובייקט פקודה
+
+        cmd.Connection = con;            // הגדרת החיבור לפקודה
+        cmd.CommandText = spName;        // שם ה-Stored Procedure
+        cmd.CommandType = CommandType.StoredProcedure; // סוג הפקודה
+
+        // הוספת פרמטרים לפקודה
+        cmd.Parameters.AddWithValue("@UserId", player.User.UserId);
+        cmd.Parameters.AddWithValue("@CurrentPosition", player.CurrentPosition);
+        cmd.Parameters.AddWithValue("@CurrentBalance", player.CurrentBalance);
+        cmd.Parameters.AddWithValue("@PlayerStatus", player.PlayerStatus);
+        cmd.Parameters.AddWithValue("@LastDiceResult", player.LastDiceResult);
+
+        return cmd;
+    }
 
     //-------------------------------------------------------------------------------------------------
     // !!! PROPERTY !!!
@@ -936,6 +1056,8 @@ public class DBservices
             card.Description = dataReader["Description"].ToString();
             card.Action = (CardAction)Convert.ToInt32(dataReader["ActionType"]);
             card.Amount = Convert.ToInt32(dataReader["Amount"]);
+            card.MoveTo = Convert.ToInt32(dataReader["MoveTo"]);
+
 
 
             cards.Add(card);
@@ -964,50 +1086,6 @@ public class DBservices
         return cmd;
 
     }
-
-    //-------------------------------------------------------------------------------------------------
-
-    public List<Answer> ReadAnswers()
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-    
-        try
-        {
-          con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-                // write to log
-           throw (ex);
-        }
-    
-            List<Answer> answers = new List<Answer>();
-    
-            cmd = buildReadStoredProcedureCommand(con, "KBSP_GetAnswers");
-    
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-    
-            while (dataReader.Read())
-        {
-                Answer a = new Answer();
-                a.AnswerId = Convert.ToInt32(dataReader["AnswerId"]);
-                a.QuestionId = Convert.ToInt32(dataReader["QuestionId"]);
-                a.AnswerText = dataReader["AnswerText"].ToString();
-                a.IsCorrect = Convert.ToBoolean(dataReader["IsCorrect"]);
-    
-                answers.Add(a);
-            }
-            if (con != null)
-        {
-                // close the db connection
-                con.Close();
-            }
-            return answers;
-
-    }
-
-
 }
 
 
