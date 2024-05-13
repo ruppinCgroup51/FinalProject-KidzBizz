@@ -15,17 +15,21 @@ namespace KidzBizzServer.BL
         string description;
         CardAction action;  // שימוש ב־enum עבור סוג הפעולה
         double amount;
+        int moveTo;  // New property to specify board move location
+
 
 
         /// 1 - פקודה: השחקן חייב לבצע הוראה מסוימת.
         /// 2 - הפתעה: מפעיל אירוע משחק בלתי צפוי.
         /// 3 - הידעת: מספק עובדה או מידע טריוויה.
-        public Card(int cardId, string description, CardAction action, double amount)
+        public Card(int cardId, string description, CardAction action, double amount, int moveTo)
         {
             this.cardId = cardId;
             this.description = description;
             this.action = action;
             this.amount = amount;
+            this.moveTo = moveTo;
+
         }
 
         public Card()
