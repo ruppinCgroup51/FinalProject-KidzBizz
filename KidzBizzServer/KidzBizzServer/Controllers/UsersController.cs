@@ -60,9 +60,11 @@ namespace KidzBizzServer.Controllers
         }
 
         // DELETE api/<UsersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete]
+        public int Delete(string username)
         {
+            User user = new User();
+            return user.Delete(username);
         }
 
         [HttpGet]

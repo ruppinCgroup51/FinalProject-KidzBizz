@@ -84,11 +84,11 @@
             return dbs.ReadUserByUsername(username);
         }
 
-        ////delete user
-        //public int Delete(string email)
-        //{
-        //    DBservices dbs = new DBservices();
-        //    return dbs.DeleteUserByEmail(email);
-        //}
+        //delete user
+        public int Delete(string username)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.DeleteUser(username);
+        }
     }
 }

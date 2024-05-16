@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Data;
-using System.Text;
 using KidzBizzServer.BL;
-using System.Net;
-
-
 
 /// <summary>
 /// DBServices is a class created by me to provides some DataBase Services
@@ -71,6 +63,7 @@ public class DBservices
         while (dataReader.Read())
         {
             User u = new User();
+            u.UserId = Convert.ToInt32(dataReader["UserId"]);
             u.Username = dataReader["Username"].ToString();
             u.Password = dataReader["Password"].ToString();
             u.FirstName = dataReader["FirstName"].ToString();
@@ -182,6 +175,66 @@ public class DBservices
 
         cmd.Parameters.AddWithValue("@Score", user.Score);
 
+
+        return cmd;
+    }
+
+    //this method delete user
+
+    public int DeleteUser(string username)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateDeleteUserCommandWithStoredProcedure("KBSP_DeleteUser", con, username);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+
+
+    private SqlCommand CreateDeleteUserCommandWithStoredProcedure(String spName, SqlConnection con, string username)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@Username", username);
 
         return cmd;
     }
@@ -1156,6 +1209,48 @@ public class DBservices
         cmd.Parameters.AddWithValue("@MoveTo", card.MoveTo);
 
         return cmd;
+    }
+
+    //-------------------------------------------------------------------------------------------------
+
+    public List<Answer> ReadAnswers()
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<Answer> answers = new List<Answer>();
+
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetAnswers");
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            Answer a = new Answer();
+            a.AnswerId = Convert.ToInt32(dataReader["AnswerId"]);
+            a.QuestionId = Convert.ToInt32(dataReader["QuestionId"]);
+            a.AnswerText = dataReader["AnswerText"].ToString();
+            a.IsCorrect = Convert.ToBoolean(dataReader["IsCorrect"]);
+
+            answers.Add(a);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return answers;
+
     }
 
 }
