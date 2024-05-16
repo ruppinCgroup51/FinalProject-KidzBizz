@@ -21,6 +21,10 @@ namespace KidzBizzServer.BL
 
         }
 
+        public GameManagerWithAI()
+        {
+        }
+
         public Player Player { get => player; set => player = value; }
         public AIPlayer AiPlayer { get => aiPlayer; set => aiPlayer = value; }
         public int CurrentPlayerIndex { get => currentPlayerIndex; set => currentPlayerIndex = value; }
@@ -29,7 +33,7 @@ namespace KidzBizzServer.BL
         public Game Game { get => game; set => game = value; }
 
         // פעולה להפעלת משחק חדש
-        public void StartNewGame()
+        public void StartNewGame(int userId)
         {
             DBservices dbs = new DBservices();
 
@@ -51,7 +55,7 @@ namespace KidzBizzServer.BL
             Player player = new Player
             {
                 // how to convert decimal to double
-
+                User = new User { UserId = userId },
                 CurrentBalance = Convert.ToDouble(startingMoney),
                 CurrentPosition = currentLocation,
                 PlayerStatus = "Active", 
@@ -63,6 +67,7 @@ namespace KidzBizzServer.BL
 
             Player aiPlayer = new Player
             {
+                User = new User { UserId = 1016 }, // Assuming AI player has user ID 2
                 CurrentBalance = Convert.ToDouble(startingMoney),
                 CurrentPosition = currentLocation,
                 PlayerStatus = "Active",

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KidzBizzServer.BL;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,6 +14,21 @@ namespace KidzBizzServer.Controllers
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
+        }
+
+        [HttpPost("startnewgame")]
+        public IActionResult StartNewGame(User user)
+        {
+            try
+            {
+                GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
+                gameManagerWithAI.StartNewGame(user.UserId);
+                return Ok("Game started successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error starting game: {ex.Message}");
+            }
         }
 
         // GET api/<GameManagerWithAIController>/5
