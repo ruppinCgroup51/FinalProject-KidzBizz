@@ -8,16 +8,16 @@ namespace KidzBizzServer.BL
         AIPlayer aiPlayer = new AIPlayer();
         int currentPlayerIndex;
         int diceRoll;
-        private Game game; // הוספת תכונה למחלקה
+        Game game = new Game();
 
 
-        public GameManagerWithAI(Player player, AIPlayer aiPlayer, int currentPlayerIndex,int diceRoll)
+        public GameManagerWithAI(Player player, AIPlayer aiPlayer, int currentPlayerIndex,int diceRoll, Game game)
         {
             Player = player;
             AiPlayer = aiPlayer;
             CurrentPlayerIndex = currentPlayerIndex;
             DiceRoll = diceRoll;
-            this.game = new Game(); // אתחול בקונסטרקטור
+            Game = game;
 
         }
 
@@ -26,35 +26,54 @@ namespace KidzBizzServer.BL
         public int CurrentPlayerIndex { get => currentPlayerIndex; set => currentPlayerIndex = value; }
         public int DiceRoll { get => diceRoll; set => diceRoll = value; }
 
+        public Game Game { get => game; set => game = value; }
 
         // פעולה להפעלת משחק חדש
         public void StartNewGame()
         {
-            // לוגיקה להפעלת משחק חדש
-            //Game game = new Game();
-            //game.NumberOfPlayers = 2;
-            //game.GameDuration = new TimeSpan(0, 0, 0);
-            //game.GameStatus = "Active";
-            //game.GameTimestamp = DateTime.Now;
+            DBservices dbs = new DBservices();
 
-            // insert the new game into the data base inside table 'game'
-            SaveDetailsGameToDatabase(game);
+            var (startingMoney, currentLocation) = dbs.GetGameSettings();
 
-            // initial money for each player = 1500 
-            // initial propertys for each player = 0
-            // initial position for each player = 0
+            // Create a new game instance
+            Game game = new Game
+            {
+                NumberOfPlayers = 2,
+                GameDuration = "00:00:00",  // no duration initially // Timespan made some problems later we will change it 
+                GameStatus = "Active",
+                GameTimestamp = DateTime.Now
+            };
 
-            player.CurrentBalance = 1500;
-            aiPlayer.CurrentBalance = 1500;
-            player.CurrentPosition = 0;
-            aiPlayer.CurrentPosition = 0;
-            player.Properties = new List<Property>();
-            aiPlayer.Properties = new List<Property>();
-                        
+            // Insert the game into the database
+            game.InsertGame(); // Assuming this method exists and returns game ID
 
+            // Create players
+            Player player = new Player
+            {
+                // how to convert decimal to double
 
-            currentPlayerIndex = new Random().Next(0, 2);  // פעולה שמגרילה מי השחקן שיתחיל ראשון
+                CurrentBalance = Convert.ToDouble(startingMoney),
+                CurrentPosition = currentLocation,
+                PlayerStatus = "Active", 
+                LastDiceResult = 0
+               
+            };
 
+            player.Insert();
+
+            Player aiPlayer = new Player
+            {
+                CurrentBalance = Convert.ToDouble(startingMoney),
+                CurrentPosition = currentLocation,
+                PlayerStatus = "Active",
+                LastDiceResult = 0
+
+            };
+
+            aiPlayer.Insert();
+
+            // Randomly decide who starts first
+            currentPlayerIndex = new Random().Next(0, 2);
         }
 
         // פעולה לשמירת פרטי משחק במסד הנתונים

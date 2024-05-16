@@ -1411,7 +1411,36 @@ public class DBservices
 
     }
 
-  
+    public (decimal, int) GetGameSettings()    // from Game setting table 
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetGameSettings");
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+        while (dataReader.Read())
+        {
+               decimal startingMoney = Convert.ToDecimal(dataReader["StartingMoney"]);
+            int currentLocation = Convert.ToInt32(dataReader["CurrentLocation"]);
+            return (startingMoney, currentLocation);
+
+        }
+        if (con != null)
+        {
+            con.Close();
+        }
+        return (0, 0);
+
+    }
 
 }
 
