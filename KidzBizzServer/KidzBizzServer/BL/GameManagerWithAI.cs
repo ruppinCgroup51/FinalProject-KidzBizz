@@ -27,18 +27,15 @@ namespace KidzBizzServer.BL
         public int DiceRoll { get => diceRoll; set => diceRoll = value; }
 
 
-
-
-
         // פעולה להפעלת משחק חדש
         public void StartNewGame()
         {
             // לוגיקה להפעלת משחק חדש
-            Game game = new Game();
-            game.NumberOfPlayers = 2;
-            game.GameDuration = new TimeSpan(0, 0, 0);
-            game.GameStatus = "Active";
-            game.GameTimestamp = DateTime.Now;
+            //Game game = new Game();
+            //game.NumberOfPlayers = 2;
+            //game.GameDuration = new TimeSpan(0, 0, 0);
+            //game.GameStatus = "Active";
+            //game.GameTimestamp = DateTime.Now;
 
             // insert the new game into the data base inside table 'game'
             SaveDetailsGameToDatabase(game);

@@ -17,6 +17,21 @@ namespace KidzBizzServer.Controllers
             return player.Read();
         }
 
+        [HttpPost("AddPropertyToPlayer")]
+        public int AddPropertyToPlayer(int playerId, int propertyId)
+        {
+            Player player = new Player();
+            return player.AddPropertyToPlayer(playerId, propertyId);
+        }
+
+        [HttpPost("GetPlayerProperties")]
+        public List<Property> GetPlayerProperties(int playerId)
+        {
+            Player player = new Player();
+            return player.GetPlayerProperties(playerId);
+        }
+      
+
         // GET api/<PlayersController>/5
         [HttpGet("{id}")]
         public string Get(int id)
@@ -26,37 +41,17 @@ namespace KidzBizzServer.Controllers
 
         // POST api/<PlayersController>
         [HttpPost]
-        public IActionResult Post([FromBody] Player player)
+        public int Post([FromBody] Player player)
         {
-            if (player == null)
-            {
-                return BadRequest("Invalid player data");
-            }
-
-            bool status = player.Insert();
-            if (!status)
-            {
-                return Conflict("Player already exists");
-            }
-            return Ok("Player added successfully");
+            return player.Insert();
         }
 
-        // PUT api/<PlayersController>/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Player player)
+        [HttpPut("update")]
+        public Player Put([FromBody] Player player)
         {
-            if (player == null)
-            {
-                return BadRequest("Invalid player data");
-            }
-
-            bool status = player.UpdatePlayer(id);
-            if (!status)
-            {
-                return NotFound("Player not found");
-            }
-            return Ok("Player updated successfully");
+            return player.Update();
         }
+
         // DELETE api/<PlayersController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)

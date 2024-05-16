@@ -38,7 +38,39 @@ namespace KidzBizzServer.BL
 
         public List<Property> Properties { get => properties; set => properties = value; }
 
+        public List<Player> Read()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadPlayers();
+        }
+        public int Insert()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.InsertPlayer(this);  
+             
+        }
 
+
+        public Player Update()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.UpdatePlayer(this);
+
+        }
+
+        public int AddPropertyToPlayer(int playerId, int propertyId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.AddPropertyToPlayer(playerId, propertyId);
+        }
+
+        public List<Property> GetPlayerProperties(int playerId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadPropertiesByPlayerId(playerId);
+        }
+
+     
         // מיישמת את ההשפעות של כרטיס הפתעה
         public void ApplySurpriseEffect(Card card)
         {
@@ -80,49 +112,6 @@ namespace KidzBizzServer.BL
         }
 
         // קריאה ועדכון נתוני שחקן מהדאטאבייס
-
-        public List<Player> Read()
-        {
-            DBservices dbs = new DBservices();
-            return dbs.ReadPlayers();
-        }
-        public bool Insert()
-        {
-            DBservices dbs = new DBservices();
-            if (!CheckPlayer(this.playerId))
-            {
-                Player insertedPlayer = dbs.InsertPlayer(this);  
-                return insertedPlayer != null;  
-            }
-            return false;  
-        }
-
-
-        public bool UpdatePlayer(int playerId)
-        {
-            DBservices dbs = new DBservices();
-            if (CheckPlayer(playerId))
-            {
-                Player updatedPlayer = dbs.UpdatePlayer(this);  
-                return updatedPlayer != null; 
-            }
-            return false;  
-        }
-
-
-        private bool CheckPlayer(int playerId)
-        {
-            DBservices dbs = new DBservices();
-            List<Player> players = dbs.ReadPlayers();
-            foreach (Player player in players)
-            {
-                if (player.PlayerId == playerId)
-                {
-                    return true;  // Player exists
-                }
-            }
-            return false;  // Player does not exist
-        }
     }
 }
 

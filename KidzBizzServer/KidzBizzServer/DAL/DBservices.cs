@@ -489,7 +489,7 @@ public class DBservices
     //-------------------------------------------------------------------------------------------------
     // This method insert player  
     //-------------------------------------------------------------------------------------------------
-    public Player InsertPlayer(Player player)
+    public int InsertPlayer(Player player)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -508,12 +508,8 @@ public class DBservices
 
         try
         {
-            int numEffected = cmd.ExecuteNonQuery(); // ביצוע הפקודה
-            if (numEffected == 1)
-            {
-                return player; // החזרת השחקן אם הוספה בוצעה בהצלחה
-            }
-            return null; // אם לא הושפעו שורות
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
         }
         catch (Exception ex)
         {
@@ -578,6 +574,7 @@ public class DBservices
         {
             Player player = new Player();
             player.User = new User();
+            player.PlayerId = Convert.ToInt32(dataReader["PlayerId"]);
             player.User.Username = dataReader["Username"].ToString();
             player.User.AvatarPicture = dataReader["AvatarPicture"].ToString();
             player.CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]);
@@ -595,9 +592,66 @@ public class DBservices
         return players;
     }
 
+    // this method AddPropertyToPlayer
+    public int AddPropertyToPlayer(int playerId, int propertyId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateAddPropertyToPlayerCommand("KBSP_AddPropertyToPlayer", con, playerId, propertyId); // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand CreateAddPropertyToPlayerCommand(String spName, SqlConnection con, int playerId, int propertyId)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@PlayerId", playerId);
+        cmd.Parameters.AddWithValue("@PropertyId", propertyId);
+
+        return cmd;
+    }
+
     //-------------------------------------------------------------------------------------------------
     // This method update Player
     //-------------------------------------------------------------------------------------------------
+
     public Player UpdatePlayer(Player player)
     {
         SqlConnection con;
@@ -613,16 +667,16 @@ public class DBservices
             throw (ex);
         }
 
-        cmd = CreateUpdatePlayerCommand("KBSP_UpdatePlayer", con, player); // יצירת פקודת SQL
+        cmd = CreateUpdatePlayerCommand("KBSP_PlayerUpdate", con, player); // יצירת פקודת SQL
 
         try
         {
-            int numEffected = cmd.ExecuteNonQuery(); // ביצוע הפקודה
+            int numEffected = cmd.ExecuteNonQuery();
             if (numEffected == 1)
             {
-                return player; // החזרת השחקן אם הוספה בוצעה בהצלחה
+                return player;
             }
-            return null; // אם לא הושפעו שורות
+            return null;
         }
         catch (Exception ex)
         {
@@ -647,7 +701,7 @@ public class DBservices
         cmd.CommandType = CommandType.StoredProcedure; // סוג הפקודה
 
         // הוספת פרמטרים לפקודה
-        cmd.Parameters.AddWithValue("@UserId", player.User.UserId);
+  
         cmd.Parameters.AddWithValue("@CurrentPosition", player.CurrentPosition);
         cmd.Parameters.AddWithValue("@CurrentBalance", player.CurrentBalance);
         cmd.Parameters.AddWithValue("@PlayerStatus", player.PlayerStatus);
@@ -1060,8 +1114,7 @@ public class DBservices
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
 
         cmd.Parameters.AddWithValue("@NumberOfPlayers", game.NumberOfPlayers);
-
-        cmd.Parameters.AddWithValue("@GameDuration", game.GameDuration);
+        cmd.Parameters.AddWithValue("@GameDuration", game.GameDuration); // Assuming seconds is a suitable unit
 
         cmd.Parameters.AddWithValue("@GameStatus", game.GameStatus);
 
@@ -1070,7 +1123,112 @@ public class DBservices
         return cmd;
     }
 
+    // this method read game
 
+    public List<Game> ReadGames()
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        List<Game> games = new List<Game>();
+
+        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetGames");
+
+        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        while (dataReader.Read())
+        {
+            Game game = new Game();
+            game.GameId = Convert.ToInt32(dataReader["GameId"]);
+            game.NumberOfPlayers = Convert.ToInt32(dataReader["NumberOfPlayers"]);
+            game.GameDuration = dataReader["GameDuration"].ToString();
+            game.GameStatus = dataReader["GameStatus"].ToString();
+            game.GameTimestamp = Convert.ToDateTime(dataReader["GameTimestamp"]);
+
+            games.Add(game);
+        }
+        if (con != null)
+        {
+            // close the db connection
+            con.Close();
+        }
+        return games;
+    }
+
+
+
+    // this method update game
+    public Game UpdateGame(Game game)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateUpdateGameCommandWithStoredProcedure("KBSP_GameUpdate", con, game); // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery();
+            if (numEffected == 1)
+            {
+                return game;
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand CreateUpdateGameCommandWithStoredProcedure(String spName, SqlConnection con, Game game)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con; // assign the connection to the command object
+
+        cmd.CommandText = spName; // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10; // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@GameId", game.GameId);
+        cmd.Parameters.AddWithValue("@NumberOfPlayers", game.NumberOfPlayers);
+        cmd.Parameters.AddWithValue("@GameDuration", game.GameDuration);
+        cmd.Parameters.AddWithValue("@GameStatus", game.GameStatus);
+        cmd.Parameters.AddWithValue("@GameTimestamp", game.GameTimestamp);
+
+        return cmd;
+    }
 
     //-------------------------------------------------------------------------------------------------
     // !!! Card !!!
@@ -1252,6 +1410,8 @@ public class DBservices
         return answers;
 
     }
+
+  
 
 }
 
