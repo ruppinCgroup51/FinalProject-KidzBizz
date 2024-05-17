@@ -22,8 +22,8 @@ namespace KidzBizzServer.Controllers
             try
             {
                 GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
-                gameManagerWithAI.StartNewGame(user.UserId);
-                return Ok("Game started successfully.");
+                var players = gameManagerWithAI.StartNewGame(user.UserId);
+                return Ok(players);
             }
             catch (Exception ex)
             {

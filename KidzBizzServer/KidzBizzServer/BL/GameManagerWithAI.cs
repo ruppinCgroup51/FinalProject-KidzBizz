@@ -33,7 +33,7 @@ namespace KidzBizzServer.BL
         public Game Game { get => game; set => game = value; }
 
         // פעולה להפעלת משחק חדש
-        public void StartNewGame(int userId)
+        public List<Player> StartNewGame(int userId)
         {
             DBservices dbs = new DBservices();
 
@@ -79,6 +79,7 @@ namespace KidzBizzServer.BL
 
             // Randomly decide who starts first
             currentPlayerIndex = new Random().Next(0, 2);
+            return new List<Player> { player , aiPlayer};
         }
 
         // פעולה לשמירת פרטי משחק במסד הנתונים

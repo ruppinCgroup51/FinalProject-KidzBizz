@@ -3,6 +3,7 @@ import BoardSection from "./BoardSection";
 import { SquareConfigData } from "/src/components/SquareData.jsx";
 import { SquareInfo } from "/src/components/SquareInfo.jsx";
 import SquareType from "./SquareType";
+import "../css/gamesquare.css";
 
 export const GameSquare = ({ id, players }) => {
   const section = SquareConfigData.get(id)?.section;
@@ -41,17 +42,20 @@ export const GameSquare = ({ id, players }) => {
   return (
     <div className={getSquareClassName()} id={getSquareId()}>
       <div className={getContainerClassName()}>
+      
         <SquareInfo id={id} />
+        
         {/* Add this block to render the players on this square */}
-        <div className="player-container">
-          {players &&
-            players.map((player) => (
-              <div key={player.id} className="player">
-                {player.name}
-              </div>
-            ))}
-        </div>
+        {players &&
+          players.map((player) => (
+            <div key={player["user"]["userId"]} className="player">
+              {player["user"]["userId"]}
+            </div>
+          ))}
+
+        
       </div>
+
     </div>
   );
 };
