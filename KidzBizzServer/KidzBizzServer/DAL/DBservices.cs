@@ -359,7 +359,7 @@ public class DBservices
             {
                 authenticatedUser = new User
                 {
-
+                    UserId = Convert.ToInt32(dataReader["UserId"]),
                     Username = dataReader["Username"].ToString(),
                     Password = dataReader["Password"].ToString(),
                     FirstName = dataReader["FirstName"].ToString(),

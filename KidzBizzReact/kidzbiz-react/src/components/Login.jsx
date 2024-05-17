@@ -29,6 +29,7 @@ export default function Login({ onLogin }) {
     avatarPicture: "",
     dateOfBirth: new Date().toISOString(),
     gender: "",
+    score: 0,
   });
 
   const handleChange = (event) => {
@@ -95,6 +96,7 @@ export default function Login({ onLogin }) {
             avatarPicture: "",
             dateOfBirth: new Date().toISOString(),
             gender: "",
+            score: 0
           }); // Reset the form
         });
     }

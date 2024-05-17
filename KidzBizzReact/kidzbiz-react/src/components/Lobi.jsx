@@ -27,7 +27,7 @@ export default function Lobi() {
       console.error("User context is missing userId");
       return; // Optionally display an error message to the user
     }
-    
+
     try {
       const response = await fetch('https://localhost:7034/api/GameManagerWithAI/startnewgame', {
         method: 'POST',
@@ -35,9 +35,7 @@ export default function Lobi() {
           'Content-Type': 'application/json'
           // Include other headers as needed, e.g., authorization tokens
         },
-        body: JSON.stringify({
-          userId: user.userId
-        })
+        body: JSON.stringify(user) // Send the user ID in the request body
       });
 
       if (response.ok) {
