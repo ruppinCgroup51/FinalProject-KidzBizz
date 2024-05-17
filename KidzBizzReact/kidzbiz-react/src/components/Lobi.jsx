@@ -15,37 +15,40 @@ import "../css/Lobi.css";
 import UserContext from "./UserContext"; // Import the UserContext
 import { Avatar, Box, Typography } from "@mui/material";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from "react-router-dom";
 
 export default function Lobi() {
   const user = useContext(UserContext); // Access the user context
   const navigate = useNavigate(); // Use the navigate hook to navigate to a different page
 
   const handlePlayAlone = async () => {
-
     if (!user || !user.userId) {
       console.error("User context is missing userId");
       return; // Optionally display an error message to the user
     }
 
     try {
-      const response = await fetch('https://localhost:7034/api/GameManagerWithAI/startnewgame', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-          // Include other headers as needed, e.g., authorization tokens
-        },
-        body: JSON.stringify(user) // Send the user ID in the request body
-      });
+      const response = await fetch(
+        "https://localhost:7034/api/GameManagerWithAI/startnewgame",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Include other headers as needed, e.g., authorization tokens
+          },
+          body: JSON.stringify(user), // Send the user ID in the request body
+        }
+      );
 
       if (response.ok) {
         // If the server responds that the game has started successfully
-        navigate('/GameBoard'); // Navigate to the game board page
+        navigate("/GameBoard");
+        // Navigate to the game board page
       } else {
-        throw new Error('Failed to start the game');
+        throw new Error("Failed to start the game");
       }
     } catch (error) {
-      console.error('Error starting the game:', error);
+      console.error("Error starting the game:", error);
     }
   };
 
@@ -99,9 +102,9 @@ export default function Lobi() {
         </Box>
       </nav>
       <div className="main-buttons">
-         <button onClick={handlePlayAlone} className="main-button blue">
-        <FontAwesomeIcon icon={faFlagCheckered} /> משחק לבד
-      </button>
+        <button onClick={handlePlayAlone} className="main-button blue">
+          <FontAwesomeIcon icon={faFlagCheckered} /> משחק לבד
+        </button>
         <Link to="/playing-with-friends" className="main-button green">
           <FontAwesomeIcon icon={faDice} /> משחק מול חברים
         </Link>

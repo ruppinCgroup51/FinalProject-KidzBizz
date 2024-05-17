@@ -4,7 +4,7 @@ import { SquareConfigData } from "/src/components/SquareData.jsx";
 import { SquareInfo } from "/src/components/SquareInfo.jsx";
 import SquareType from "./SquareType";
 
-export const GameSquare = ({ id }) => {
+export const GameSquare = ({ id, players }) => {
   const section = SquareConfigData.get(id)?.section;
   const squareType = SquareConfigData.get(id)?.type;
 
@@ -42,6 +42,15 @@ export const GameSquare = ({ id }) => {
     <div className={getSquareClassName()} id={getSquareId()}>
       <div className={getContainerClassName()}>
         <SquareInfo id={id} />
+        {/* Add this block to render the players on this square */}
+        <div className="player-container">
+          {players &&
+            players.map((player) => (
+              <div key={player.id} className="player">
+                {player.name}
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
