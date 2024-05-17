@@ -32,9 +32,7 @@ export default function GameBoard() {
         }
 
         const data = await response.json();
-        console.log("Hey" + user.userId);
         setPlayers(data);
-        console.log(data);
 
         // Store the players array in local storage
         localStorage.setItem("players", JSON.stringify(data));
@@ -43,20 +41,13 @@ export default function GameBoard() {
       }
     };
 
-    fetchData();
-  }, [user]);
-
-  // Load the players array from local storage when the component mounts
-  useEffect(() => {
     const storedPlayers = localStorage.getItem("players");
     if (storedPlayers) {
       setPlayers(JSON.parse(storedPlayers));
+    } else {
+      fetchData();
     }
   }, []);
-
-  useEffect(() => {
-    console.log(players);
-  }, [players]);
 
   return (
     <>
