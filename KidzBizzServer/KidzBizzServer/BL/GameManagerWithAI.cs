@@ -164,6 +164,7 @@ namespace KidzBizzServer.BL
             // Update the player's currentPosition
             player.CurrentPosition += diceRoll;
             player.CurrentPosition %= 40; // Wrap around to start if currentPosition >= 40
+            player.LastDiceResult = diceRoll;
 
             // Save the new position in the database
             player.UpdatePosition();

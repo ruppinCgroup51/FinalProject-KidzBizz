@@ -5,6 +5,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.players-info {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+}
 
 .board {
   display: grid;
@@ -432,7 +437,7 @@ body {
   grid-row-end: 11;
   grid-column-start: 2;
   grid-column-end: 11;
-
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;

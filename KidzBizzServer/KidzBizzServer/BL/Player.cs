@@ -52,7 +52,7 @@ namespace KidzBizzServer.BL
         public void UpdatePosition()
         {
             DBservices dbs = new DBservices();
-            dbs.UpdatePlayerPosition(this.PlayerId, this.CurrentPosition);
+            dbs.UpdatePlayerPosition(this.PlayerId, this.CurrentPosition , this.LastDiceResult);
         }
 
 

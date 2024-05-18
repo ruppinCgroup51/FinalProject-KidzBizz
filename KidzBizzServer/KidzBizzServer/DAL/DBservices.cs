@@ -1451,7 +1451,7 @@ public class DBservices
     }
 
 
-    public void UpdatePlayerPosition(int playerId, int newPosition)
+    public void UpdatePlayerPosition(int playerId, int newPosition , int lastDiceResult)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1466,7 +1466,7 @@ public class DBservices
             throw (ex);
         }
 
-        cmd = CreateUpdatePosCommandWithStoredProcedure("KBSP_UpdatePlayerPosition", con, playerId, newPosition); // create the command
+        cmd = CreateUpdatePosCommandWithStoredProcedure("KBSP_UpdatePlayerPosition", con, playerId, newPosition, lastDiceResult); // create the command
 
         try
         {
@@ -1491,7 +1491,7 @@ public class DBservices
         }
     }
 
-    private SqlCommand CreateUpdatePosCommandWithStoredProcedure(String spName, SqlConnection con, int playerId, int newPosition)
+    private SqlCommand CreateUpdatePosCommandWithStoredProcedure(String spName, SqlConnection con, int playerId, int newPosition, int lastDiceResult)
     {
         SqlCommand cmd = new SqlCommand(); // create the command object
 
@@ -1505,6 +1505,8 @@ public class DBservices
 
         cmd.Parameters.AddWithValue("@playerId", playerId);
         cmd.Parameters.AddWithValue("@newPosition", newPosition);
+        cmd.Parameters.AddWithValue("@lastDiceResult", lastDiceResult);
+
 
         return cmd;
     }
