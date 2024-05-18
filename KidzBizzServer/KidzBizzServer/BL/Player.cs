@@ -49,6 +49,11 @@ namespace KidzBizzServer.BL
             return dbs.InsertPlayer(this);  
              
         }
+        public void UpdatePosition()
+        {
+            DBservices dbs = new DBservices();
+            dbs.UpdatePlayerPosition(this.PlayerId, this.CurrentPosition);
+        }
 
 
         public Player Update()

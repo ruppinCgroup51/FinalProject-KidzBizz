@@ -11,7 +11,7 @@ namespace KidzBizzServer.BL
         Game game = new Game();
 
 
-        public GameManagerWithAI(Player player, AIPlayer aiPlayer, int currentPlayerIndex,int diceRoll, Game game)
+        public GameManagerWithAI(Player player, AIPlayer aiPlayer, int currentPlayerIndex, int diceRoll, Game game)
         {
             Player = player;
             AiPlayer = aiPlayer;
@@ -52,25 +52,32 @@ namespace KidzBizzServer.BL
             // Insert the game into the database
             game.InsertGame(); // Assuming this method exists and returns game ID
 
-           
+
             // Create players
             Player player = new Player
             {
                 // how to convert decimal to double
-                User = user ,
+                User = user,
                 CurrentBalance = Convert.ToDouble(startingMoney),
                 CurrentPosition = currentLocation,
-                PlayerStatus = "Active", 
+                PlayerStatus = "Active",
                 LastDiceResult = 0
-               
+
             };
 
             player.Insert();
-           
+
 
             Player aiPlayer = new Player
             {
-                User = new User { UserId = 1016 }, // Assuming AI player has user ID 2
+                User = new User { UserId = 1016,
+                    Gender = "Not specified",
+                    LastName = "AI",
+                    Password = "password",
+                    Username = "AIPlayer",
+                    FirstName = "AI",
+                    AvatarPicture = "default.jpg"
+                }, // Assuming AI player has user ID 2
                 CurrentBalance = Convert.ToDouble(startingMoney),
                 CurrentPosition = currentLocation,
                 PlayerStatus = "Active",
@@ -82,7 +89,7 @@ namespace KidzBizzServer.BL
 
             // Randomly decide who starts first
             currentPlayerIndex = new Random().Next(0, 2);
-            return new List<Player> { player , aiPlayer};
+            return new List<Player> { player, aiPlayer };
         }
 
         // פעולה לשמירת פרטי משחק במסד הנתונים
@@ -93,53 +100,53 @@ namespace KidzBizzServer.BL
         }
 
         // פעולה למעבר לתור השחקן הבא
-        public void MoveToNextPlayer()
-        {
-            // עדכון אינדקס השחקן הנוכחי לשחקן הבא
-            currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+        //public void MoveToNextPlayer()
+        //{
+        //    // עדכון אינדקס השחקן הנוכחי לשחקן הבא
+        //    currentPlayerIndex = (currentPlayerIndex + 1) % 2;
 
-            // הדפסת מידע על מעבר התור
-            Console.WriteLine($"תור השחקן הבא: {(currentPlayerIndex == 0 ? player.User.Username : aiPlayer.User.Username)}");
+        //    // הדפסת מידע על מעבר התור
+        //    Console.WriteLine($"תור השחקן הבא: {(currentPlayerIndex == 0 ? player.User.Username : aiPlayer.User.Username)}");
 
-            //  אם מדובר בסוף משחק
-            if (CheckIfGameOver())
-            {
-                EndGame(); // סיום המשחק אם התקיים תנאי מסוים
-            }
-            else
-            {
-               
-                RollDice(); // זריקת קובייה לתחילת התור החדש
-            }
-        }
+        //    //  אם מדובר בסוף משחק
+        //    if (CheckIfGameOver())
+        //    {
+        //        EndGame(); // סיום המשחק אם התקיים תנאי מסוים
+        //    }
+        //    else
+        //    {
+
+        //        RollDice(); // זריקת קובייה לתחילת התור החדש
+        //    }
+        //}
 
         // פונקציה שבודקת אם המשחק הסתיים
-    private bool CheckIfGameOver()
-{
-    // תחילה בדיקת הזמן - אם חצי שעה חלפה מאז התחלת המשחק
-    if ((DateTime.Now - game.GameTimestamp).TotalMinutes >= 30)
-    {
-        Console.WriteLine("המשחק הסתיים , עברו 30 דקות.");
-        return true;
-    }
+        private bool CheckIfGameOver()
+        {
+            // תחילה בדיקת הזמן - אם חצי שעה חלפה מאז התחלת המשחק
+            if ((DateTime.Now - game.GameTimestamp).TotalMinutes >= 30)
+            {
+                Console.WriteLine("המשחק הסתיים , עברו 30 דקות.");
+                return true;
+            }
 
-    // בדיקה אם לאחד השחקנים נגמר כל הכסף
-    if (player.CurrentBalance <= 0 || aiPlayer.CurrentBalance <= 0)
-    {
-        Console.WriteLine("המשחק הסתיים - לאחד השחקנים נגמר כל הכסף.");
-        return true;
-    }
+            // בדיקה אם לאחד השחקנים נגמר כל הכסף
+            if (player.CurrentBalance <= 0 || aiPlayer.CurrentBalance <= 0)
+            {
+                Console.WriteLine("המשחק הסתיים - לאחד השחקנים נגמר כל הכסף.");
+                return true;
+            }
 
-    // בדיקה אם לאחד השחקנים אין נכסים למשכן
-    if (player.Properties.Count == 0 || aiPlayer.Properties.Count == 0)
-    {
-        Console.WriteLine("המשחק הסתיים -  אחד השחקנים נשאר ללא נכסים למשכן.");
-        return true;
-    }
+            // בדיקה אם לאחד השחקנים אין נכסים למשכן
+            if (player.Properties.Count == 0 || aiPlayer.Properties.Count == 0)
+            {
+                Console.WriteLine("המשחק הסתיים -  אחד השחקנים נשאר ללא נכסים למשכן.");
+                return true;
+            }
 
 
-    return false; // אם אף אחד מהתנאים לא התקיים
-}
+            return false; // אם אף אחד מהתנאים לא התקיים
+        }
 
 
 
@@ -147,32 +154,22 @@ namespace KidzBizzServer.BL
 
 
         // פעולה לזריקת קובייה
-        public void RollDice()
+        public Player RollDice(Player player)
         {
             Random random = new Random();
             int dice1 = random.Next(1, 7);
             int dice2 = random.Next(1, 7);
-            diceRoll = dice1 + dice2;
+            int diceRoll = dice1 + dice2;
 
+            // Update the player's currentPosition
+            player.CurrentPosition += diceRoll;
+            player.CurrentPosition %= 40; // Wrap around to start if currentPosition >= 40
 
-            if (dice1 == dice2)
-            {
-                // Double rolled, allow another turn for the same player
-                // No need to change currentPlayerIndex
-            }
-            else
-            {
-                // Change turn to the next player
-                currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-            }
+            // Save the new position in the database
+            player.UpdatePosition();
 
-            // Move the current player
-            MovePlayer(diceRoll);
-            // Update player details
-            //UpdatePlayerDetails();
-
-           
-    
+            // Return the updated player
+            return player;
         }
 
 
@@ -288,10 +285,11 @@ namespace KidzBizzServer.BL
                 //        ActivateAIPlayerFunctionForKnowledge();
                 //    }
                 //    break;
-                    
-                    //נניח שתא מס' 30 זה הכלא אז נפעיל את הפונקציה לעשות סקיפ ל3 טורות
+
+                //נניח שתא מס' 30 זה הכלא אז נפעיל את הפונקציה לעשות סקיפ ל3 טורות
                 case 15:
-                    if ((currentPlayerIndex == 0 && player.CurrentPosition == 30) || (currentPlayerIndex == 1 && aiPlayer.CurrentPosition == 30)) {
+                    if ((currentPlayerIndex == 0 && player.CurrentPosition == 30) || (currentPlayerIndex == 1 && aiPlayer.CurrentPosition == 30))
+                    {
 
                         SkipTurns(3);
 
@@ -306,7 +304,7 @@ namespace KidzBizzServer.BL
             }
         }
 
-        
+
         //פונקציה שמדלגת על 3 טורות
         private void SkipTurns(int turnsToSkip)
         {
@@ -373,7 +371,7 @@ namespace KidzBizzServer.BL
         //    //int index = position % propertys.Count; // Modulo operation to handle circular board
         //    //return propertys[index];
         //}
-    
+
 
         // מימוש פונקציה שתשאל את השחקן האם לקנות את הנכס
         //private bool AskPlayerToBuyProperty(Property property)
@@ -417,13 +415,13 @@ namespace KidzBizzServer.BL
             {
                 // Update player details
                 player.CurrentBalance -= price; // For example, deduct 100 from the player's balance
-                                              // Update other player details as needed
+                                                // Update other player details as needed
             }
             else
             {
                 // Update AIPlayer details
                 aiPlayer.CurrentBalance -= price; // For example, deduct 100 from the AI player's balance
-                                                // Update other AIPlayer details as needed
+                                                  // Update other AIPlayer details as needed
             }
         }
 
@@ -482,6 +480,6 @@ namespace KidzBizzServer.BL
         public void ContinueGame()
         {
             // לוגיקת המשך משחק
-        }   
+        }
     }
 }

@@ -31,24 +31,22 @@ namespace KidzBizzServer.Controllers
             }
         }
 
-        //[HttpPost("roll-dice")]
-        //public IActionResult RollDice()
-        //{
-        //    try
-        //    {
-        //        GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
-        //        gameManagerWithAI.RollDice();
-        //        //Player currentPlayer = gameManagerWithAI.GetCurrentPlayer();
-        //        return Ok(currentPlayer);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest($"Error rolling dice: {ex.Message}");
-        //    }
-        //}
+        [HttpPost("rolldice")]
+        public IActionResult RollDice([FromBody] Player player)
+        {
+            try
+            {
+                GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
+                return Ok(gameManagerWithAI.RollDice(player));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error rolling dice: {ex.Message}");
+            }
+        }
 
         // GET api/<GameManagerWithAIController>/5
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public string Get(int id)
         {
             return "value";

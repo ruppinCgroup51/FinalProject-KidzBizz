@@ -131,6 +131,19 @@ namespace KidzBizzServer.BL
         {
                 
         }
+        public AIPlayer(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties, PlayerType type)
+       : base(playerId, user ?? new User
+       {
+           Gender = "Not specified",
+           LastName = "AI",
+           Password = "password",
+           Username = "AIPlayer",
+           FirstName = "AI",
+           AvatarPicture = "default.jpg"
+       }, currentPosition, currentBalance, playerStatus, lastDiceResult, properties)
+        {
+            PlayerType = type;
+        }
         // בנאי שמקבל סוג שחקן ומאתחל את השחקן עם סוג זה
         public AIPlayer(PlayerType type)
         {

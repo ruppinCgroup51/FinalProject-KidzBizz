@@ -9,6 +9,7 @@ export default function GameBoard() {
   const numSquares = Array.from({ length: 40 }, (_, i) => i + 1);
   const user = useContext(UserContext);
   const [players, setPlayers] = useState([]);
+  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +53,34 @@ export default function GameBoard() {
     }
   }, []);
 
+  const rollDice = async () => {
+    try {
+      
+      const response = await fetch("https://localhost:7034/api/GameManagerWithAI/rolldice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(players[currentPlayerIndex]),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      // Update the players array with the new player data
+      const updatedPlayers = [...players];
+      updatedPlayers[currentPlayerIndex] = data;
+      setPlayers(updatedPlayers);
+  
+      // Update the current player index
+      setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <>
       <div className="frame">
@@ -68,7 +97,7 @@ export default function GameBoard() {
 
           <div className="center-square square">
             <div className="center-txt">
-              <button>
+              <button onClick={rollDice}>
                 <FontAwesomeIcon icon={faDice} /> הגרל קוביות
               </button>
             </div>
