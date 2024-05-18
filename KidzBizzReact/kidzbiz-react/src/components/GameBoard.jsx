@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import UserContext from "./UserContext";
 import { GameSquare } from "./GameSquare";
 import "../css/gameboard.css";
+import { faDice } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function GameBoard() {
   const numSquares = Array.from({ length: 40 }, (_, i) => i + 1);
@@ -23,7 +25,7 @@ export default function GameBoard() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(user), // corrected typo he),
+            body: JSON.stringify(user),
           }
         );
 
@@ -33,6 +35,7 @@ export default function GameBoard() {
 
         const data = await response.json();
         setPlayers(data);
+        console.log(data);
 
         // Store the players array in local storage
         localStorage.setItem("players", JSON.stringify(data));
@@ -64,7 +67,11 @@ export default function GameBoard() {
           })}
 
           <div className="center-square square">
-            <div className="center-txt"></div>
+            <div className="center-txt">
+              <button>
+                <FontAwesomeIcon icon={faDice} /> הגרל קוביות
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -22,7 +22,7 @@ namespace KidzBizzServer.Controllers
             try
             {
                 GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
-                var players = gameManagerWithAI.StartNewGame(user.UserId);
+                var players = gameManagerWithAI.StartNewGame(user);
                 return Ok(players);
             }
             catch (Exception ex)
@@ -30,6 +30,22 @@ namespace KidzBizzServer.Controllers
                 return BadRequest($"Error starting game: {ex.Message}");
             }
         }
+
+        //[HttpPost("roll-dice")]
+        //public IActionResult RollDice()
+        //{
+        //    try
+        //    {
+        //        GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
+        //        gameManagerWithAI.RollDice();
+        //        //Player currentPlayer = gameManagerWithAI.GetCurrentPlayer();
+        //        return Ok(currentPlayer);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest($"Error rolling dice: {ex.Message}");
+        //    }
+        //}
 
         // GET api/<GameManagerWithAIController>/5
         [HttpGet("{id}")]

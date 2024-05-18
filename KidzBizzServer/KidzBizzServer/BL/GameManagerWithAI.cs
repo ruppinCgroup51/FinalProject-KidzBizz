@@ -33,9 +33,10 @@ namespace KidzBizzServer.BL
         public Game Game { get => game; set => game = value; }
 
         // פעולה להפעלת משחק חדש
-        public List<Player> StartNewGame(int userId)
+        public List<Player> StartNewGame(User user)
         {
             DBservices dbs = new DBservices();
+
 
             var (startingMoney, currentLocation) = dbs.GetGameSettings();
 
@@ -51,11 +52,12 @@ namespace KidzBizzServer.BL
             // Insert the game into the database
             game.InsertGame(); // Assuming this method exists and returns game ID
 
+           
             // Create players
             Player player = new Player
             {
                 // how to convert decimal to double
-                User = new User { UserId = userId },
+                User = user ,
                 CurrentBalance = Convert.ToDouble(startingMoney),
                 CurrentPosition = currentLocation,
                 PlayerStatus = "Active", 
@@ -64,6 +66,7 @@ namespace KidzBizzServer.BL
             };
 
             player.Insert();
+           
 
             Player aiPlayer = new Player
             {

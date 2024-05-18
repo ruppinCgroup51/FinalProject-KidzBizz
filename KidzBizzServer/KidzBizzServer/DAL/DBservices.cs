@@ -508,8 +508,17 @@ public class DBservices
 
         try
         {
-            int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            return numEffected;
+            cmd.ExecuteNonQuery();
+            // Get the PlayerId from the result
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    player.PlayerId = reader.GetInt32(0);
+                }
+            }
+
+            return player.PlayerId;
         }
         catch (Exception ex)
         {
