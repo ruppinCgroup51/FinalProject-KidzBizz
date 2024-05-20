@@ -41,8 +41,19 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const setUserApi = () => {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        return 'https://localhost:7034/api/Users/login';
+      } else {
+        return 'https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/Users/login';
+      }
+    };
+  
+    const apiUrl = setUserApi();
+
     try {
-      const response = await fetch("https://localhost:7034/api/Users/login", {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

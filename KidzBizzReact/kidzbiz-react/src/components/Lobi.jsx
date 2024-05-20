@@ -27,9 +27,18 @@ export default function Lobi() {
       return; // Optionally display an error message to the user
     }
 
+    const setUserApi = () => {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        return 'https://localhost:7034/api/GameManagerWithAI/startnewgame';
+      } else {
+        return 'https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/GameManagerWithAI/startnewgame';
+      }
+    };
+  
+    const apiUrl = setUserApi();
+
     try {
-      const response = await fetch(
-        "https://localhost:7034/api/GameManagerWithAI/startnewgame",
+      const response = await fetch(apiUrl,
         {
           method: "POST",
           headers: {
