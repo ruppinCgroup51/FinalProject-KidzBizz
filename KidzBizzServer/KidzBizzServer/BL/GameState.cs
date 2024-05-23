@@ -46,7 +46,7 @@
 //            //{
 //            //    Console.WriteLine(decision ? "Save money" : "Buy an asset");
 //            //}
-            
+
 //            //Console.WriteLine("Adventurous player decision history:");
 //            //foreach (bool decision in adventurousPlayer.DecisionHistory)
 //            //{
@@ -57,3 +57,30 @@
 //    }
 
 //}
+namespace KidzBizzServer.BL
+{
+    // מחלקת GameState מייצגת את מצב המשחק הנוכחי
+    public class GameState
+    {
+        public double CurrentPropertyPrice { get; set; } // עלות הנכס הנוכחי
+        public double CurrentRentPotential { get; set; } // פוטנציאל השכירות של הנכס הנוכחי
+        public double PlayerCash { get; set; } // מזומן של השחקן
+        public int PlayerAssets { get; set; } // נכסים של השחקן
+        public double OpponentCash { get; set; } // מזומן של היריב
+        public int OpponentAssets { get; set; } // נכסים של היריב
+
+        // בנאי לאתחול מצב המשחק עם נתוני השחקן והיריב
+        public GameState(double currentPropertyPrice, double currentRentPotential, double playerCash, int playerAssets, double opponentCash, int opponentAssets)
+        {
+            CurrentPropertyPrice = currentPropertyPrice;
+            CurrentRentPotential = currentRentPotential;
+            PlayerCash = playerCash;
+            PlayerAssets = playerAssets;
+            OpponentCash = opponentCash;
+            OpponentAssets = opponentAssets;
+        }
+    }
+}
+
+
+
