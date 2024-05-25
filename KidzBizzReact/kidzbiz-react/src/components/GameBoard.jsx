@@ -4,6 +4,7 @@ import { GameSquare } from "./GameSquare";
 import "../css/gameboard.css";
 import { faDice, faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Navigate } from "react-router-dom";
 
 export default function GameBoard() {
   const numSquares = Array.from({ length: 40 }, (_, i) => i + 1);
@@ -137,6 +138,13 @@ export default function GameBoard() {
     setisEndTurnDisabled(true);
   };
 
+  const handleEndGame = () => {
+    //call end game from server 
+
+    // go back to looby page
+    Navigate("/Lobi");
+  };
+
   return (
     <>
       <div className="frame">
@@ -177,6 +185,11 @@ export default function GameBoard() {
               <br />
               <button onClick={handleEndTurnClick} disabled={isEndTurnDisabled}>
                 End Turn
+              </button>
+              <br/>
+              <br/>
+              <button onClick={handleEndGame}>
+                End Game
               </button>
             </div>
           </div>

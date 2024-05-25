@@ -9,7 +9,7 @@ const GoDisplay = ({ id }) => {
       <div className="icon">
         <FontAwesomeIcon icon={faHandPointLeft} color="green" />
       </div>
-      <div className="square-name">GO</div>
+      <div className="square-name">צא</div>
     </React.Fragment>
   );
 };

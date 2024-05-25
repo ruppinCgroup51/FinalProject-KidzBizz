@@ -36,7 +36,7 @@ SquareConfigData.set(5, {
 });
 
 SquareConfigData.set(6, {
-  type: SquareType.Airport,
+  type: SquareType.Present,
   section: BoardSection.Bottom,
   groupId: 10,
 });
@@ -47,7 +47,7 @@ SquareConfigData.set(7, {
   groupId: 2,
 });
 SquareConfigData.set(8, {
-  type: SquareType.Chance,
+  type: SquareType.DidYouKnow,
   section: BoardSection.Bottom,
 });
 SquareConfigData.set(9, {
@@ -87,7 +87,7 @@ SquareConfigData.set(15, {
 });
 
 SquareConfigData.set(16, {
-  type: SquareType.Airport,
+  type: SquareType.Present,
   section: BoardSection.Left,
   groupId: 10,
 });
@@ -98,7 +98,7 @@ SquareConfigData.set(17, {
   groupId: 4,
 });
 SquareConfigData.set(18, {
-  type: SquareType.Utility,
+  type: SquareType.DidYouKnow,
   section: BoardSection.Left,
 });
 SquareConfigData.set(19, {
@@ -113,7 +113,7 @@ SquareConfigData.set(20, {
 });
 
 SquareConfigData.set(21, {
-  type: SquareType.CentralPark,
+  type: SquareType.Chance,
   section: BoardSection.Top,
 });
 
@@ -123,7 +123,7 @@ SquareConfigData.set(22, {
   groupId: 5,
 });
 SquareConfigData.set(23, {
-  type: SquareType.Chance,
+  type: SquareType.DidYouKnow,
   section: BoardSection.Top,
 });
 SquareConfigData.set(24, {
@@ -138,7 +138,7 @@ SquareConfigData.set(25, {
 });
 
 SquareConfigData.set(26, {
-  type: SquareType.Airport,
+  type: SquareType.Present,
   section: BoardSection.Top,
   groupId: 10,
 });
@@ -174,7 +174,7 @@ SquareConfigData.set(32, {
   groupId: 7,
 });
 SquareConfigData.set(33, {
-  type: SquareType.Chance,
+  type: SquareType.DidYouKnow,
   section: BoardSection.Right,
 });
 SquareConfigData.set(34, {
@@ -189,13 +189,13 @@ SquareConfigData.set(35, {
 });
 
 SquareConfigData.set(36, {
-  type: SquareType.Airport,
+  type: SquareType.Present,
   section: BoardSection.Right,
   groupId: 10,
 });
 
 SquareConfigData.set(37, {
-  type: SquareType.Utility,
+  type: SquareType.Chance,
   section: BoardSection.Right,
 });
 
@@ -205,7 +205,7 @@ SquareConfigData.set(38, {
   groupId: 8,
 });
 SquareConfigData.set(39, {
-  type: SquareType.Chance,
+  type: SquareType.DidYouKnow,
   section: BoardSection.Right,
 });
 SquareConfigData.set(40, {

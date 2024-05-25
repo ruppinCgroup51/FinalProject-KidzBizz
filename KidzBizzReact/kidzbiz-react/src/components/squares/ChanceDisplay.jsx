@@ -7,9 +7,9 @@ const ChanceDisplay = ({ id }) => {
     <React.Fragment>
       <div className="blank"></div>
       <div className="icon">
-        <FontAwesomeIcon icon={faQuestion} size="3x" color="orange" />
+        <FontAwesomeIcon icon={faQuestion} size="3x" color="#ff4500" />
       </div>
-      <div className="square-name"> CHANCE</div>
+      <div className="square-name">סיכוי</div>
     </React.Fragment>
   );
 };

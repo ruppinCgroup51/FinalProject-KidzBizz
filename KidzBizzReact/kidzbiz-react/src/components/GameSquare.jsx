@@ -17,13 +17,13 @@ export const GameSquare = ({ id, players }) => {
   ]);
 
   const squareTypeClass = new Map([
-    [SquareType.Airport, "airport"],
+    [SquareType.Present, "airport"],
     [SquareType.Chance, "chance"],
     [SquareType.Go, "passgo"],
     [SquareType.GoToJail, "go-to-jail"],
     [SquareType.Jail, "jail"],
     [SquareType.Property, "property"],
-    [SquareType.CentralPark, "central-park"],
+    [SquareType.DidYouKnow, "central-park"],
     [SquareType.Utility, "utility"],
   ]);
 
