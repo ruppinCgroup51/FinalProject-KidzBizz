@@ -238,14 +238,14 @@ body {
 }
 
 .square.jail {
-  background-image: url("../components/images/prisoner.svg");
+  background-image: url("./images/prisoner.svg");
   background-repeat: no-repeat;
   background-size: cover;
   opacity: 0.5;
 }
 
 .square.go-to-jail {
-  background-image: url("../components/images/policeman.svg");
+  background-image: url("./images/policeman.svg");
   background-repeat: no-repeat;
   background-size: cover;
 }
