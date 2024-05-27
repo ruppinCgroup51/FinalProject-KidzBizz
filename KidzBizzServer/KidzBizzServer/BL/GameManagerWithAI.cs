@@ -92,18 +92,62 @@ namespace KidzBizzServer.BL
             return new List<Player> { player, aiPlayer };
         }
 
+
+
         public void EndGame()
         {
-            game.GameStatus = "Completed"; // Update the game status to completed
-            game.GameDuration = (DateTime.Now - game.GameTimestamp).ToString();// Calculate the game duration
+          
+            game.GameDuration = (DateTime.Now - game.GameTimestamp).ToString("g");
+            game.GameStatus = "Completed";
+
+            game.UpdateGame();
+
             player.PlayerStatus = "Not Active";
             aiPlayer.PlayerStatus = "Not Active";
-            // Determine the winner based on the player with the most money
-            string winner = DetermineWinner();
+            
+            player.Update();
+            aiPlayer.Update();
+
+            string winner = DetermineWinner(); // Implement this method to decide based on game logic
             Console.WriteLine($"The game has ended. The winner is {winner}.");
 
-            // Save the game details or perform other actions to close the game
+            if (winner == "Player")
+            {
+                player.User.Score += 100; // Update score for human player
+                player.Update();
+            }
+          
         }
+
+        public string DetermineWinner()
+        {
+
+            if (player.CurrentBalance > aiPlayer.CurrentBalance)
+            {
+                return "Player";
+            }
+            else if (aiPlayer.CurrentBalance > player.CurrentBalance)
+            {
+                return "AIPlayer";
+            }
+            else
+            {
+                if(player.Properties.Count() > aiPlayer.Properties.Count())
+                {
+                    return "Player";
+                } else if (aiPlayer.Properties.Count() > player.Properties.Count())
+                {
+                    return "AIPlayer";
+                }
+                else
+                {
+                    return "Draw";
+                }
+                
+            }
+        }
+
+
 
         // פעולה לשמירת פרטי משחק במסד הנתונים
         //public void SaveDetailsGameToDatabase(Game game)
@@ -417,34 +461,34 @@ namespace KidzBizzServer.BL
         //    // שמירת פרטי המשחק או פעולות נוספות לסגירת המשחק
         //}
 
-        private string DetermineWinner()
-        {
-            // קודם כל בדיקה לפי כסף
-            if (player.CurrentBalance > aiPlayer.CurrentBalance)
-            {
-                return player.User.Username; // שם משתמש של השחקן האנושי אם יש לו יותר כסף
-            }
-            else if (aiPlayer.CurrentBalance > player.CurrentBalance)
-            {
-                return "מחשב"; // או כל שם שנתתם ל-AIPlayer
-            }
-            else
-            {
-                // במקרה של שוויון בכסף, בודקים על פי נכסים
-                if (player.Properties.Count > aiPlayer.Properties.Count)
-                {
-                    return player.User.Username; // השחקן עם יותר נכסים מנצח
-                }
-                else if (aiPlayer.Properties.Count > player.Properties.Count)
-                {
-                    return "מחשב";
-                }
-                else
-                {
-                    return "שוויון"; // האם להכניס אצלנו מצב כזה?
-                }
-            }
-        }
+        //private string DetermineWinner()
+        //{
+        //    // קודם כל בדיקה לפי כסף
+        //    if (player.CurrentBalance > aiPlayer.CurrentBalance)
+        //    {
+        //        return player.User.Username; // שם משתמש של השחקן האנושי אם יש לו יותר כסף
+        //    }
+        //    else if (aiPlayer.CurrentBalance > player.CurrentBalance)
+        //    {
+        //        return "מחשב"; // או כל שם שנתתם ל-AIPlayer
+        //    }
+        //    else
+        //    {
+        //        // במקרה של שוויון בכסף, בודקים על פי נכסים
+        //        if (player.Properties.Count > aiPlayer.Properties.Count)
+        //        {
+        //            return player.User.Username; // השחקן עם יותר נכסים מנצח
+        //        }
+        //        else if (aiPlayer.Properties.Count > player.Properties.Count)
+        //        {
+        //            return "מחשב";
+        //        }
+        //        else
+        //        {
+        //            return "שוויון"; // האם להכניס אצלנו מצב כזה?
+        //        }
+        //    }
+        //}
 
 
 
