@@ -1,0 +1,57 @@
+
+.playerRatingsPage {
+    background: linear-gradient(#47b3a1, #d9eed9); /* Light teal background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    font-family: Arial, sans-serif; /* Sets the font for this page */
+}
+
+.scoreContainer {
+    width: 30%; /* Adjust the width as needed */
+    background-color: #de7d2e; /* Optional: sets a different background for the score list */
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners for the score container */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for better focus */
+}
+
+.scoreList {
+    width: 50%; /* Adjust width as needed */
+}
+
+.userScore {
+    background-color: #f0f0f0;
+    color: black;
+    padding: 10px;
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.userScore.current {
+    background-color: #58d639;
+    color: white;
+}
+
+.score {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Pulls the score to the right */
+}
+
+.scoreIcon {
+    color: gold;
+    margin-right: 5px; /* Optional: Adjust spacing between star icon and score */
+}
+
+.arrow-button {
+    position: absolute;    
+    right:95%;
+    top: 2%;
+    width: 40px;
+    height: 40px;
+
+}

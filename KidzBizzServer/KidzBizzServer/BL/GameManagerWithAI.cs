@@ -92,65 +92,74 @@ namespace KidzBizzServer.BL
             return new List<Player> { player, aiPlayer };
         }
 
-        // פעולה לשמירת פרטי משחק במסד הנתונים
-        public void SaveDetailsGameToDatabase(Game game)
+        public void EndGame()
         {
+            game.GameStatus = "Completed"; // Update the game status to completed
+            game.GameDuration = (DateTime.Now - game.GameTimestamp).ToString();// Calculate the game duration
+            player.PlayerStatus = "Not Active";
+            aiPlayer.PlayerStatus = "Not Active";
+            // Determine the winner based on the player with the most money
+            string winner = DetermineWinner();
+            Console.WriteLine($"The game has ended. The winner is {winner}.");
 
-            // לוגיקת שמירת פרטי משחק במסד הנתונים
+            // Save the game details or perform other actions to close the game
         }
 
-        // פעולה למעבר לתור השחקן הבא
-        //public void MoveToNextPlayer()
+        // פעולה לשמירת פרטי משחק במסד הנתונים
+        //public void SaveDetailsGameToDatabase(Game game)
         //{
-        //    // עדכון אינדקס השחקן הנוכחי לשחקן הבא
-        //    currentPlayerIndex = (currentPlayerIndex + 1) % 2;
 
-        //    // הדפסת מידע על מעבר התור
-        //    Console.WriteLine($"תור השחקן הבא: {(currentPlayerIndex == 0 ? player.User.Username : aiPlayer.User.Username)}");
-
-        //    //  אם מדובר בסוף משחק
-        //    if (CheckIfGameOver())
-        //    {
-        //        EndGame(); // סיום המשחק אם התקיים תנאי מסוים
-        //    }
-        //    else
-        //    {
-
-        //        RollDice(); // זריקת קובייה לתחילת התור החדש
-        //    }
+        //    // לוגיקת שמירת פרטי משחק במסד הנתונים
         //}
 
-        // פונקציה שבודקת אם המשחק הסתיים
-        private bool CheckIfGameOver()
-        {
-            // תחילה בדיקת הזמן - אם חצי שעה חלפה מאז התחלת המשחק
-            if ((DateTime.Now - game.GameTimestamp).TotalMinutes >= 30)
-            {
-                Console.WriteLine("המשחק הסתיים , עברו 30 דקות.");
-                return true;
-            }
+        //// פעולה למעבר לתור השחקן הבא
+        ////public void MoveToNextPlayer()
+        ////{
+        ////    // עדכון אינדקס השחקן הנוכחי לשחקן הבא
+        ////    currentPlayerIndex = (currentPlayerIndex + 1) % 2;
 
-            // בדיקה אם לאחד השחקנים נגמר כל הכסף
-            if (player.CurrentBalance <= 0 || aiPlayer.CurrentBalance <= 0)
-            {
-                Console.WriteLine("המשחק הסתיים - לאחד השחקנים נגמר כל הכסף.");
-                return true;
-            }
+        ////    // הדפסת מידע על מעבר התור
+        ////    Console.WriteLine($"תור השחקן הבא: {(currentPlayerIndex == 0 ? player.User.Username : aiPlayer.User.Username)}");
 
-            // בדיקה אם לאחד השחקנים אין נכסים למשכן
-            if (player.Properties.Count == 0 || aiPlayer.Properties.Count == 0)
-            {
-                Console.WriteLine("המשחק הסתיים -  אחד השחקנים נשאר ללא נכסים למשכן.");
-                return true;
-            }
+        ////    //  אם מדובר בסוף משחק
+        ////    if (CheckIfGameOver())
+        ////    {
+        ////        EndGame(); // סיום המשחק אם התקיים תנאי מסוים
+        ////    }
+        ////    else
+        ////    {
+
+        ////        RollDice(); // זריקת קובייה לתחילת התור החדש
+        ////    }
+        ////}
+
+        //// פונקציה שבודקת אם המשחק הסתיים
+        //private bool CheckIfGameOver()
+        //{
+        //    // תחילה בדיקת הזמן - אם חצי שעה חלפה מאז התחלת המשחק
+        //    if ((DateTime.Now - game.GameTimestamp).TotalMinutes >= 30)
+        //    {
+        //        Console.WriteLine("המשחק הסתיים , עברו 30 דקות.");
+        //        return true;
+        //    }
+
+        //    // בדיקה אם לאחד השחקנים נגמר כל הכסף
+        //    if (player.CurrentBalance <= 0 || aiPlayer.CurrentBalance <= 0)
+        //    {
+        //        Console.WriteLine("המשחק הסתיים - לאחד השחקנים נגמר כל הכסף.");
+        //        return true;
+        //    }
+
+        //    // בדיקה אם לאחד השחקנים אין נכסים למשכן
+        //    if (player.Properties.Count == 0 || aiPlayer.Properties.Count == 0)
+        //    {
+        //        Console.WriteLine("המשחק הסתיים -  אחד השחקנים נשאר ללא נכסים למשכן.");
+        //        return true;
+        //    }
 
 
-            return false; // אם אף אחד מהתנאים לא התקיים
-        }
-
-
-
-
+        //    return false; // אם אף אחד מהתנאים לא התקיים
+        //}
 
 
         // פעולה לזריקת קובייה
@@ -171,37 +180,6 @@ namespace KidzBizzServer.BL
 
             // Return the updated player
             return player;
-        }
-
-
-
-
-
-        //מימוש פונקציה שמזיזה את השחקן בהתאם להגרלה
-        private void MovePlayer(int steps)
-        {
-            if (currentPlayerIndex == 0)
-            {
-                player.CurrentPosition = (player.CurrentPosition + steps) % 40; // Assuming 40 slots on the board
-
-                // After each dice roll, update the player's position on the game board in your React state
-
-                HandleSlotActions(player.CurrentPosition, "Go");
-
-                //נקבל את type from react
-
-            }
-            else
-            {
-                aiPlayer.CurrentPosition = (aiPlayer.CurrentPosition + steps) % 40; // Assuming 40 slots on the board
-
-
-                //After each dice roll, update the player's position on the game board in your React state
-
-                HandleSlotActions(aiPlayer.CurrentPosition, "Jail");
-
-                //נקבל את type from react
-            }
         }
 
 
@@ -428,16 +406,16 @@ namespace KidzBizzServer.BL
 
         // פעולה לסיום משחק
         // פעולה לסיום משחק
-        public void EndGame()
-        {
-            game.GameStatus = "Completed"; // עדכון סטטוס המשחק להושלם
+        //public void EndGame()
+        //{
+        //    game.GameStatus = "Completed"; // עדכון סטטוס המשחק להושלם
 
-            // קביעת מי המנצח על פי כמות הכסף והנכסים
-            string winner = DetermineWinner();
-            Console.WriteLine($"המשחק הסתיים. המנצח הוא {winner}.");
+        //    // קביעת מי המנצח על פי כמות הכסף והנכסים
+        //    string winner = DetermineWinner();
+        //    Console.WriteLine($"המשחק הסתיים. המנצח הוא {winner}.");
 
-            // שמירת פרטי המשחק או פעולות נוספות לסגירת המשחק
-        }
+        //    // שמירת פרטי המשחק או פעולות נוספות לסגירת המשחק
+        //}
 
         private string DetermineWinner()
         {
