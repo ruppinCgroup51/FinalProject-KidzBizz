@@ -31,8 +31,8 @@ export default function Register() {
     // Password validation
     if (!formData.password) {
       errors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      errors.password = "Password must contain 8 characters or more";
+    } else if (formData.password.length < 4) {
+      errors.password = "Password must contain 4 characters or more";
     }
 
     // First name validation
@@ -58,8 +58,8 @@ export default function Register() {
       const birthDate = new Date(formData.dateOfBirth);
       const today = new Date();
       const age = today.getFullYear() - birthDate.getFullYear();
-      if (age < 14) {
-        errors.dateOfBirth = "User must be over 14 years old";
+      if (age < 8) {
+        errors.dateOfBirth = "User must be over 8 years old";
       }
     }
 
@@ -78,22 +78,6 @@ export default function Register() {
       [name]: value,
     }));
   };
-
-  {
-    /*const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you can handle form submission, like sending data to a server
-    console.log(formData);
-    setFormData({
-      firstName: "",
-      lastName: "",
-      birthDate: "",
-      userName: "",
-      password: "",
-      confirmPassword: "",
-    });
-  */
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

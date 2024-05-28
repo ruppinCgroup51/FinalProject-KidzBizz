@@ -5,8 +5,7 @@ const SquareType = {
   Go: 4,
   Chance: 5,
   GoToJail: 6,
-  DidYouKnow: 7,
-  Utility: 8,
+  DidYouKnow: 7
 };
 
 export default SquareType;

@@ -17,14 +17,13 @@ export const GameSquare = ({ id, players }) => {
   ]);
 
   const squareTypeClass = new Map([
-    [SquareType.Present, "airport"],
+    [SquareType.Present, "present"],
     [SquareType.Chance, "chance"],
     [SquareType.Go, "passgo"],
     [SquareType.GoToJail, "go-to-jail"],
     [SquareType.Jail, "jail"],
     [SquareType.Property, "property"],
-    [SquareType.DidYouKnow, "central-park"],
-    [SquareType.Utility, "utility"],
+    [SquareType.DidYouKnow, "didYouKnow"]
   ]);
 
   const getContainerClassName = () => {
