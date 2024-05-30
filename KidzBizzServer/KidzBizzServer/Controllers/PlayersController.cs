@@ -30,6 +30,23 @@ namespace KidzBizzServer.Controllers
             Player player = new Player();
             return player.GetPlayerProperties(playerId);
         }
+
+        // http get to get player balance by player id
+        [HttpGet("GetPlayerBalance")]
+        public decimal GetPlayerBalance(int playerId)
+        {
+            Player player = new Player();
+            return player.GetPlayerBalance(playerId);
+        }
+
+        //http put to update player balance
+        [HttpPut("UpdatePlayerBalance")]
+        public void UpdatePlayerBalance(int playerId, decimal newBalance)
+        {
+            Player player = new Player();
+            player.UpdatePlayerBalance(playerId, newBalance);
+            
+        }
       
 
         // GET api/<PlayersController>/5

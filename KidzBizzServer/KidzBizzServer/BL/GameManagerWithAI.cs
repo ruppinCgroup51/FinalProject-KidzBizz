@@ -147,65 +147,6 @@ namespace KidzBizzServer.BL
             }
         }
 
-
-
-        // פעולה לשמירת פרטי משחק במסד הנתונים
-        //public void SaveDetailsGameToDatabase(Game game)
-        //{
-
-        //    // לוגיקת שמירת פרטי משחק במסד הנתונים
-        //}
-
-        //// פעולה למעבר לתור השחקן הבא
-        ////public void MoveToNextPlayer()
-        ////{
-        ////    // עדכון אינדקס השחקן הנוכחי לשחקן הבא
-        ////    currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-
-        ////    // הדפסת מידע על מעבר התור
-        ////    Console.WriteLine($"תור השחקן הבא: {(currentPlayerIndex == 0 ? player.User.Username : aiPlayer.User.Username)}");
-
-        ////    //  אם מדובר בסוף משחק
-        ////    if (CheckIfGameOver())
-        ////    {
-        ////        EndGame(); // סיום המשחק אם התקיים תנאי מסוים
-        ////    }
-        ////    else
-        ////    {
-
-        ////        RollDice(); // זריקת קובייה לתחילת התור החדש
-        ////    }
-        ////}
-
-        //// פונקציה שבודקת אם המשחק הסתיים
-        //private bool CheckIfGameOver()
-        //{
-        //    // תחילה בדיקת הזמן - אם חצי שעה חלפה מאז התחלת המשחק
-        //    if ((DateTime.Now - game.GameTimestamp).TotalMinutes >= 30)
-        //    {
-        //        Console.WriteLine("המשחק הסתיים , עברו 30 דקות.");
-        //        return true;
-        //    }
-
-        //    // בדיקה אם לאחד השחקנים נגמר כל הכסף
-        //    if (player.CurrentBalance <= 0 || aiPlayer.CurrentBalance <= 0)
-        //    {
-        //        Console.WriteLine("המשחק הסתיים - לאחד השחקנים נגמר כל הכסף.");
-        //        return true;
-        //    }
-
-        //    // בדיקה אם לאחד השחקנים אין נכסים למשכן
-        //    if (player.Properties.Count == 0 || aiPlayer.Properties.Count == 0)
-        //    {
-        //        Console.WriteLine("המשחק הסתיים -  אחד השחקנים נשאר ללא נכסים למשכן.");
-        //        return true;
-        //    }
-
-
-        //    return false; // אם אף אחד מהתנאים לא התקיים
-        //}
-
-
         // פעולה לזריקת קובייה
         public Player RollDice(Player player)
         {
@@ -227,6 +168,23 @@ namespace KidzBizzServer.BL
         }
 
 
+        public void PayRent(int playerId, int propertyOwnerId, int propertyId)
+        {
+            DBservices dbServices = new DBservices();
+            decimal rentPrice = dbServices.GetRentPrice(propertyId);
+            decimal payerBalance = dbServices.GetPlayerBalance(playerId);
+            decimal ownerBalance = dbServices.GetPlayerBalance(propertyOwnerId);
+
+            if (payerBalance >= rentPrice)
+            {
+                dbServices.UpdatePlayerBalance(playerId, payerBalance - rentPrice);  // Deduct rent from payer
+                dbServices.UpdatePlayerBalance(propertyOwnerId, ownerBalance + rentPrice);  // Add rent to owner
+            }
+            else
+            {
+                throw new Exception("Player cannot afford to pay the rent.");
+            }
+        }
 
         //כל הפעולות שנבצע על לוח המשחק SWITCH CASE
         private void HandleSlotActions(int currentPos, string slot)

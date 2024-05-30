@@ -63,6 +63,18 @@ namespace KidzBizzServer.BL
 
         }
 
+        public decimal GetPlayerBalance(int playerId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetPlayerBalance(playerId);
+        }
+
+        public void UpdatePlayerBalance(int playerId, decimal newBalance)
+        {
+            DBservices dbs = new DBservices();
+            dbs.UpdatePlayerBalance(playerId, newBalance);
+        }
+
         public int AddPropertyToPlayer(int playerId, int propertyId)
         {
             DBservices dbs = new DBservices();

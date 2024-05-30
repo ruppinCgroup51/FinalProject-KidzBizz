@@ -1,5 +1,6 @@
 ﻿using KidzBizzServer.BL;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,6 +43,25 @@ namespace KidzBizzServer.Controllers
             catch (Exception ex)
             {
                 return BadRequest($"Error rolling dice: {ex.Message}");
+            }
+        }
+
+        [HttpPost("payRent")]
+        public IActionResult PayRent([FromBody] JsonElement jsonData)
+        {
+            try
+            {
+                int playerId = jsonData.GetProperty("playerId").GetInt32();
+                int propertyOwnerId = jsonData.GetProperty("propertyOwnerId").GetInt32();
+                int propertyId = jsonData.GetProperty("propertyId").GetInt32();
+
+                GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
+                gameManagerWithAI.PayRent(playerId, propertyOwnerId, propertyId);
+                return Ok("Rent paid successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
             }
         }
 

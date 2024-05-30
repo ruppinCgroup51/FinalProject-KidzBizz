@@ -1511,7 +1511,183 @@ public class DBservices
         return cmd;
     }
 
+    // this method get rent price by property id
 
+    public decimal GetRentPrice(int propertyId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateGetRentPriceCommandWithStoredProcedure("KBSP_GetRentPrice", con, propertyId); // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dataReader.Read())
+            {
+                return Convert.ToDecimal(dataReader["RentPrice"]);
+            }
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    private SqlCommand CreateGetRentPriceCommandWithStoredProcedure(String spName, SqlConnection con, int propertyId)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con; // assign the connection to the command object
+
+        cmd.CommandText = spName; // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10; // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@PropertyId", propertyId);
+
+        return cmd;
+    }
+
+    public decimal GetPlayerBalance(int playerId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateGetPlayerBalanceCommandWithStoredProcedure("KBSP_GetPlayerBalance", con, playerId); // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dataReader.Read())
+            {
+                return Convert.ToDecimal(dataReader["CurrentBalance"]);
+            }
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    private SqlCommand CreateGetPlayerBalanceCommandWithStoredProcedure(String spName, SqlConnection con, int playerId)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con; // assign the connection to the command object
+
+        cmd.CommandText = spName; // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10; // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@PlayerId", playerId);
+
+        return cmd;
+    }
+
+    public void UpdatePlayerBalance(int playerId, decimal newBalance)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateUpdateBalanceCommandWithStoredProcedure("KBSP_UpdatePlayerBalance", con, playerId, newBalance); // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery();
+            if (numEffected != 1)
+            {
+                // Handle the case where the update was not successful
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand CreateUpdateBalanceCommandWithStoredProcedure(String spName, SqlConnection con, int playerId, decimal newBalance)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con; // assign the connection to the command object
+
+        cmd.CommandText = spName; // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10; // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@PlayerId", playerId);
+        cmd.Parameters.AddWithValue("@NewBalance", newBalance);
+
+        return cmd;
+    }
 
 
 }
