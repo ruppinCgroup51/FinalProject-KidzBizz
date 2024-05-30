@@ -44,7 +44,7 @@ export const GameSquare = ({ id, players }) => {
       
         <SquareInfo id={id} />
         
-        {/* Add this block to render the players on this square */}
+        {/*render the players on this square */}
         {players &&
           players.map((player) => (
             <div key={player["user"]["userId"]} className="player">

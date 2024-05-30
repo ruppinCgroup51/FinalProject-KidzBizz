@@ -7,8 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Navigate } from "react-router-dom";
 
 export default function GameBoard() {
-  const numSquares = Array.from({ length: 40 }, (_, i) => i + 1);
-  const user = useContext(UserContext);
+  const numSquares = Array.from({ length: 40 }, (_, i) => i + 1); // 40 משבצות בלוח
+  const user = useContext(UserContext); // המשתמש המחובר 
   const [players, setPlayers] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isRollDiceDisabled, setIsRollDiceDisabled] = useState(false);
@@ -21,7 +21,7 @@ export default function GameBoard() {
         return; // Optionally display an error message to the user
       }
 
-      
+      // התחלת משחק 
   const setUserApi = () => {
     if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
       return 'https://localhost:7034/api/GameManagerWithAI/startnewgame';
