@@ -1,4 +1,3 @@
-
 .playerRatingsPage {
     background: linear-gradient(#47b3a1, #d9eed9); /* Light teal background */
     display: flex;
@@ -9,8 +8,8 @@
 }
 
 .scoreContainer {
-    width: 30%; /* Adjust the width as needed */
-    background-color: #de7d2e; /* Optional: sets a different background for the score list */
+    width: 25%; /* Adjust the width as needed */
+    background-color:linear-gradient(#297c6e, #d9eed9); /* Optional: sets a different background for the score list */
     padding: 20px;
     border-radius: 10px; /* Rounded corners for the score container */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for better focus */
@@ -29,6 +28,7 @@
     justify-content: space-between;
     align-items: center;
     border-radius: 5px;
+    position: relative;
 }
 
 .userScore.current {
@@ -36,22 +36,56 @@
     color: white;
 }
 
+.nameContainer {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.rankIcon {
+    position: absolute;
+    top: -30px; /* Adjust the position as needed */
+    left: -30px; /* Adjust the position as needed */
+    transform: rotate(-20deg); /* Slant the icon */
+    color: rgb(195, 28, 136); /* Optional: set a color for the rank icons */
+    font-size: 40px; /* Increase the size of the icon */
+}
+
 .score {
     display: flex;
     align-items: center;
     margin-left: auto; /* Pulls the score to the right */
+    position: relative;
 }
 
 .scoreIcon {
-    color: gold;
-    margin-right: 5px; /* Optional: Adjust spacing between star icon and score */
+    color: rgb(255, 215, 0);
+    font-size: 40px; /* Increase the size of the star icon */
+    position: relative;
+    width: 60px; /* Set a fixed width */
+    height: 50px; /* Set a fixed height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.arrow-button {
-    position: absolute;    
-    right:95%;
-    top: 2%;
-    width: 40px;
-    height: 40px;
+.scoreValue {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Center align */
+    color: black;
+    font-size: 15px; /* Adjust font size as needed */
+    font-weight: bold;
+    z-index: 1; /* Ensure it appears above the star icon */
+}
 
+.arrow-button{
+    color: red;
+    font-size: 40px;
+    margin: 5px 0;
+    position: absolute;    
+    left: 2%;
+    justify-content: space-between;
+    align-items: center;
 }

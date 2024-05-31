@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { FaStar } from 'react-icons/fa';  // Importing star icon
-import { useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
+import { FaStar, FaCrown } from 'react-icons/fa'; // Importing star and crown icons
 import "../css/PlayersRating.css";
 import UserContext from "./UserContext";
 import { Link } from "react-router-dom";
 import { TiArrowLeftThick } from "react-icons/ti";
-
 
 function UsersScores() {
     const [userScores, setUserScores] = useState([]);
@@ -39,21 +37,27 @@ function UsersScores() {
 
         fetchData();
     }, []);
+
     return (
-        <>
-        <div className="playerRatingsPage"> {/* This is your unique class for this page */}
-        <div>
-        <Link to="/Lobi" className="arrow-button">
-          <TiArrowLeftThick size={70} color="red" />
-        </Link>
-      </div>
+        <div className="playerRatingsPage">
+            <div>
+                <Link to="/Lobi" className="arrow-button">
+                    <TiArrowLeftThick size={70} color="red" />
+                </Link>
+            </div>
             <div className="scoreContainer">
                 {userScores.length > 0 ? (
                     <div>
                         {userScores.map((userScore, index) => (
                             <div key={index} className={`userScore ${userScore.username === currentUser ? 'current' : ''}`}>
-                                <span>{userScore.username}</span>
-                                <span className="score"><FaStar className="scoreIcon" /> {userScore.score}</span>
+                                <div className="nameContainer">
+                                    {index <= 1 && <FaCrown className="rankIcon" />}
+                                    <span>{userScore.username}</span>
+                                </div>
+                                <span className="score">
+                                    <FaStar className="scoreIcon" />
+                                    <span className="scoreValue">{userScore.score}</span>
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -62,15 +66,8 @@ function UsersScores() {
                 )}
             </div>
         </div>
-        </>
     );
-    
-    
-    
-    
 }
 
 export default UsersScores;
-
-
 
