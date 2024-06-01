@@ -76,7 +76,7 @@ namespace KidzBizzServer.BL
                     Password = "password",
                     Username = "AIPlayer",
                     FirstName = "AI",
-                    AvatarPicture = "default.jpg"
+                    AvatarPicture = "https://robohash.org/avatar1"
                 }, // Assuming AI player has user ID 2
                 CurrentBalance = Convert.ToDouble(startingMoney),
                 CurrentPosition = currentLocation,

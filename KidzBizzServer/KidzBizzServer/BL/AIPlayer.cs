@@ -111,6 +111,7 @@
 
 //}
 using System;
+using static System.Net.WebRequestMethods;
 
 namespace KidzBizzServer.BL
 {
@@ -146,7 +147,7 @@ namespace KidzBizzServer.BL
                Password = "password",
                Username = "AIPlayer",
                FirstName = "AI",
-               AvatarPicture = "default.jpg"
+               AvatarPicture = "https://robohash.org/avatar1"
            }, currentPosition, currentBalance, playerStatus, lastDiceResult, properties)
         {
             PlayerType = type;

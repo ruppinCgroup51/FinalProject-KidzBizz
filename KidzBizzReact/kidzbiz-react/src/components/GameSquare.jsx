@@ -23,7 +23,7 @@ export const GameSquare = ({ id, players }) => {
     [SquareType.GoToJail, "go-to-jail"],
     [SquareType.Jail, "jail"],
     [SquareType.Property, "property"],
-    [SquareType.DidYouKnow, "didYouKnow"]
+    [SquareType.DidYouKnow, "didYouKnow"],
   ]);
 
   const getContainerClassName = () => {
@@ -41,20 +41,22 @@ export const GameSquare = ({ id, players }) => {
   return (
     <div className={getSquareClassName()} id={getSquareId()}>
       <div className={getContainerClassName()}>
-      
         <SquareInfo id={id} />
-        
-        {/*render the players on this square */}
-        {players &&
-          players.map((player) => (
-            <div key={player["user"]["userId"]} className="player">
-              {player["user"]["userId"]}
-            </div>
-          ))}
-
-        
+        <div className="player-container">
+          {/*render the players on this square */}
+          {players &&
+            players.map((player) => (
+              <div key={player["user"]["userId"]} className="player">
+                {/* {player["user"]["userId"]} */}
+                <img
+                  src={player["user"]["avatarPicture"]}
+                  alt="avatar"
+                  className="avatar"
+                />
+              </div>
+            ))}
+        </div>
       </div>
-
     </div>
   );
 };
