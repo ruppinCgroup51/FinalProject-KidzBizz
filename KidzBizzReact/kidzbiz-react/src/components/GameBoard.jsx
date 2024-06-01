@@ -8,41 +8,47 @@ import { Navigate } from "react-router-dom";
 
 export default function GameBoard() {
   const numSquares = Array.from({ length: 40 }, (_, i) => i + 1); // 40 משבצות בלוח
-  const user = useContext(UserContext); // המשתמש המחובר 
+  const user = useContext(UserContext); // המשתמש המחובר
   const [players, setPlayers] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isRollDiceDisabled, setIsRollDiceDisabled] = useState(false);
   const [isEndTurnDisabled, setisEndTurnDisabled] = useState(false);
 
   useEffect(() => {
+    setPlayers([]);
+    setCurrentPlayerIndex(0);
+    setIsRollDiceDisabled(false);
+    setisEndTurnDisabled(false);
+    localStorage.removeItem('players');
+
     const fetchData = async () => {
       if (!user || !user.userId) {
         console.error("User context is missing userId");
         return; // Optionally display an error message to the user
       }
 
-      // התחלת משחק 
-  const setUserApi = () => {
-    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-      return 'https://localhost:7034/api/GameManagerWithAI/startnewgame';
-    } else {
-      return 'https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/GameManagerWithAI/startnewgame';
-    }
-  };
+      // התחלת משחק
+      const setUserApi = () => {
+        if (
+          location.hostname === "localhost" ||
+          location.hostname === "127.0.0.1"
+        ) {
+          return "https://localhost:7034/api/GameManagerWithAI/startnewgame";
+        } else {
+          return "https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/GameManagerWithAI/startnewgame";
+        }
+      };
 
-  const apiUrl = setUserApi();
+      const apiUrl = setUserApi();
 
       try {
-        const response = await fetch(
-          apiUrl,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-          }
-        );
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -65,38 +71,37 @@ export default function GameBoard() {
     } else {
       fetchData();
     }
-  }, []);
+  }, [user]);
 
   const rollDice = async () => {
-    
-  const setUserApi = () => {
-    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-      return "https://localhost:7034/api/GameManagerWithAI/rolldice";
-    } else {
-      return 'https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/GameManagerWithAI/rolldice';
-    }
-  };
+    const setUserApi = () => {
+      if (
+        location.hostname === "localhost" ||
+        location.hostname === "127.0.0.1"
+      ) {
+        return "https://localhost:7034/api/GameManagerWithAI/rolldice";
+      } else {
+        return "https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/GameManagerWithAI/rolldice";
+      }
+    };
 
-  const apiUrl = setUserApi();
+    const apiUrl = setUserApi();
 
     try {
-      const response = await fetch(
-        apiUrl,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(players[currentPlayerIndex]),
-        }
-      );
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(players[currentPlayerIndex]),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      // Update the players array with the new player data
+      //Update the players array with the new player data
       const updatedPlayers = [...players];
       updatedPlayers[currentPlayerIndex] = data;
       setPlayers(updatedPlayers);
@@ -139,7 +144,7 @@ export default function GameBoard() {
   };
 
   const handleEndGame = () => {
-    //call end game from server 
+    //call end game from server
 
     // go back to looby page
     Navigate("/Lobi");
@@ -150,7 +155,7 @@ export default function GameBoard() {
       <div className="frame">
         <div className="board">
           {numSquares.map((num) => {
-            // Get the players on this square
+            //Get the players on this square
             const playersOnThisSquare = players.filter(
               (player) => player["currentPosition"] === num
             );
@@ -186,11 +191,9 @@ export default function GameBoard() {
               <button onClick={handleEndTurnClick} disabled={isEndTurnDisabled}>
                 End Turn
               </button>
-              <br/>
-              <br/>
-              <button onClick={handleEndGame}>
-                End Game
-              </button>
+              <br />
+              <br />
+              <button onClick={handleEndGame}>End Game</button>
             </div>
           </div>
         </div>

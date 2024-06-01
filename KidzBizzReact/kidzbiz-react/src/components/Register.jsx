@@ -186,7 +186,7 @@ export default function Register() {
             </select>
             {errors.gender && <p style={{ color: "red" }}>{errors.gender}</p>}
           </div>
-          <button class="button-29" type="submit">
+          <button className="button-29" type="submit">
             Proceed
           </button>
         </form>
