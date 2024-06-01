@@ -10,6 +10,7 @@ import GameGuide from "./components/GameGuide";
 import GameBoard from "./components/GameBoard";
 import UserContext from "./components/UserContext";
 import PlayersRating from "./components/PlayersRating";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -21,6 +22,7 @@ function App() {
   return (
     <UserContext.Provider value={user}>
       <div>
+      <ToastContainer />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/ChooseAvatar" element={<ChooseAvatar />} />

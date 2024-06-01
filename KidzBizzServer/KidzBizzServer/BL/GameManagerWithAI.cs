@@ -61,7 +61,7 @@ namespace KidzBizzServer.BL
                 CurrentBalance = Convert.ToDouble(startingMoney),
                 CurrentPosition = currentLocation,
                 PlayerStatus = "Active",
-                LastDiceResult = 0
+                LastDiceResult = 0 ,               
 
             };
 
@@ -81,7 +81,8 @@ namespace KidzBizzServer.BL
                 CurrentBalance = Convert.ToDouble(startingMoney),
                 CurrentPosition = currentLocation,
                 PlayerStatus = "Active",
-                LastDiceResult = 0
+                LastDiceResult = 0,
+             
 
             };
 
@@ -159,6 +160,8 @@ namespace KidzBizzServer.BL
             player.CurrentPosition += diceRoll;
             player.CurrentPosition %= 40; // Wrap around to start if currentPosition >= 40
             player.LastDiceResult = diceRoll;
+            player.Dice1 = dice1;
+            player.Dice2 = dice2;
 
             // Save the new position in the database
             player.UpdatePosition();

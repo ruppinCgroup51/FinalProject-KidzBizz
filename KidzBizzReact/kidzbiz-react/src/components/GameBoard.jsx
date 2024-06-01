@@ -3,8 +3,17 @@ import UserContext from "./UserContext";
 import { GameSquare } from "./GameSquare";
 import "../css/gameboard.css";
 import { faDice, faDollarSign } from "@fortawesome/free-solid-svg-icons";
+import {
+  FaDiceOne,
+  FaDiceTwo,
+  FaDiceThree,
+  FaDiceFour,
+  FaDiceFive,
+  FaDiceSix,
+} from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Navigate } from "react-router-dom";
+import Modal from "react-modal";
 
 export default function GameBoard() {
   const numSquares = Array.from({ length: 40 }, (_, i) => i + 1); // 40 משבצות בלוח
@@ -13,13 +22,15 @@ export default function GameBoard() {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isRollDiceDisabled, setIsRollDiceDisabled] = useState(false);
   const [isEndTurnDisabled, setisEndTurnDisabled] = useState(false);
+  const [displayDice, setDisplayDice] = useState(null);
+  // Add a new state variable for prop button.
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    setPlayers([]);
     setCurrentPlayerIndex(0);
     setIsRollDiceDisabled(false);
     setisEndTurnDisabled(false);
-    localStorage.removeItem('players');
 
     const fetchData = async () => {
       if (!user || !user.userId) {
@@ -127,6 +138,7 @@ export default function GameBoard() {
 
   const endTurn = () => {
     // Advance the current player index
+
     const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
     setCurrentPlayerIndex(nextPlayerIndex);
   };
@@ -134,13 +146,24 @@ export default function GameBoard() {
   const handleRollDiceClick = async () => {
     setIsRollDiceDisabled(true);
     setisEndTurnDisabled(false);
+
     await rollDice();
+    // Set the displayDice state to the current player's userId
+    setDisplayDice(players[currentPlayerIndex].user.userId);
   };
 
   const handleEndTurnClick = () => {
+    const updatedPlayers = [...players];
+    if (updatedPlayers[currentPlayerIndex].user.userId === 1016) {
+      // Only reset the dice for the AI player
+      updatedPlayers[currentPlayerIndex].dice1 = 0;
+      updatedPlayers[currentPlayerIndex].dice2 = 0;
+    }
+    setPlayers(updatedPlayers);
     endTurn();
     setIsRollDiceDisabled(false);
     setisEndTurnDisabled(true);
+    setDisplayDice(1016);
   };
 
   const handleEndGame = () => {
@@ -148,6 +171,51 @@ export default function GameBoard() {
 
     // go back to looby page
     Navigate("/Lobi");
+  };
+
+  const numberToDiceIcon = (number, size) => {
+    switch (number) {
+      case 1:
+        return <FaDiceOne size={size} />;
+      case 2:
+        return <FaDiceTwo size={size} />;
+      case 3:
+        return <FaDiceThree size={size} />;
+      case 4:
+        return <FaDiceFour size={size} />;
+      case 5:
+        return <FaDiceFive size={size} />;
+      case 6:
+        return <FaDiceSix size={size} />;
+      default:
+        return null;
+    }
+  };
+
+  const PlayerProperties = ({ player }) => {
+    if (!player) {
+      return null;
+    }
+
+    const hasProperties = player.properties && player.properties.length > 0;
+
+    return (
+      <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
+        <h2>{player.user.firstName}'s Properties</h2>
+        {hasProperties ? (
+          player.properties.map((property, index) => (
+            <div key={index}>
+              <p>Property ID: {property.propertyId}</p>
+              <p>Property Name: {property.propertyName}</p>
+              <p>Property Price: {property.propertyPrice}</p>
+            </div>
+          ))
+        ) : (
+          <p>No properties</p>
+        )}
+        <button onClick={() => setIsModalOpen(false)}>Close</button>
+      </Modal>
+    );
   };
 
   return (
@@ -175,6 +243,22 @@ export default function GameBoard() {
                     <FontAwesomeIcon icon={faDollarSign} />
                     Current Money: {player.currentBalance}
                   </p>
+                  <button
+                    onClick={() => {
+                      setSelectedPlayer(player);
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    View Properties
+                  </button>
+                  {player.user.userId === displayDice &&
+                    player.dice1 > 0 &&
+                    player.dice2 > 0 && (
+                      <p>
+                        {numberToDiceIcon(player.dice1, 50)}
+                        {numberToDiceIcon(player.dice2, 50)}
+                      </p>
+                    )}
                 </div>
               ))}
             </div>
@@ -196,6 +280,7 @@ export default function GameBoard() {
               <button onClick={handleEndGame}>End Game</button>
             </div>
           </div>
+          <PlayerProperties player={selectedPlayer} />
         </div>
       </div>
     </>

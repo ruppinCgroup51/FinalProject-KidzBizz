@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import BoardSection from "./BoardSection";
 import { SquareConfigData } from "/src/components/SquareData.jsx";
 import { SquareInfo } from "/src/components/SquareInfo.jsx";
 import SquareType from "./SquareType";
 import "../css/gamesquare.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const GameSquare = ({ id, players }) => {
   const section = SquareConfigData.get(id)?.section;
@@ -17,15 +19,17 @@ export const GameSquare = ({ id, players }) => {
   ]);
 
   const squareTypeClass = new Map([
-    [SquareType.Present, "present"],
-    [SquareType.Chance, "chance"],
+    [SquareType.Present, "הפתעה"],
+    [SquareType.Chance, "סיכוי"],
     [SquareType.Go, "passgo"],
     [SquareType.GoToJail, "go-to-jail"],
     [SquareType.Jail, "jail"],
-    [SquareType.Property, "property"],
-    [SquareType.DidYouKnow, "didYouKnow"],
+    [SquareType.Property, "נכס"],
+    [SquareType.DidYouKnow, "הידעת ?"],
   ]);
-
+  const prevPlayerPositions = useRef(
+    players.map((player) => player.currentPosition)
+  );
   const getContainerClassName = () => {
     return "container container-" + sectionMap.get(section);
   };
@@ -37,6 +41,25 @@ export const GameSquare = ({ id, players }) => {
   const getSquareId = () => {
     return "game-square-" + id;
   };
+
+  useEffect(() => {
+    players.forEach((player, index) => {
+      if (
+        player.currentPosition === id &&
+        player.currentPosition !== prevPlayerPositions.current[index]
+      ) {
+        prevPlayerPositions.current[index] = player.currentPosition;
+        if (squareType !== SquareType.Go) {
+          toast(
+            `שחקן מספר ${
+              player.user.userId
+            } הגעת ל-תא מסוג ${squareTypeClass.get(squareType)}`,
+            { type: "success" }
+          );
+        }
+      }
+    });
+  }, [players, id, squareType, squareTypeClass]);
 
   return (
     <div className={getSquareClassName()} id={getSquareId()}>

@@ -11,8 +11,11 @@ namespace KidzBizzServer.BL
         string playerStatus;
         int lastDiceResult;
         List<Property> properties = new List<Property>();
+        int dice1 = 0;
+        int dice2 = 0;
 
-        public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties)
+
+        public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties, int dice1, int dice2)
         {
             this.playerId = playerId;
             this.user = user;
@@ -21,6 +24,8 @@ namespace KidzBizzServer.BL
             this.playerStatus = playerStatus;
             this.lastDiceResult = lastDiceResult;
             this.properties = properties;
+            this.dice1 = dice1;
+            this.dice2 = dice2; 
         }
 
         public Player()
@@ -35,8 +40,14 @@ namespace KidzBizzServer.BL
         public double CurrentBalance { get => currentBalance; set => currentBalance = value; }
         public string PlayerStatus { get => playerStatus; set => playerStatus = value; }
         public int LastDiceResult { get => lastDiceResult; set => lastDiceResult = value; }
-
         public List<Property> Properties { get => properties; set => properties = value; }
+
+        public int Dice1 { get => dice1; set => dice1 = value; } 
+        public int Dice2 { get => dice2; set => dice2 = value; }
+
+
+
+
 
         public List<Player> Read()
         {

@@ -43,13 +43,16 @@ export default function Login({ onLogin }) {
     e.preventDefault();
 
     const setUserApi = () => {
-      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-        return 'https://localhost:7034/api/Users/login';
+      if (
+        location.hostname === "localhost" ||
+        location.hostname === "127.0.0.1"
+      ) {
+        return "https://localhost:7034/api/Users/login";
       } else {
-        return 'https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/Users/login';
+        return "https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/Users/login";
       }
     };
-  
+
     const apiUrl = setUserApi();
 
     try {
@@ -61,6 +64,10 @@ export default function Login({ onLogin }) {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
+        // Clear the local storage
+        localStorage.removeItem("players");
+        // Then perform the login operation...
+
         const formData = await response.json();
         console.log("userData : ", formData);
         console.log("User logged in successfully");
@@ -107,7 +114,7 @@ export default function Login({ onLogin }) {
             avatarPicture: "",
             dateOfBirth: new Date().toISOString(),
             gender: "",
-            score: 0
+            score: 0,
           }); // Reset the form
         });
     }
@@ -139,9 +146,7 @@ export default function Login({ onLogin }) {
               sx={{
                 fontSize: "16px",
                 width: "20%",
-                
               }}
-              
             />
             <br />
             <ThemeProvider theme={theme}>

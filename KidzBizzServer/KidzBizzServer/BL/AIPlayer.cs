@@ -139,7 +139,7 @@ namespace KidzBizzServer.BL
             public double CurrentRentPotential { get; set; }
         }
 
-        public AIPlayer(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties, PlayerType type)
+        public AIPlayer(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties, int dice1 , int dice2 , PlayerType type)
            : base(playerId, user ?? new User
            {
                Gender = "Not specified",
@@ -148,7 +148,7 @@ namespace KidzBizzServer.BL
                Username = "AIPlayer",
                FirstName = "AI",
                AvatarPicture = "https://robohash.org/avatar1"
-           }, currentPosition, currentBalance, playerStatus, lastDiceResult, properties)
+           }, currentPosition, currentBalance, playerStatus, lastDiceResult, properties , dice1 , dice2)
         {
             PlayerType = type;
         }
