@@ -4,7 +4,7 @@
     {
         int propertyId;
         string propertyName;
-        double propertyPrice;
+        decimal propertyPrice;
 
         public Property(int propertyId, string propertyName, double propertyPrice)
         {
@@ -33,10 +33,13 @@
             DBservices dbs = new DBservices();
             return dbs.ReadPropertiesByPlayerId(id);
         }
+
         public object CheckPropertyOwnership(int propertyId, int playerId, int playerAiId)
         {
+            DBservices dbs = new DBservices();
+
             // בדיקת בעלות הנכס ע"י השחקן
-            List<Property> playerProperties = ReadPropertiesByPlayerId(playerId);
+            List<Property> playerProperties = dbs.ReadPropertiesByPlayerId(playerId);
             foreach (var property in playerProperties)
             {
                 if (property.PropertyId == propertyId)
@@ -46,7 +49,7 @@
             }
 
             // בדיקת בעלות הנכס ע"י שחקן ה-AI
-            List<Property> aiPlayerProperties = ReadPropertiesByPlayerId(playerAiId);
+            List<Property> aiPlayerProperties = dbs.ReadPropertiesByPlayerId(playerAiId);
             foreach (var property in aiPlayerProperties)
             {
                 if (property.PropertyId == propertyId)
@@ -59,8 +62,52 @@
             return null;
         }
 
+        public bool BuyProperty(int playerId, int propertyId)
+        {
+            DBservices dbs = new DBservices();
+
+            // בדיקת בעלות הנכס
+            var ownership = CheckPropertyOwnership(propertyId, playerId, playerId);
+            if (ownership != null)
+            {
+                return false; // הנכס כבר תפוס
+            }
+
+            // קבלת פרטי הנכס לפי מזהה הנכס
+            Property propertyToBuy = dbs.GetRentPrice(propertyId);
+            if (propertyToBuy == null)
+            {
+                return false; // הנכס לא נמצא
+            }
+
+            // קבלת פרטי השחקן
+            Player player = dbs.GetPlayerById(playerId);
+            if (player == null)
+            {
+                return false; // השחקן לא נמצא
+            }
+
+            // בדיקת אם לשחקן יש מספיק כסף לרכישת הנכס
+            if (player.CurrentBalance >= propertyToBuy.PropertyPrice)
+            {
+                // עדכון הכסף של השחקן
+                player.CurrentBalance -= propertyToBuy.PropertyPrice;
+                player.UpdatePlayerBalance(playerId, (decimal)player.CurrentBalance);
+
+                // הוספת הנכס לרשימת הנכסים של השחקן
+                player.AddPropertyToPlayer(playerId, propertyId);
+
+                // עדכון פרטי השחקן במסד הנתונים
+                player.Update();
+
+                return true; // הרכישה הצליחה
+            }
+
+            return false; // לשחקן אין מספיק כסף
+        }
     }
 }
+   
 
 
 

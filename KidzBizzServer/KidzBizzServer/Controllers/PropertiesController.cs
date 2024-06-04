@@ -41,6 +41,23 @@ namespace KidzBizzServer.Controllers
                 return NotFound("הנכס לא בבעלות של אף שחקן.");
             }
         }
+        // POST api/<PropertiesController>/BuyProperty
+        [HttpPost]
+        [Route("BuyProperty")]
+        public IActionResult BuyProperty([FromBody] int PlayerId, int PropertyId)
+        {
+            Property property = new Property();
+            bool success = property.BuyProperty(PlayerId, PropertyId);
+            if (success)
+            {
+                return Ok("הנכס נרכש בהצלחה.");
+            }
+            else
+            {
+                return BadRequest("הרכישה נכשלה.");
+            }
+        }
+
 
         // POST api/<PropertiesController>
         [HttpPost]
