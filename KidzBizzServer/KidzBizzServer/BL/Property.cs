@@ -33,7 +33,34 @@
             DBservices dbs = new DBservices();
             return dbs.ReadPropertiesByPlayerId(id);
         }
-     
+        public object CheckPropertyOwnership(int propertyId, int playerId, int playerAiId)
+        {
+            // בדיקת בעלות הנכס ע"י השחקן
+            List<Property> playerProperties = ReadPropertiesByPlayerId(playerId);
+            foreach (var property in playerProperties)
+            {
+                if (property.PropertyId == propertyId)
+                {
+                    return new { OwnerType = "Player", OwnerId = playerId };
+                }
+            }
+
+            // בדיקת בעלות הנכס ע"י שחקן ה-AI
+            List<Property> aiPlayerProperties = ReadPropertiesByPlayerId(playerAiId);
+            foreach (var property in aiPlayerProperties)
+            {
+                if (property.PropertyId == propertyId)
+                {
+                    return new { OwnerType = "AI Player", OwnerId = playerAiId };
+                }
+            }
+
+            // הנכס לא בבעלות של אף שחקן
+            return null;
+        }
 
     }
 }
+
+
+
