@@ -98,7 +98,8 @@ namespace KidzBizzServer.BL
             return dbs.ReadPropertiesByPlayerId(playerId);
         }
 
-     
+
+
         // מיישמת את ההשפעות של כרטיס הפתעה
         public void ApplySurpriseEffect(Card card)
         {

@@ -718,7 +718,68 @@ public class DBservices
 
         return cmd;
     }
+    //--------------------------------------------------------------------------------------------------
+    // This method return player by id
+    //--------------------------------------------------------------------------------------------------
+     public Player GetPlayerById(int playerId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        Player player = null;
 
+        try
+        {
+            con = connect("myProjDB"); // יצירת חיבור למסד הנתונים
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateGetPlayerByIdCommandWithStoredProcedure("KBSP_GetPlayerById", con, playerId);
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dataReader.Read())
+            {
+                player = new Player
+                {
+                    PlayerId = Convert.ToInt32(dataReader["PlayerId"]),
+                    CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]),
+                    CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]),
+                    PlayerStatus = dataReader["PlayerStatus"].ToString(),
+                    LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"])
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+
+        return player;
+    }
+
+    private SqlCommand CreateGetPlayerByIdCommandWithStoredProcedure(String spName, SqlConnection con, int playerId)
+    {
+        SqlCommand cmd = new SqlCommand();
+
+        cmd.Connection = con;
+        cmd.CommandText = spName;
+        cmd.CommandTimeout = 10;
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Parameters.AddWithValue("@PlayerId", playerId);
+
+        return cmd;
+    }
     //-------------------------------------------------------------------------------------------------
     // !!! PROPERTY !!!
     //-------------------------------------------------------------------------------------------------
