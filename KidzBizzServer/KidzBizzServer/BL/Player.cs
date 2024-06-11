@@ -100,20 +100,89 @@ namespace KidzBizzServer.BL
 
 
 
-        // מיישמת את ההשפעות של כרטיס הפתעה
-        public void ApplySurpriseEffect(Card card)
+     
+        // מיישמת את ההשפעות של כרטיס לפי סוגו
+        public void ApplyCardEffect(Card card)
         {
-            // הפעולות המוסיפות כסף
-            if (card.Description.Contains("קבל") || card.Description.Contains("הרווח"))
+            switch (card.Action)
+            {
+                case CardAction.Command:
+                    ApplyCommandCardEffect(card);
+                    break;
+                case CardAction.Surprise:
+                    ApplySurpriseEffect(card);
+                    break;
+                case CardAction.DidYouKnow:
+                    ApplyDidYouKnowCardEffect(card);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        // מיישמת את ההשפעות של כרטיס פקודה
+        private void ApplyCommandCardEffect(Card card)
+        {
+            if (card.Description.Contains("התקדם למשבצת"))
+            {
+                if (card.Description.Contains("הידעת הקרובה"))
+                {
+                    int targetPosition = FindNearestPosition("ידעת");
+                    MoveToPosition(targetPosition);
+                }
+                else if (card.Description.Contains("תיבת הפתעות הקרובה"))
+                {
+                    int targetPosition = FindNearestPosition("תיבת הפתעה");
+                    MoveToPosition(targetPosition);
+                    DrawSurpriseCard();
+                }
+                else if (card.Description.Contains("הפקודה הקרובה"))
+                {
+                    int targetPosition = FindNearestPosition("פקודה");
+                    MoveToPosition(targetPosition);
+                }
+            }
+            else if (card.Description.Contains("דלג"))
+            {
+                SkipNextTurn();
+                if (card.Description.Contains("הרוויח"))
+                {
+                    this.currentBalance += card.Amount;
+                }
+            }
+            else if (card.Description.Contains("הרוויח"))
             {
                 this.currentBalance += card.Amount;
             }
-            // הפעולות המחסירות כסף
-            else if (card.Description.Contains("שלם") || card.Description.Contains("השקיעו") || card.Description.Contains("הפסדת "))
+            else if (card.Description.Contains("שלם"))
             {
                 this.currentBalance -= card.Amount;
             }
-            // פעולות המשפיעות על ערך הנכסים
+            else if (card.Description.Contains("בחר שחקן כדי לדלג על התור הבא שלו"))
+            {
+                // יש לממש את הלוגיקה לבחירת שחקן ודילוג על התור הבא שלו
+            }
+            else if (card.Description.Contains("קלף הגנה"))
+            {
+                // יש לממש את הלוגיקה לקלף הגנה
+            }
+            else if (card.Description.Contains("אם תפתרו נכון את השאלה הרוויחו"))
+            {
+                // יש לממש את הלוגיקה לכרטיס מחקר ופיתוח
+            }
+        }
+
+        // מיישמת את ההשפעות של כרטיס הפתעה
+        private void ApplySurpriseEffect(Card card)
+        {
+            if (card.Description.Contains("קבל") || card.Description.Contains("הרוויח"))
+            {
+                this.currentBalance += card.Amount;
+            }
+            else if (card.Description.Contains("שלם") || card.Description.Contains("השקיעו") || card.Description.Contains("הפסדת"))
+            {
+                this.currentBalance -= card.Amount;
+            }
             if (card.Description.Contains("ערכי הנכסים יורדים"))
             {
                 int percentage = ExtractPercentage(card.Description);
@@ -122,25 +191,75 @@ namespace KidzBizzServer.BL
                     property.PropertyPrice -= property.PropertyPrice * percentage / 100;
                 }
             }
-            // מיוחד: משחק קוביות עם מתחרה
             if (card.Description.Contains("בחר מתחרה אחד"))
             {
                 PlayDiceWithRival();
             }
         }
 
+        // מיישמת את ההשפעות של כרטיס הידעת
+        private void ApplyDidYouKnowCardEffect(Card card)
+        {
+            // יש לממש את הלוגיקה לכרטיס הידעת
+        }
+
+        // מוצאת את המיקום הקרוב ביותר לפי סוג הכרטיס
+        private int FindNearestPosition(string type)
+        {
+            int currentPosition = this.CurrentPosition;
+            int[] positions;
+
+            switch (type)
+            {
+                case "ידעת":
+                    positions = new int[] { };
+                    break;
+                case "תיבת הפתעה":
+                    positions = new int[] { 6, 15, 21, 30, 37 };
+                    break;
+                case "פקודה":
+                    positions = new int[] { 2, 9, 13, 19, 32, 38 };
+                    break;
+                default:
+                    positions = new int[] { };
+                    break;
+            }
+
+            return positions.Where(p => p > currentPosition).OrderBy(p => p).FirstOrDefault();
+        }
+
+        // מזיז את השחקן למיקום החדש
+        private void MoveToPosition(int targetPosition)
+        {
+            int steps = targetPosition - this.CurrentPosition;
+            this.CurrentPosition = steps;
+            UpdatePosition();
+        }
+
+        // מדלג על התור הבא
+        private void SkipNextTurn()
+        {
+            // לוגיקה לדילוג על התור הבא
+        }
+
+        // שולף קלף הפתעה
+        private void DrawSurpriseCard()
+        {
+            // לוגיקה לשליפת קלף הפתעה
+        }
+
+        // מחלץ אחוזים מהתיאור
         private int ExtractPercentage(string description)
         {
             var match = Regex.Match(description, @"\d+%");
             return int.Parse(match.Value.TrimEnd('%'));
         }
 
+        // משחק קוביות עם יריב
         private void PlayDiceWithRival()
         {
-            // יש לממש את פונקציית ההטלות בהתאם ללוגיקה של המשחק
+            // לוגיקה להטלת קוביות עם יריב לפי חוקי המשחק
         }
-
-        // קריאה ועדכון נתוני שחקן מהדאטאבייס
     }
 }
 
