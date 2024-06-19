@@ -2,7 +2,9 @@ import React, { useState, useContext, useEffect } from "react";
 import UserContext from "./UserContext";
 import { GameSquare } from "./GameSquare";
 import "../css/gameboard.css";
+import { SquareConfigData} from "/src/components/SquareData.jsx"; // Already imported in GameSquare, ensure it's imported in GameBoard too
 import { faDice, faDollarSign } from "@fortawesome/free-solid-svg-icons";
+import SquareType from "/src/components/SquareType.jsx"
 import {
   FaDiceOne,
   FaDiceTwo,
@@ -14,7 +16,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Navigate } from "react-router-dom";
 import Modal from "react-modal";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  // Make sure this line is also included to apply styles.
+ // At the top level of your component or application
 
+
+// This line is needed to bind the modal to your app element (set the ID accordingly)
+Modal.setAppElement('#root'); // or whatever your root element's ID is
 export default function GameBoard() {
   const numSquares = Array.from({ length: 40 }, (_, i) => i + 1); // 40 משבצות בלוח
   const user = useContext(UserContext); // המשתמש המחובר
@@ -26,6 +34,10 @@ export default function GameBoard() {
   // Add a new state variable for prop button.
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  ////
+  const [modalSquareIsOpen, setModalSquarIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
+
 
   useEffect(() => {
     setCurrentPlayerIndex(0);
@@ -218,6 +230,102 @@ export default function GameBoard() {
     );
   };
 
+  const handleSquareLanding = async (position) => {
+    const squareType = SquareConfigData.get(position)?.type; // Using the existing GameSquare logic to get type
+  
+    switch(squareType) {
+      case SquareType.Property:
+        /*try {
+          const response = await fetch(`/api/Properties/CheckPropertyOwnership?propertyId=${position}`);
+          const result = await response.json();
+          const ownerId = result.owner; 
+    
+          if (ownerId === -1) {
+            // No owner, ask player if they want to buy the property
+            const wantToBuy = window.confirm('This property is available. Do you want to buy it?');
+            if (wantToBuy) {
+              const buyResponse = await fetch(`/api/Properties/BuyProperty`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ propertyId: position, playerId: currentPlayer.userId })
+              });
+              if (buyResponse.ok) {
+                toast('You have successfully bought the property!', { type: 'success' });
+              } else {
+                toast('Failed to buy property.', { type: 'error' });
+              }
+            }
+          } else {
+            // Property has an owner, need to pay rent
+            const rentResponse = await fetch(`/api/GameManagerWithAI/payRent`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ playerId: currentPlayer.userId, propertyOwnerId: ownerId, propertyId: position })
+            });
+            if (rentResponse.ok) {
+              toast('Rent paid successfully!', { type: 'info' });
+            } else {
+              toast('Failed to pay rent.', { type: 'error' });
+            }
+          }
+        } catch (error) {
+          console.error('Failed to check property ownership or handle transactions:', error);
+          toast('Error handling property action.', { type: 'error' });
+        }; */
+        // Show modal to buy property or something similar
+        showModal(`You landed on a property. Would you like to buy it?`);
+        break;
+      case SquareType.Surprise:
+        // Trigger a surprise event
+        showModal('Surprise! You have drawn a surprise card.');
+        break;
+      case SquareType.Chance:
+        // Trigger a chance event
+        showModal('Chance! Take a chance card and see what happens.');
+        break;
+      case SquareType.DidYouKnow:
+        // Trigger a trivia question
+        showModal('Did You Know? Time for a trivia question!');
+        break;
+      case SquareType.Go:
+        // Perhaps increment player's money here as they pass go
+        toast('You passed GO! Collect $200.', { type: "info" });
+        break;
+      case SquareType.Jail:
+        // Handle jail logic
+        showModal('You are just visiting jail this time.');
+        break;
+      case SquareType.GoToJail:
+        // Move player to jail
+        showModal('Go to Jail! Move directly to jail.');
+        break;
+      default:
+        // Handle other types or do nothing
+        toast(`You landed on a regular square.`, { type: "info" });
+        break;
+    }
+  };
+  
+  // Function to show modal with a message
+  const showModal = (message) => {
+    setModalContent(message);
+    setModalSquarIsOpen(true);  // Ensure this is the correct state variable
+  };
+  
+
+useEffect(() => {
+  if (players[currentPlayerIndex]) {
+    const currentPosition = players[currentPlayerIndex].currentPosition;
+    handleSquareLanding(currentPosition);
+  }
+}, [currentPlayerIndex, players]);
+
+  
+
+
+
+  
+
   return (
     <>
       <div className="frame">
@@ -283,6 +391,11 @@ export default function GameBoard() {
           <PlayerProperties player={selectedPlayer} />
         </div>
       </div>
+        {/* Modal for displaying messages based on square landing */}
+        <Modal isOpen={modalSquareIsOpen} onRequestClose={() => setModalSquarIsOpen(false)}>
+        <h2>{modalContent}</h2>
+        <button onClick={() => setModalSquarIsOpen(false)}>Close</button>
+      </Modal>
     </>
   );
 }

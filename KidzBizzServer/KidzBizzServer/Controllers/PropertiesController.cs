@@ -34,13 +34,15 @@ namespace KidzBizzServer.Controllers
             var owner = property.CheckPropertyOwnership(propertyId, playerId, playerAiId);
             if (owner != null)
             {
-                return Ok(owner);
+                return Ok(new { owner = owner });  // Return JSON object with owner
             }
             else
             {
-                return NotFound("הנכס לא בבעלות של אף שחקן.");
+                return Ok(new { owner = -1 });  // Still return JSON object, but indicate no owner
             }
         }
+
+
         // POST api/<PropertiesController>/BuyProperty
         [HttpPost]
         [Route("BuyProperty")]
