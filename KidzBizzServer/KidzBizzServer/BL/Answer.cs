@@ -14,7 +14,7 @@
             this.answerText = answerText;
             this.isCorrect = isCorrect;
         }
-    
+
         public Answer()
         {
 
