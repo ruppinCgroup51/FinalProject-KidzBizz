@@ -1,7 +1,6 @@
 ﻿using KidzBizzServer.BL;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace KidzBizzServer.Controllers
 {
     [Route("api/[controller]")]

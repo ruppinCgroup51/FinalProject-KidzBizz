@@ -1,85 +1,99 @@
-﻿
-namespace KidzBizzServer.BL
+﻿namespace KidzBizzServer.BL
 {
-
-    // יצירת enum לסוגי הפעולות של הכרטיס
+    // Enum לסוגי הפעולות של הכרטיס
     public enum CardAction
     {
         Command = 1,  // פקודה
         Surprise = 2, // הפתעה
         DidYouKnow = 3 // הידעת
     }
-    public class Card
+
+    // מחלקת כרטיס בסיסית
+    public abstract class Card
     {
-        int cardId;
-        string description;
-        CardAction action;  // שימוש ב־enum עבור סוג הפעולה
-        double amount;
-        int moveTo;  // New property to specify board move location
+        public int CardId { get; set; }
+        public string Description { get; set; }
+        public CardAction Action { get; set; }
 
-
-
-        /// 1 - פקודה: השחקן חייב לבצע הוראה מסוימת.
-        /// 2 - הפתעה: מפעיל אירוע משחק בלתי צפוי.
-        /// 3 - הידעת: מספק עובדה או מידע טריוויה.
-        public Card(int cardId, string description, CardAction action, double amount, int moveTo)
+        protected Card(int cardId, string description, CardAction action)
         {
-            this.cardId = cardId;
-            this.description = description;
-            this.action = action;
-            this.amount = amount;
-            this.moveTo = moveTo;
-
+            CardId = cardId;
+            Description = description;
+            Action = action;
         }
 
-        public Card()
-        {
+        protected Card() { }
 
+        public abstract bool UpdateCard();
+    }
+
+    // מחלקת כרטיס הידעת
+    public class DidYouKnowCard : Card
+    {
+        public string Question1 { get; set; }
+        public string Question2 { get; set; }
+        public string Answer { get; set; }
+
+        public DidYouKnowCard(int cardId, string description, string question1, string question2, string answer)
+            : base(cardId, description, CardAction.DidYouKnow)
+        {
+            Question1 = question1;
+            Question2 = question2;
+            Answer = answer;
         }
 
-        public int CardId { get => cardId; set => cardId = value; }
-        public string Description { get => description; set => description = value; }
-        public CardAction Action { get => action; set => action = value; }
-        public double Amount { get => amount; set => amount = value; }
-        public int MoveTo { get => moveTo; set => moveTo = value; }
+        public DidYouKnowCard() { }
 
-
-        // Method to retrieve all cards from the database
-        public List<Card> ReadAllCards()
-        {
-            DBservices dbs = new DBservices();
-            return dbs.ReadCards();
-        }
-        public bool UpdateCard(int cardId)
+        public override bool UpdateCard()
         {
             DBservices dbs = new DBservices();
-            if (CheckCard(cardId))
-            {
-                Card updatedsuccess = dbs.UpdateCard(this);
-                return updatedsuccess != null;
-            }
-            else
-            {
-                
-                return false;
-            }
+            return dbs.UpdateDidYouKnowCard(this);
+        }
+    }
+
+    // מחלקת כרטיס הפתעה
+    public class SurpriseCard : Card
+    {
+        public double Amount { get; set; }
+        public int MoveTo { get; set; }
+        public bool IsGameState { get; set; } // מצב משחק, לדוגמה כרטיס יציאה מהכלא
+
+        public SurpriseCard(int cardId, string description, double amount, int moveTo, bool isGameState)
+            : base(cardId, description, CardAction.Surprise)
+        {
+            Amount = amount;
+            MoveTo = moveTo;
+            IsGameState = isGameState;
         }
 
-        private bool CheckCard(int cardId)
+        public SurpriseCard() { }
+
+        public override bool UpdateCard()
         {
             DBservices dbs = new DBservices();
-            List<Card> cards = dbs.ReadCards();
-            foreach (Card card in cards)
-            {
-                if (card.CardId == cardId)
-                {
-                    return true;  
-                }
-            }
-            return false;  
+            return dbs.UpdateSurpriseCard(this);
+        }
+    }
+
+    // מחלקת כרטיס פקודה
+    public class CommandCard : Card
+    {
+        public double Amount { get; set; }
+        public int MoveTo { get; set; }
+
+        public CommandCard(int cardId, string description, double amount, int moveTo)
+            : base(cardId, description, CardAction.Command)
+        {
+            Amount = amount;
+            MoveTo = moveTo;
         }
 
+        public CommandCard() { }
+
+        public override bool UpdateCard()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.UpdateCommandCard(this);
+        }
     }
 }
-
-
