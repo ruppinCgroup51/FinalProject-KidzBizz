@@ -888,51 +888,51 @@ public class DBservices
     }
 
 
-    //-------------------------------------------------------------------------------------------------
-    // !!! QUESTION !!!
-    //-------------------------------------------------------------------------------------------------
+    ////-------------------------------------------------------------------------------------------------
+    //// !!! QUESTION !!!
+    ////-------------------------------------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------------------------------
-    // This method return all the Questions
-    //--------------------------------------------------------------------------------------------------
+    ////--------------------------------------------------------------------------------------------------
+    //// This method return all the Questions
+    ////--------------------------------------------------------------------------------------------------
 
-    public List<Question> ReadQuestions()
-    {
+    //public List<Question> ReadQuestions()
+    //{
 
-        SqlConnection con;
-        SqlCommand cmd;
+    //    SqlConnection con;
+    //    SqlCommand cmd;
 
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        List<Question> questions = new List<Question>();
+    //    try
+    //    {
+    //        con = connect("myProjDB"); // create the connection
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // write to log
+    //        throw (ex);
+    //    }
+    //    List<Question> questions = new List<Question>();
 
 
-        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetQuestions");
+    //    cmd = buildReadStoredProcedureCommand(con, "KBSP_GetQuestions");
 
-        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+    //    SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-        while (dataReader.Read())
-        {
-            Question q = new Question();
-            q.QuestionId = Convert.ToInt32(dataReader["QuestionId"]);
-            q.QuestionText = dataReader["QuestionText"].ToString();
+    //    while (dataReader.Read())
+    //    {
+    //        Question q = new Question();
+    //        q.QuestionId = Convert.ToInt32(dataReader["QuestionId"]);
+    //        q.QuestionText = dataReader["QuestionText"].ToString();
 
-            questions.Add(q);
-        }
-        if (con != null)
-        {
-            // close the db connection
-            con.Close();
-        }
-        return questions;
-    }
+    //        questions.Add(q);
+    //    }
+    //    if (con != null)
+    //    {
+    //        // close the db connection
+    //        con.Close();
+    //    }
+    //    return questions;
+    //}
 
     //-------------------------------------------------------------------------------------------------
     // !!! FEEDBACK !!!
@@ -1050,84 +1050,84 @@ public class DBservices
         return cmd;
     }
 
-    //-------------------------------------------------------------------------------------------------
-    // !!! ANSWER !!!
-    //-------------------------------------------------------------------------------------------------
+    ////-------------------------------------------------------------------------------------------------
+    //// !!! ANSWER !!!
+    ////-------------------------------------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------------------------------
-    // This method insert Answer
-    //--------------------------------------------------------------------------------------------------
+    ////--------------------------------------------------------------------------------------------------
+    //// This method insert Answer
+    ////--------------------------------------------------------------------------------------------------
 
-    // לא בטוחה שצריך פונקציה כזאת של הכנסת תשובה מהקליינט 
+    //// לא בטוחה שצריך פונקציה כזאת של הכנסת תשובה מהקליינט 
 
 
 
-    public int InsertAnswer(Answer answer)
+    //public int InsertAnswer(Answer answer)
 
-    {
+    //{
 
-        SqlConnection con;
-        SqlCommand cmd;
+    //    SqlConnection con;
+    //    SqlCommand cmd;
 
-        try
+    //    try
 
-        {
-            con = connect("myProjDB"); // create the connection
-        }
+    //    {
+    //        con = connect("myProjDB"); // create the connection
+    //    }
 
-        catch (Exception ex)
+    //    catch (Exception ex)
 
-        {
-            // write to log
-            throw (ex);
+    //    {
+    //        // write to log
+    //        throw (ex);
 
-        }
+    //    }
 
-        cmd = CreateInsertAnswerWithStoredProcedure("KBSP_InsertAnswer", con, answer);             // create the command
+    //    cmd = CreateInsertAnswerWithStoredProcedure("KBSP_InsertAnswer", con, answer);             // create the command
 
-        try
+    //    try
 
-        {
-            int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            return numEffected;
-        }
+    //    {
+    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
+    //        return numEffected;
+    //    }
 
-        catch (Exception ex)
+    //    catch (Exception ex)
 
-        {
-            // write to log
-            throw (ex);
-        }
+    //    {
+    //        // write to log
+    //        throw (ex);
+    //    }
 
-        finally
-        {
-            if (con != null)
+    //    finally
+    //    {
+    //        if (con != null)
 
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
+    //        {
+    //            // close the db connection
+    //            con.Close();
+    //        }
+    //    }
 
-    }
+    //}
 
-    private SqlCommand CreateInsertAnswerWithStoredProcedure(String spName, SqlConnection con, Answer answer)
+    //private SqlCommand CreateInsertAnswerWithStoredProcedure(String spName, SqlConnection con, Answer answer)
 
-    {
-        SqlCommand cmd = new SqlCommand(); // create the command object
+    //{
+    //    SqlCommand cmd = new SqlCommand(); // create the command object
 
-        cmd.Connection = con;              // assign the connection to the command object
-        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete
-        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+    //    cmd.Connection = con;              // assign the connection to the command object
+    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete
+    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
 
-        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
 
-        cmd.Parameters.AddWithValue("@QuestionID", answer.QuestionId);
-        cmd.Parameters.AddWithValue("@AnswerText", answer.AnswerText);
-        cmd.Parameters.AddWithValue("@IsCorrect", answer.IsCorrect);
-        return cmd;
+    //    cmd.Parameters.AddWithValue("@QuestionID", answer.QuestionId);
+    //    cmd.Parameters.AddWithValue("@AnswerText", answer.AnswerText);
+    //    cmd.Parameters.AddWithValue("@IsCorrect", answer.IsCorrect);
+    //    return cmd;
 
-    }
+    //}
 
     //-------------------------------------------------------------------------------------------------
     // !!! GAME !!!
@@ -1298,409 +1298,404 @@ public class DBservices
         cmd.Parameters.AddWithValue("@GameTimestamp", game.GameTimestamp);
 
         return cmd;
+        }
+    //------------------------------------------------------------------
+    public Card GetCardById(int cardId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        Card card = null;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedure("KBSP_GetCardById", con);
+        cmd.Parameters.AddWithValue("@CardID", cardId);
+
+        try
+        {
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dr.Read())
+            {
+                card = new Card
+                {
+                    CardId = Convert.ToInt32(dr["CardID"]),
+                    Description = dr["Description"].ToString(),
+                    Action = (CardAction)Convert.ToInt32(dr["ActionType"])
+                };
+            }
+            return card;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
     }
 
-    //-------------------------------------------------------------------------------------------------
-    // !!! Card !!!
-    //-------------------------------------------------------------------------------------------------
+    public CommandCard GetCommandCardDetails(int cardId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        CommandCard card = null;
 
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
 
-    //-------------------------------------------------------------------------------------------------
-    // !!! CARD !!!
-    //-------------------------------------------------------------------------------------------------
+        cmd = CreateCommandWithStoredProcedure("KBSP_GetCommandCardDetails", con);
+        cmd.Parameters.AddWithValue("@CardID", cardId);
 
-    //--------------------------------------------------------------------------------------------------
-    // This method returns all the App Cards
-    //--------------------------------------------------------------------------------------------------
+        try
+        {
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dr.Read())
+            {
+                card = new CommandCard
+                {
+                    CardId = cardId,
+                    Description = dr["Description"].ToString(),
+                    Action = CardAction.Command,
+                    Amount = Convert.ToDouble(dr["Amount"]),
+                    MoveTo = dr["MoveTo"].ToString()
+                };
+            }
+            return card;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+    public SurpriseCard GetSurpriseCardDetails(int cardId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        SurpriseCard card = null;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedure("KBSP_GetSurpriseCardDetails", con);
+        cmd.Parameters.AddWithValue("@CardID", cardId);
+
+        try
+        {
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dr.Read())
+            {
+                card = new SurpriseCard
+                {
+                    CardId = cardId,
+                    Description = dr["Description"].ToString(),
+                    Action = CardAction.Surprise,
+                    Amount = Convert.ToDouble(dr["Amount"])
+                };
+            }
+            return card;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+    public DidYouKnowCard GetDidYouKnowCardDetails(int cardId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        DidYouKnowCard card = null;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedure("KBSP_GetDidYouKnowCardDetails", con);
+        cmd.Parameters.AddWithValue("@CardID", cardId);
+
+        try
+        {
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            if (dr.Read())
+            {
+                card = new DidYouKnowCard
+                {
+                    CardId = cardId,
+                    Description = dr["Description"].ToString(),
+                    Action = CardAction.DidYouKnow,
+                    Question = dr["Question"].ToString(),
+                    Answer1 = dr["Answer1"].ToString(),
+                    Answer2 = dr["Answer2"].ToString(),
+                    CorrectAnswer = dr["CorrectAnswer"].ToString()
+                };
+            }
+            return card;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand CreateCommandWithStoredProcedure(string spName, SqlConnection con)
+    {
+        SqlCommand cmd = new SqlCommand
+        {
+            Connection = con,
+            CommandText = spName,
+            CommandTimeout = 10,
+            CommandType = CommandType.StoredProcedure
+        };
+
+        return cmd;
+    }
+
+    public bool InsertCard(Card card)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateInsertCardCommandWithStoredProcedure("KBSP_InsertCard", con, card);
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery();
+            return numEffected == 1;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+    public bool UpdateCard(Card card)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateUpdateCardCommandWithStoredProcedure("KBSP_UpdateCard", con, card);
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery();
+            return numEffected == 1;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+    public bool DeleteCard(int cardId)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateDeleteCardCommandWithStoredProcedure("KBSP_DeleteCard", con, cardId);
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery();
+            return numEffected == 1;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+    private SqlCommand CreateInsertCardCommandWithStoredProcedure(string spName, SqlConnection con, Card card)
+    {
+        SqlCommand cmd = new SqlCommand
+        {
+            Connection = con,
+            CommandText = spName,
+            CommandTimeout = 10,
+            CommandType = CommandType.StoredProcedure
+        };
+
+        cmd.Parameters.AddWithValue("@Description", card.Description);
+        cmd.Parameters.AddWithValue("@ActionType", card.Action);
+
+        return cmd;
+    }
+
+    private SqlCommand CreateUpdateCardCommandWithStoredProcedure(string spName, SqlConnection con, Card card)
+    {
+        SqlCommand cmd = new SqlCommand
+        {
+            Connection = con,
+            CommandText = spName,
+            CommandTimeout = 10,
+            CommandType = CommandType.StoredProcedure
+        };
+
+        cmd.Parameters.AddWithValue("@CardID", card.CardId);
+        cmd.Parameters.AddWithValue("@Description", card.Description);
+        cmd.Parameters.AddWithValue("@ActionType", card.Action);
+
+        return cmd;
+    }
+
+    private SqlCommand CreateDeleteCardCommandWithStoredProcedure(string spName, SqlConnection con, int cardId)
+    {
+        SqlCommand cmd = new SqlCommand
+        {
+            Connection = con,
+            CommandText = spName,
+            CommandTimeout = 10,
+            CommandType = CommandType.StoredProcedure
+        };
+
+        cmd.Parameters.AddWithValue("@CardID", cardId);
+
+        return cmd;
+    }
+
     public List<Card> ReadCards()
     {
         SqlConnection con;
         SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
         List<Card> cards = new List<Card>();
 
-        cmd = buildReadCardStoredProcedureCommand(con, "KBSP_GetCards");
-
-        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-        while (dataReader.Read())
-        {
-            int cardId = Convert.ToInt32(dataReader["CardID"]);
-            string description = dataReader["Description"].ToString();
-            CardAction action = (CardAction)Convert.ToInt32(dataReader["ActionType"]);
-
-            Card card;
-            switch (action)
-            {
-                case CardAction.DidYouKnow:
-                    card = ReadDidYouKnowCard(cardId, description);
-                    break;
-                case CardAction.Surprise:
-                    card = ReadSurpriseCard(cardId, description);
-                    break;
-                case CardAction.Command:
-                    card = ReadCommandCard(cardId, description);
-                    break;
-                default:
-                    throw new InvalidOperationException("Unknown card action type");
-            }
-
-            cards.Add(card);
-        }
-        if (con != null)
-        {
-            // close the db connection
-            con.Close();
-        }
-        return cards;
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method reads a DidYouKnow card
-    //--------------------------------------------------------------------------------------------------
-    private DidYouKnowCard ReadDidYouKnowCard(int cardId, string description)
-    {
-        using (SqlConnection connection = connect("myProjDB"))
-        {
-            string query = "SELECT * FROM DidYouKnowCard WHERE CardID = @CardID";
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@CardID", cardId);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        string question1 = reader.GetString(1);
-                        string question2 = reader.GetString(2);
-                        string answer = reader.GetString(3);
-
-                        return new DidYouKnowCard(cardId, description, question1, question2, answer);
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method reads a Surprise card
-    //--------------------------------------------------------------------------------------------------
-    private SurpriseCard ReadSurpriseCard(int cardId, string description)
-    {
-        using (SqlConnection connection = connect("myProjDB"))
-        {
-            string query = "SELECT * FROM SurpriseCard WHERE CardID = @CardID";
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@CardID", cardId);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        double amount = reader.GetDouble(1);
-                        int moveTo = reader.GetInt32(2);
-                        bool isGameState = reader.GetBoolean(3);
-
-                        return new SurpriseCard(cardId, description, amount, moveTo, isGameState);
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method reads a Command card
-    //--------------------------------------------------------------------------------------------------
-    private CommandCard ReadCommandCard(int cardId, string description)
-    {
-        using (SqlConnection connection = connect("myProjDB"))
-        {
-            string query = "SELECT * FROM CommandCard WHERE CardID = @CardID";
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@CardID", cardId);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        double amount = reader.GetDouble(1);
-                        int moveTo = reader.GetInt32(2);
-
-                        return new CommandCard(cardId, description, amount, moveTo);
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method updates a DidYouKnow card
-    //--------------------------------------------------------------------------------------------------
-    public bool UpdateDidYouKnowCard(DidYouKnowCard card)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB");// create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        cmd = CreateUpdateDidYouKnowCardCommandWithStoredProcedure("KBSP_UpdateDidYouKnowCard", con, card);
-
-        try
-        {
-            int numEffected = cmd.ExecuteNonQuery();
-            return numEffected == 1;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // Create the update DidYouKnow card SqlCommand using a stored procedure
-    //--------------------------------------------------------------------------------------------------
-    private SqlCommand CreateUpdateDidYouKnowCardCommandWithStoredProcedure(string spName, SqlConnection con, DidYouKnowCard card)
-    {
-        SqlCommand cmd = new SqlCommand(); // create the command object
-
-        cmd.Connection = con; // assign the connection to the command object
-
-        cmd.CommandText = spName; // can be Select, Insert, Update, Delete 
-
-        cmd.CommandTimeout = 10; // Time to wait for the execution' The default is 30 seconds
-
-        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-        cmd.Parameters.AddWithValue("@CardID", card.CardId);
-        cmd.Parameters.AddWithValue("@Description", card.Description);
-        cmd.Parameters.AddWithValue("@Question1", card.Question1);
-        cmd.Parameters.AddWithValue("@Question2", card.Question2);
-        cmd.Parameters.AddWithValue("@Answer", card.Answer);
-
-        return cmd;
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method updates a Surprise card
-    //--------------------------------------------------------------------------------------------------
-    public bool UpdateSurpriseCard(SurpriseCard card)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB");// create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        cmd = CreateUpdateSurpriseCardCommandWithStoredProcedure("KBSP_UpdateSurpriseCard", con, card);
-
-        try
-        {
-            int numEffected = cmd.ExecuteNonQuery();
-            return numEffected == 1;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // Create the update Surprise card SqlCommand using a stored procedure
-    //--------------------------------------------------------------------------------------------------
-    private SqlCommand CreateUpdateSurpriseCardCommandWithStoredProcedure(string spName, SqlConnection con, SurpriseCard card)
-    {
-        SqlCommand cmd = new SqlCommand(); // create the command object
-
-        cmd.Connection = con; // assign the connection to the command object
-
-        cmd.CommandText = spName; // can be Select, Insert, Update, Delete 
-
-        cmd.CommandTimeout = 10; // Time to wait for the execution' The default is 30 seconds
-
-        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-        cmd.Parameters.AddWithValue("@CardID", card.CardId);
-        cmd.Parameters.AddWithValue("@Description", card.Description);
-        cmd.Parameters.AddWithValue("@Amount", card.Amount);
-        cmd.Parameters.AddWithValue("@MoveTo", card.MoveTo);
-        cmd.Parameters.AddWithValue("@IsGameState", card.IsGameState);
-
-        return cmd;
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // This method updates a Command card
-    //--------------------------------------------------------------------------------------------------
-    public bool UpdateCommandCard(CommandCard card)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
         try
         {
             con = connect("myProjDB"); // create the connection
         }
         catch (Exception ex)
         {
-            // write to log
             throw (ex);
         }
 
-        cmd = CreateUpdateCommandCardCommandWithStoredProcedure("KBSP_UpdateCommandCard", con, card);
+        cmd = CreateCommandWithStoredProcedure("KBSP_GetAllCards", con);
 
         try
         {
-            int numEffected = cmd.ExecuteNonQuery();
-            return numEffected == 1;
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {
+                Card card = new Card
+                {
+                    CardId = Convert.ToInt32(dr["CardID"]),
+                    Description = dr["Description"].ToString(),
+                    Action = (CardAction)Convert.ToInt32(dr["ActionType"])
+                };
+                cards.Add(card);
+            }
+            return cards;
         }
         catch (Exception ex)
         {
-            // write to log
             throw (ex);
         }
         finally
         {
             if (con != null)
             {
-                // close the db connection
                 con.Close();
             }
         }
     }
 
-    //--------------------------------------------------------------------------------------------------
-    // Create the update Command card SqlCommand using a stored procedure
-    //--------------------------------------------------------------------------------------------------
-    private SqlCommand CreateUpdateCommandCardCommandWithStoredProcedure(string spName, SqlConnection con, CommandCard card)
-    {
-        SqlCommand cmd = new SqlCommand(); // create the command object
-
-        cmd.Connection = con; // assign the connection to the command object
-
-        cmd.CommandText = spName; // can be Select, Insert, Update, Delete 
-
-        cmd.CommandTimeout = 10; // Time to wait for the execution' The default is 30 seconds
-
-        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-        cmd.Parameters.AddWithValue("@CardID", card.CardId);
-        cmd.Parameters.AddWithValue("@Description", card.Description);
-        cmd.Parameters.AddWithValue("@Amount", card.Amount);
-        cmd.Parameters.AddWithValue("@MoveTo", card.MoveTo);
-
-        return cmd;
-    }
-
-    //--------------------------------------------------------------------------------------------------
-    // Build read card stored procedure command
-    //--------------------------------------------------------------------------------------------------
-    private SqlCommand buildReadCardStoredProcedureCommand(SqlConnection con, string spName)
-    {
-        SqlCommand cmd = new SqlCommand(); // create the command object
-
-        cmd.Connection = con;              // assign the connection to the command object
-
-        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-        return cmd;
-    }
-
-//-------------------------------------------------------------------------------------------------
-
-public List<Answer> ReadAnswers()
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        List<Answer> answers = new List<Answer>();
-
-        cmd = buildReadStoredProcedureCommand(con, "KBSP_GetAnswers");
-
-        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-        while (dataReader.Read())
-        {
-            Answer a = new Answer();
-            a.AnswerId = Convert.ToInt32(dataReader["AnswerId"]);
-            a.QuestionId = Convert.ToInt32(dataReader["QuestionId"]);
-            a.AnswerText = dataReader["AnswerText"].ToString();
-            a.IsCorrect = Convert.ToBoolean(dataReader["IsCorrect"]);
-
-            answers.Add(a);
-        }
-        if (con != null)
-        {
-            // close the db connection
-            con.Close();
-        }
-        return answers;
-
-    }
+    //--------------------------------------------------------------------
 
     public (decimal, int) GetGameSettings()    // from Game setting table 
     {

@@ -100,28 +100,26 @@ namespace KidzBizzServer.BL
 
 
 
-     
         // מיישמת את ההשפעות של כרטיס לפי סוגו
         public void ApplyCardEffect(Card card)
         {
             switch (card.Action)
             {
                 case CardAction.Command:
-                    ApplyCommandCardEffect(card);
+                    ApplyCommandCardEffect(card as CommandCard);
                     break;
                 case CardAction.Surprise:
-                    ApplySurpriseEffect(card);
+                    ApplySurpriseEffect(card as SurpriseCard);
                     break;
                 case CardAction.DidYouKnow:
-                    ApplyDidYouKnowCardEffect(card);
+                    ApplyDidYouKnowCardEffect(card as DidYouKnowCard);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-
         // מיישמת את ההשפעות של כרטיס פקודה
-        private void ApplyCommandCardEffect(Card card)
+        private void ApplyCommandCardEffect(CommandCard card)
         {
             if (card.Description.Contains("התקדם למשבצת"))
             {
@@ -173,7 +171,7 @@ namespace KidzBizzServer.BL
         }
 
         // מיישמת את ההשפעות של כרטיס הפתעה
-        private void ApplySurpriseEffect(Card card)
+        private void ApplySurpriseEffect(SurpriseCard card)
         {
             if (card.Description.Contains("קבל") || card.Description.Contains("הרוויח"))
             {
@@ -196,9 +194,8 @@ namespace KidzBizzServer.BL
                 PlayDiceWithRival();
             }
         }
-
         // מיישמת את ההשפעות של כרטיס הידעת
-        private void ApplyDidYouKnowCardEffect(Card card)
+        private void ApplyDidYouKnowCardEffect(DidYouKnowCard card)
         {
             // יש לממש את הלוגיקה לכרטיס הידעת
         }

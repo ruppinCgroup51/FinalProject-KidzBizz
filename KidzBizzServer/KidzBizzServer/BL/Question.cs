@@ -1,28 +1,28 @@
-﻿namespace KidzBizzServer.BL
-{
-    public class Question
-    {
-        int questionId;
-        string questionText;
+﻿//namespace KidzBizzServer.BL
+//{
+//    public class Question
+//    {
+//        int questionId;
+//        string questionText;
 
-        public Question(int questionId, string questionText)
-        {
-            this.questionId = questionId;
-            this.questionText = questionText;
-        }
+//        public Question(int questionId, string questionText)
+//        {
+//            this.questionId = questionId;
+//            this.questionText = questionText;
+//        }
 
-        public Question()
-        {
+//        public Question()
+//        {
 
-        }
+//        }
 
-        public int QuestionId { get => questionId; set => questionId = value; }
-        public string QuestionText { get => questionText; set => questionText = value; }
+//        public int QuestionId { get => questionId; set => questionId = value; }
+//        public string QuestionText { get => questionText; set => questionText = value; }
 
-        public List<Question> Read()
-        {
-            DBservices dbs = new DBservices();
-            return dbs.ReadQuestions();
-        }
-    }
-}
+//        public List<Question> Read()
+//        {
+//            DBservices dbs = new DBservices();
+//            return dbs.ReadQuestions();
+//        }
+//    }
+//}

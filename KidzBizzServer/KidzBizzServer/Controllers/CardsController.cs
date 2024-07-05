@@ -30,30 +30,12 @@ namespace KidzBizzServer.Controllers
         [HttpGet("{id}")]
         public ActionResult<Card> Get(int id)
         {
-            var cards = _dbServices.ReadCards();
-            var card = cards.FirstOrDefault(c => c.CardId == id);
+            var card = Card.GetCardById(id);
             if (card == null)
             {
                 return NotFound("Card not found");
             }
             return Ok(card);
-        }
-
-        // POST api/<CardsController>
-        [HttpPost]
-        public IActionResult Post([FromBody] Card card)
-        {
-            if (card == null)
-            {
-                return BadRequest("Invalid card data");
-            }
-
-            bool status = card.UpdateCard();
-            if (!status)
-            {
-                return StatusCode(500, "An error occurred while creating the card");
-            }
-            return CreatedAtAction(nameof(Get), new { id = card.CardId }, card);
         }
 
         // PUT api/<CardsController>/5
@@ -65,7 +47,7 @@ namespace KidzBizzServer.Controllers
                 return BadRequest("Invalid card data");
             }
 
-            bool status = card.UpdateCard();
+            bool status = _dbServices.UpdateCard(card);
             if (!status)
             {
                 return NotFound("Card not found");
@@ -77,8 +59,12 @@ namespace KidzBizzServer.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            // מחיקה לא מיושמת בקוד זה, יש להוסיף אם נדרש
-            return StatusCode(501, "Not implemented");
+            bool status = _dbServices.DeleteCard(id);
+            if (!status)
+            {
+                return NotFound("Card not found");
+            }
+            return Ok("Card deleted successfully");
         }
     }
 }
