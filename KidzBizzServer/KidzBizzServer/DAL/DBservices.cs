@@ -1658,7 +1658,7 @@ public class DBservices
 
         try
         {
-            con = connect("myProjDB"); // create the connection
+            con = connect("myProjDB");
         }
         catch (Exception ex)
         {
@@ -1672,13 +1672,12 @@ public class DBservices
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dr.Read())
             {
-                Card card = new Card
+                cards.Add(new Card
                 {
                     CardId = Convert.ToInt32(dr["CardID"]),
                     Description = dr["Description"].ToString(),
                     Action = (CardAction)Convert.ToInt32(dr["ActionType"])
-                };
-                cards.Add(card);
+                });
             }
             return cards;
         }
@@ -1695,9 +1694,149 @@ public class DBservices
         }
     }
 
-    //--------------------------------------------------------------------
+    public List<CommandCard> ReadCommandCards()
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        List<CommandCard> cards = new List<CommandCard>();
 
-    public (decimal, int) GetGameSettings()    // from Game setting table 
+        try
+        {
+            con = connect("myProjDB");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedure("KBSP_GetAllCommandCards", con);
+
+        try
+        {
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {
+                cards.Add(new CommandCard
+                {
+                    CardId = Convert.ToInt32(dr["CardID"]),
+                    Description = dr["Description"].ToString(),
+                    Action = CardAction.Command,
+                    Amount = Convert.ToDouble(dr["Amount"]),
+                    MoveTo = dr["MoveTo"].ToString()
+                });
+            }
+            return cards;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+    public List<SurpriseCard> ReadSurpriseCards()
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        List<SurpriseCard> cards = new List<SurpriseCard>();
+
+        try
+        {
+            con = connect("myProjDB");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedure("KBSP_GetAllSurpriseCards", con);
+
+        try
+        {
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {
+                cards.Add(new SurpriseCard
+                {
+                    CardId = Convert.ToInt32(dr["CardID"]),
+                    Description = dr["Description"].ToString(),
+                    Action = CardAction.Surprise,
+                    Amount = Convert.ToDouble(dr["Amount"])
+                });
+            }
+            return cards;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+    public List<DidYouKnowCard> ReadDidYouKnowCards()
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        List<DidYouKnowCard> cards = new List<DidYouKnowCard>();
+
+        try
+        {
+            con = connect("myProjDB");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedure("KBSP_GetAllDidYouKnowCards", con);
+
+        try
+        {
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {
+                cards.Add(new DidYouKnowCard
+                {
+                    CardId = Convert.ToInt32(dr["CardID"]),
+                    Description = dr["Description"].ToString(),
+                    Action = CardAction.DidYouKnow,
+                    Question = dr["Question"].ToString(),
+                    Answer1 = dr["Answer1"].ToString(),
+                    Answer2 = dr["Answer2"].ToString(),
+                    CorrectAnswer = dr["CorrectAnswer"].ToString()
+                });
+            }
+            return cards;
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+    }
+
+
+//--------------------------------------------------------------------
+
+public (decimal, int) GetGameSettings()    // from Game setting table 
     {
         SqlConnection con;
         SqlCommand cmd;

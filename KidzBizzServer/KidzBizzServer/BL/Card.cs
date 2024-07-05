@@ -30,6 +30,30 @@
                     throw new InvalidOperationException("Unknown card action type");
             }
         }
+
+        public static List<Card> GetAllCards()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadCards();
+        }
+
+        public static List<CommandCard> GetAllCommandCards()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadCommandCards();
+        }
+
+        public static List<SurpriseCard> GetAllSurpriseCards()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadSurpriseCards();
+        }
+
+        public static List<DidYouKnowCard> GetAllDidYouKnowCards()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.ReadDidYouKnowCards();
+        }
     }
 
     public class CommandCard : Card

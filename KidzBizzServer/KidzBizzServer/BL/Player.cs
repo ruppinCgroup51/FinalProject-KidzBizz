@@ -99,103 +99,106 @@ namespace KidzBizzServer.BL
         }
 
 
-
         // מיישמת את ההשפעות של כרטיס לפי סוגו
         public void ApplyCardEffect(Card card)
         {
             switch (card.Action)
             {
                 case CardAction.Command:
-                    ApplyCommandCardEffect(card as CommandCard);
+                    ApplyCommandCardEffect(card);
                     break;
                 case CardAction.Surprise:
-                    ApplySurpriseEffect(card as SurpriseCard);
+                    ApplySurpriseCardEffect(card);
                     break;
                 case CardAction.DidYouKnow:
-                    ApplyDidYouKnowCardEffect(card as DidYouKnowCard);
+                    ApplyDidYouKnowCardEffect(card);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
         // מיישמת את ההשפעות של כרטיס פקודה
-        private void ApplyCommandCardEffect(CommandCard card)
+        private void ApplyCommandCardEffect(Card card)
         {
-            if (card.Description.Contains("התקדם למשבצת"))
+            CommandCard commandCard = (CommandCard)card;
+            if (commandCard.Description.Contains("התקדם למשבצת"))
             {
-                if (card.Description.Contains("הידעת הקרובה"))
+                if (commandCard.Description.Contains("הידעת הקרובה"))
                 {
                     int targetPosition = FindNearestPosition("ידעת");
                     MoveToPosition(targetPosition);
                 }
-                else if (card.Description.Contains("תיבת הפתעות הקרובה"))
+                else if (commandCard.Description.Contains("תיבת הפתעות הקרובה"))
                 {
                     int targetPosition = FindNearestPosition("תיבת הפתעה");
                     MoveToPosition(targetPosition);
                     DrawSurpriseCard();
                 }
-                else if (card.Description.Contains("הפקודה הקרובה"))
+                else if (commandCard.Description.Contains("הפקודה הקרובה"))
                 {
                     int targetPosition = FindNearestPosition("פקודה");
                     MoveToPosition(targetPosition);
                 }
             }
-            else if (card.Description.Contains("דלג"))
+            else if (commandCard.Description.Contains("דלג"))
             {
                 SkipNextTurn();
-                if (card.Description.Contains("הרוויח"))
+                if (commandCard.Description.Contains("הרוויח"))
                 {
-                    this.currentBalance += card.Amount;
+                    this.currentBalance += commandCard.Amount;
                 }
             }
-            else if (card.Description.Contains("הרוויח"))
+            else if (commandCard.Description.Contains("הרוויח"))
             {
-                this.currentBalance += card.Amount;
+                this.currentBalance += commandCard.Amount;
             }
-            else if (card.Description.Contains("שלם"))
+            else if (commandCard.Description.Contains("שלם"))
             {
-                this.currentBalance -= card.Amount;
+                this.currentBalance -= commandCard.Amount;
             }
-            else if (card.Description.Contains("בחר שחקן כדי לדלג על התור הבא שלו"))
+            else if (commandCard.Description.Contains("בחר שחקן כדי לדלג על התור הבא שלו"))
             {
                 // יש לממש את הלוגיקה לבחירת שחקן ודילוג על התור הבא שלו
             }
-            else if (card.Description.Contains("קלף הגנה"))
+            else if (commandCard.Description.Contains("קלף הגנה"))
             {
                 // יש לממש את הלוגיקה לקלף הגנה
             }
-            else if (card.Description.Contains("אם תפתרו נכון את השאלה הרוויחו"))
+            else if (commandCard.Description.Contains("אם תפתרו נכון את השאלה הרוויחו"))
             {
                 // יש לממש את הלוגיקה לכרטיס מחקר ופיתוח
             }
         }
 
         // מיישמת את ההשפעות של כרטיס הפתעה
-        private void ApplySurpriseEffect(SurpriseCard card)
+        private void ApplySurpriseCardEffect(Card card)
         {
-            if (card.Description.Contains("קבל") || card.Description.Contains("הרוויח"))
+            SurpriseCard surpriseCard = (SurpriseCard)card;
+            if (surpriseCard.Description.Contains("קבל") || surpriseCard.Description.Contains("הרוויח"))
             {
-                this.currentBalance += card.Amount;
+                this.currentBalance += surpriseCard.Amount;
             }
-            else if (card.Description.Contains("שלם") || card.Description.Contains("השקיעו") || card.Description.Contains("הפסדת"))
+            else if (surpriseCard.Description.Contains("שלם") || surpriseCard.Description.Contains("השקיעו") || surpriseCard.Description.Contains("הפסדת"))
             {
-                this.currentBalance -= card.Amount;
+                this.currentBalance -= surpriseCard.Amount;
             }
-            if (card.Description.Contains("ערכי הנכסים יורדים"))
+            if (surpriseCard.Description.Contains("ערכי הנכסים יורדים"))
             {
-                int percentage = ExtractPercentage(card.Description);
+                int percentage = ExtractPercentage(surpriseCard.Description);
                 foreach (var property in properties)
                 {
                     property.PropertyPrice -= property.PropertyPrice * percentage / 100;
                 }
             }
-            if (card.Description.Contains("בחר מתחרה אחד"))
+            if (surpriseCard.Description.Contains("בחר מתחרה אחד"))
             {
                 PlayDiceWithRival();
             }
         }
+
         // מיישמת את ההשפעות של כרטיס הידעת
-        private void ApplyDidYouKnowCardEffect(DidYouKnowCard card)
+        private void ApplyDidYouKnowCardEffect(Card card)
         {
             // יש לממש את הלוגיקה לכרטיס הידעת
         }
@@ -232,7 +235,6 @@ namespace KidzBizzServer.BL
             this.CurrentPosition = steps;
             UpdatePosition();
         }
-
         // מדלג על התור הבא
         private void SkipNextTurn()
         {
