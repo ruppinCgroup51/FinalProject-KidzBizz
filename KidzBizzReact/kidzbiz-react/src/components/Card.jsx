@@ -2,7 +2,7 @@ import React from "react";
 import "../css/Card.css";
 
 const Card = ({ onClose, card }) => {
-  
+  console.log(card);
   return (
     <div className="card-overlay">
       <div className="card">

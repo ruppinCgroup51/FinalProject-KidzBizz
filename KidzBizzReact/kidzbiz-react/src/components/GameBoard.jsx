@@ -234,7 +234,9 @@ export default function GameBoard() {
 
   const handlePropertySquareType = async (position, currentPlayer) => {
     const apiUrl = getBaseApiUrl();
-    const fullUrl = `${apiUrl}Properties/CheckPropertyOwnership?propertyId=${position}&playerId=${currentPlayer.playerId}&playerAiId=1016`;
+    const fullUrl = `${apiUrl}Properties/CheckPropertyOwnership?propertyId=${position}&playerId=${
+      currentPlayer.playerId
+    }&playerAiId=${currentPlayer.playerId + 2}`;
     const response = await fetch(fullUrl, {
       method: "GET",
       headers: {
@@ -250,10 +252,10 @@ export default function GameBoard() {
 
     const result = JSON.parse(responseText); // Make sure to parse the JSON only after checking response.ok
     const owner = result.owner;
-
-    if (owner === -1) {
+    console.log(result);
+    if (owner == -1) {
       const wantToBuy = window.confirm(
-        "This property is available. Do you want to buy it?"
+        `This property is available. Do you want to buy it?`
       );
       if (wantToBuy) {
         const requestBody = JSON.stringify({
@@ -277,7 +279,7 @@ export default function GameBoard() {
           toast("Failed to buy property.", { type: "error" });
         }
       }
-    } else if (owner !== currentPlayer.user.userId) {
+    } else if (owner !== currentPlayer.playerId) {
       const fullUrl = `${apiUrl}GameManagerWithAI/payRent`;
       const rentResponse = await fetch(fullUrl, {
         method: "POST",
@@ -313,9 +315,6 @@ export default function GameBoard() {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const result = JSON.parse(responseText); // Make sure to parse the JSON only after checking response.ok
-
-    setSurpriseCardToDisplay(result);
-    setDisplayCard(true);
   };
 
   const handleSquareLanding = async (currentPlayer) => {
@@ -329,7 +328,7 @@ export default function GameBoard() {
           await handlePropertySquareType(position, currentPlayer);
           break;
 
-        case SquareType.Surprise:
+        case SquareType.Present:
           await handleSurpriseSquareType(position, currentPlayer);
           break;
 
@@ -382,8 +381,6 @@ export default function GameBoard() {
       handleSquareLanding(currentPlayer);
     }
   }, [currentPlayerIndex, players]);
-
-  useEffect(() => {}, [displayCard]);
 
   return (
     <>
@@ -450,9 +447,6 @@ export default function GameBoard() {
           <PlayerProperties player={selectedPlayer} />
         </div>
       </div>
-      {displayCard && (
-        <Card displayCard onClose={handleCloseCard} card={surpriseCardToDisplay} />
-      )}
       <Modal
         isOpen={modalSquareIsOpen}
         onRequestClose={() => setModalSquarIsOpen(false)}
