@@ -46,7 +46,7 @@ namespace KidzBizzServer.Controllers
         // POST api/<PropertiesController>/BuyProperty
         [HttpPost]
         [Route("BuyProperty")]
-        public IActionResult BuyProperty([FromBody] int PlayerId, int PropertyId)
+        public IActionResult BuyProperty(int PlayerId, int PropertyId)
         {
             Property property = new Property();
             bool success = property.BuyProperty(PlayerId, PropertyId);

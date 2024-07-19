@@ -62,19 +62,19 @@
         {
             DBservices dbs = new DBservices();
 
-            // בדיקת בעלות הנכס
-            var ownership = CheckPropertyOwnership(propertyId, playerId, playerId);
-            if (ownership != null)
-            {
-                return false; // הנכס כבר תפוס
-            }
+            //// בדיקת בעלות הנכס
+            //var ownership = CheckPropertyOwnership(propertyId, playerId, playerId);
+            //if (ownership != null)
+            //{
+            //    return false; // הנכס כבר תפוס
+            //}
 
-            // קבלת כל הנכסים של השחקן
-            List<Property> playerProperties = dbs.ReadPropertiesByPlayerId(playerId);
+            // קבלת כל הנכסים
+            List<Property> Properties = dbs.ReadProperties();
 
             // חיפוש הנכס המבוקש ברשימת הנכסים
             Property propertyToBuy = null;
-            foreach (var property in playerProperties)
+            foreach (var property in Properties)
             {
                 if (property.PropertyId == propertyId)
                 {

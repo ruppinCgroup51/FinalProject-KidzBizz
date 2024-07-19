@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Navigate } from "react-router-dom";
 import Modal from "react-modal";
 import { toast } from 'react-toastify';
+import getBaseApiUrl from "./GetBaseApi";
 import 'react-toastify/dist/ReactToastify.css';  // Make sure this line is also included to apply styles.
  // At the top level of your component or application
 
@@ -230,81 +231,112 @@ export default function GameBoard() {
     );
   };
 
+
+
   const handleSquareLanding = async (position) => {
-    const squareType = SquareConfigData.get(position)?.type; // Using the existing GameSquare logic to get type
+    const apiUrl = getBaseApiUrl();
+    const currentPlayer = players[currentPlayerIndex];  // Define the current player based on the index
+    const squareType = SquareConfigData.get(position)?.type;
   
-    switch(squareType) {
-      case SquareType.Property:
-        /*try {
-          const response = await fetch(`/api/Properties/CheckPropertyOwnership?propertyId=${position}`);
-          const result = await response.json();
-          const ownerId = result.owner; 
-    
-          if (ownerId === -1) {
-            // No owner, ask player if they want to buy the property
+    try {
+      switch (squareType) {
+        /*case SquareType.Property:
+          const fullUrl = `${apiUrl}Properties/CheckPropertyOwnership?propertyId=${position}&playerId=${currentPlayer.user.userId}&playerAiId=1016`;
+          const response = await fetch(fullUrl, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+            }
+          });
+          
+          const responseText = await response.text(); 
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          
+          const result = JSON.parse(responseText);  // Make sure to parse the JSON only after checking response.ok
+          const owner = result.owner;
+
+          if (owner === -1) {
+
+            console.log("Current Player ID:", currentPlayer.user.userId);
+            console.log("Property Position:", position);
+
             const wantToBuy = window.confirm('This property is available. Do you want to buy it?');
             if (wantToBuy) {
-              const buyResponse = await fetch(`/api/Properties/BuyProperty`, {
+              const requestBody = JSON.stringify({
+                PlayerId: currentPlayer.user.userId,
+                PropertyId: position
+              });
+              console.log("Request JSON:", requestBody);
+
+              
+              const buyUrl = `${apiUrl}Properties/BuyProperty`;
+              const buyResponse = await fetch(buyUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ propertyId: position, playerId: currentPlayer.userId })
+                body: requestBody
               });
+  
               if (buyResponse.ok) {
                 toast('You have successfully bought the property!', { type: 'success' });
               } else {
                 toast('Failed to buy property.', { type: 'error' });
               }
             }
-          } else {
-            // Property has an owner, need to pay rent
-            const rentResponse = await fetch(`/api/GameManagerWithAI/payRent`, {
+          } else if (owner !== currentPlayer.user.userId) {
+            const fullUrl = `${apiUrl}GameManagerWithAI/payRent`;
+            const rentResponse = await fetch(fullUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ playerId: currentPlayer.userId, propertyOwnerId: ownerId, propertyId: position })
+              body: JSON.stringify({ playerId: currentPlayer.user.userId, propertyOwnerId: owner, propertyId: position })
             });
+  
             if (rentResponse.ok) {
               toast('Rent paid successfully!', { type: 'info' });
             } else {
               toast('Failed to pay rent.', { type: 'error' });
             }
           }
-        } catch (error) {
-          console.error('Failed to check property ownership or handle transactions:', error);
-          toast('Error handling property action.', { type: 'error' });
-        }; */
-        // Show modal to buy property or something similar
-        showModal(`You landed on a property. Would you like to buy it?`);
-        break;
-      case SquareType.Surprise:
-        // Trigger a surprise event
-        showModal('Surprise! You have drawn a surprise card.');
-        break;
-      case SquareType.Chance:
-        // Trigger a chance event
-        showModal('Chance! Take a chance card and see what happens.');
-        break;
-      case SquareType.DidYouKnow:
-        // Trigger a trivia question
-        showModal('Did You Know? Time for a trivia question!');
-        break;
-      case SquareType.Go:
-        // Perhaps increment player's money here as they pass go
-        toast('You passed GO! Collect $200.', { type: "info" });
-        break;
-      case SquareType.Jail:
-        // Handle jail logic
-        showModal('You are just visiting jail this time.');
-        break;
-      case SquareType.GoToJail:
-        // Move player to jail
-        showModal('Go to Jail! Move directly to jail.');
-        break;
-      default:
-        // Handle other types or do nothing
-        toast(`You landed on a regular square.`, { type: "info" });
-        break;
+          break;*/
+  /*
+        case SquareType.Surprise:
+          showModal('Surprise! You have drawn a surprise card.');
+          break;
+  
+        case SquareType.Chance:
+          showModal('Chance! Take a chance card and see what happens.');
+          break;
+  
+        case SquareType.DidYouKnow:
+          showModal('Did You Know? Time for a trivia question!');
+          break;
+  
+        case SquareType.Go:
+          toast('You passed GO! Collect $200.', { type: "info" });
+          break;
+  
+        case SquareType.Jail:
+          showModal('You are just visiting jail this time.');
+          break;
+  
+        case SquareType.GoToJail:
+          showModal('Go to Jail! Move directly to jail.');
+          break;*/
+  
+        default:
+          toast(`You landed on a regular square.`, { type: "info" });
+          break;
+      }
+    } catch (error) {
+      console.error('Error during square landing actions:', error);
+      toast('Error handling property action.', { type: 'error' });
     }
   };
+  
+  // Make sure showModal is defined in your component or you import it if it's a utility function.
+  
   
   // Function to show modal with a message
   const showModal = (message) => {
