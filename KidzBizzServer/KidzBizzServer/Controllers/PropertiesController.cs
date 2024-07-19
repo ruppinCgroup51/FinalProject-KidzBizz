@@ -49,6 +49,7 @@ namespace KidzBizzServer.Controllers
         public IActionResult BuyProperty(int PlayerId, int PropertyId)
         {
             Property property = new Property();
+        
             bool success = property.BuyProperty(PlayerId, PropertyId);
             if (success)
             {

@@ -453,7 +453,7 @@ namespace KidzBizzServer.BL
 
 
 
-        // פעולה להפסקת משחק
+        // פעולה להפסקת משחקc
         public void PauseGame()
         {
             game.GameStatus = "Completed";

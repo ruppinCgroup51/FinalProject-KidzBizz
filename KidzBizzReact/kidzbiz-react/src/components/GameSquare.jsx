@@ -51,9 +51,9 @@ export const GameSquare = ({ id, players }) => {
         prevPlayerPositions.current[index] = player.currentPosition;
         if (squareType !== SquareType.Go) {
           toast(
-            `שחקן מספר ${
-              player.user.userId
-            } הגעת ל-תא מסוג ${squareTypeClass.get(squareType)}`,
+            `שחקן מספר ${player.playerId} הגעת ל-תא מסוג ${squareTypeClass.get(
+              squareType
+            )}`,
             { type: "success" }
           );
         }
