@@ -314,7 +314,12 @@ export default function GameBoard() {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const result = JSON.parse(responseText); // Make sure to parse the JSON only after checking response.ok
+    const result = JSON.parse(responseText);
+
+    const showSurpriseCard = window.confirm(
+      `This card ${result.cardId} and the description is ${result.description} + amount is ${result.amount}`
+    );
+    // Make sure to parse the JSON only after checking response.ok
   };
 
   const handleSquareLanding = async (currentPlayer) => {
