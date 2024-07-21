@@ -258,18 +258,11 @@ export default function GameBoard() {
         `This property is available. Do you want to buy it?`
       );
       if (wantToBuy) {
-        const requestBody = JSON.stringify({
-          PlayerId: currentPlayer.playerId,
-          PropertyId: position,
-        });
-        console.log("Request JSON:", requestBody);
-
-        const buyUrl = `${apiUrl}Properties/BuyProperty`;
+        const buyUrl = `${apiUrl}Properties/BuyProperty?PlayerId=${currentPlayer.playerId}&PropertyId=${position}`;
         const buyResponse = await fetch(buyUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: requestBody,
+          method: "POST"
         });
+        
 
         if (buyResponse.ok) {
           toast("You have successfully bought the property!", {
