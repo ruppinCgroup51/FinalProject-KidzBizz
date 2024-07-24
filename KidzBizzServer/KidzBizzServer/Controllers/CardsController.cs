@@ -59,7 +59,9 @@ namespace KidzBizzServer.Controllers
             {
                 return NotFound("No surprise cards found");
             }
-            return Ok(cards);
+            Random rnd = new Random();
+            int randomCard = rnd.Next(0, cards.Count);
+            return Ok(cards[randomCard]);
         }
 
         // GET: api/<CardsController>/didyouknow

@@ -710,7 +710,7 @@ public class DBservices
         cmd.CommandType = CommandType.StoredProcedure; // סוג הפקודה
 
         // הוספת פרמטרים לפקודה
-
+        cmd.Parameters.AddWithValue("@PlayerId", player.PlayerId);
         cmd.Parameters.AddWithValue("@CurrentPosition", player.CurrentPosition);
         cmd.Parameters.AddWithValue("@CurrentBalance", player.CurrentBalance);
         cmd.Parameters.AddWithValue("@PlayerStatus", player.PlayerStatus);
