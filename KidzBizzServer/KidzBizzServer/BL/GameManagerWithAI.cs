@@ -408,6 +408,54 @@ namespace KidzBizzServer.BL
                                                   // Update other AIPlayer details as needed
             }
         }
+        public void ApplyCommandCardEffect(int cardId, int playerId)
+        {
+            var card = Card.GetCardById(cardId);
+            var player = new Player().Read().FirstOrDefault(p => p.PlayerId == playerId);
+
+            if (card is CommandCard commandCard)
+            {
+                if (commandCard.Description.Contains("הרוויח"))
+                {
+                    player.CurrentBalance += commandCard.Amount;
+                }
+                else if (commandCard.Description.Contains("שלם"))
+                {
+                    player.CurrentBalance -= commandCard.Amount;
+                }
+                player.Update();
+            }
+        }
+
+        public void ApplySurpriseCardEffect(int cardId, int playerId)
+        {
+            var card = Card.GetCardById(cardId);
+            var player = new Player().Read().FirstOrDefault(p => p.PlayerId == playerId);
+
+            if (card is SurpriseCard surpriseCard)
+            {
+                if (surpriseCard.Description.Contains("קבל") || surpriseCard.Description.Contains("הרוויח"))
+                {
+                    player.CurrentBalance += surpriseCard.Amount;
+                }
+                else if (surpriseCard.Description.Contains("שלם") || surpriseCard.Description.Contains("השקיעו") || surpriseCard.Description.Contains("הפסדת"))
+                {
+                    player.CurrentBalance -= surpriseCard.Amount;
+                }
+                player.Update();
+            }
+        }
+
+        public void ApplyDidYouKnowCardEffect(int cardId, int playerId)
+        {
+            var card = Card.GetCardById(cardId);
+            var player = new Player().Read().FirstOrDefault(p => p.PlayerId == playerId);
+
+            if (card is DidYouKnowCard didYouKnowCard)
+            {
+                // יש לממש את הלוגיקה לכרטיס הידעת
+            }
+        } 
 
         // פעולה לסיום משחק
         // פעולה לסיום משחק

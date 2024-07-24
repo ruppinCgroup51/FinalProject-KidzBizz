@@ -54,6 +54,32 @@
             DBservices dbs = new DBservices();
             return dbs.ReadDidYouKnowCards();
         }
+
+        public static Card GetRandomCard()
+        {
+            var cards = GetAllCards();
+            if (cards == null || cards.Count == 0)
+            {
+                return null;
+            }
+
+            var random = new Random();
+            var randomCard = cards[random.Next(cards.Count)];
+
+            DBservices dbs = new DBservices();
+
+            switch (randomCard.Action)
+            {
+                case CardAction.Command:
+                    return dbs.GetCommandCardDetails(randomCard.CardId);
+                case CardAction.Surprise:
+                    return dbs.GetSurpriseCardDetails(randomCard.CardId);
+                case CardAction.DidYouKnow:
+                    return dbs.GetDidYouKnowCardDetails(randomCard.CardId);
+                default:
+                    throw new InvalidOperationException("Unknown card action type");
+            }
+        }
     }
 
     public class CommandCard : Card

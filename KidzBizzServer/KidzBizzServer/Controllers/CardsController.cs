@@ -74,6 +74,60 @@ namespace KidzBizzServer.Controllers
             return Ok(cards);
         }
 
+
+        //  GET: api/<CardsController>/applyCommandEffect ***
+        [HttpGet("applyCommandEffect")]
+        public ActionResult ApplyCommandEffect(int cardId, int playerId)
+        {
+            var gameManager = new GameManagerWithAI();
+            gameManager.ApplyCommandCardEffect(cardId, playerId);
+            return Ok("Command card effect applied successfully");
+        }
+
+        //  GET: api/<CardsController>/applySurpriseEffect ***
+        [HttpGet("applySurpriseEffect")]
+        public ActionResult ApplySurpriseEffect(int cardId, int playerId)
+        {
+            var gameManager = new GameManagerWithAI();
+            gameManager.ApplySurpriseCardEffect(cardId, playerId);
+            return Ok("Surprise card effect applied successfully");
+        }
+
+        //  GET: api/<CardsController>/applyDidYouKnowEffect ***
+        [HttpGet("applyDidYouKnowEffect")]
+        public ActionResult ApplyDidYouKnowEffect(int cardId, int playerId)
+        {
+            var gameManager = new GameManagerWithAI();
+            gameManager.ApplyDidYouKnowCardEffect(cardId, playerId);
+            return Ok("DidYouKnow card effect applied successfully");
+        }
+
+        // *** פונקציה להחזרת כרטיס רנדומלי ***
+        [HttpGet("random")]
+        public ActionResult<Card> GetRandomCard()
+        {
+            var cards = Card.GetAllCards(); // שליפת כל הכרטיסים
+            if (cards == null || cards.Count == 0)
+            {
+                return NotFound("No cards found");
+            }
+
+            var random = new Random();
+            var randomCard = cards[random.Next(cards.Count)]; // שליפת כרטיס רנדומלי
+
+            switch (randomCard.Action)
+            {
+                case CardAction.Command:
+                    return Ok(_dbServices.GetCommandCardDetails(randomCard.CardId));
+                case CardAction.Surprise:
+                    return Ok(_dbServices.GetSurpriseCardDetails(randomCard.CardId));
+                case CardAction.DidYouKnow:
+                    return Ok(_dbServices.GetDidYouKnowCardDetails(randomCard.CardId));
+                default:
+                    return StatusCode(500, "Unknown card action type");
+            }
+        }
+
         // POST api/<CardsController>
         [HttpPost]
         public IActionResult Post([FromBody] Card card)
@@ -107,6 +161,7 @@ namespace KidzBizzServer.Controllers
             }
             return Ok("Card updated successfully");
         }
+
 
         // DELETE api/<CardsController>/5
         [HttpDelete("{id}")]
