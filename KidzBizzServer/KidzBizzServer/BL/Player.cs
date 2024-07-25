@@ -98,9 +98,7 @@ namespace KidzBizzServer.BL
             return dbs.ReadPropertiesByPlayerId(playerId);
         }
 
-
-        // מיישמת את ההשפעות של כרטיס לפי סוגו
-        public void ApplyCardEffect(Card card)
+ public void ApplyCardEffect(Card card, string selectedAnswer = "")
         {
             switch (card.Action)
             {
@@ -111,7 +109,7 @@ namespace KidzBizzServer.BL
                     ApplySurpriseCardEffect(card);
                     break;
                 case CardAction.DidYouKnow:
-                    ApplyDidYouKnowCardEffect(card);
+                    ApplyDidYouKnowCardEffect(card, selectedAnswer);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -198,11 +196,16 @@ namespace KidzBizzServer.BL
         }
 
         // מיישמת את ההשפעות של כרטיס הידעת
-        private void ApplyDidYouKnowCardEffect(Card card)
+        private void ApplyDidYouKnowCardEffect(Card card, string selectedAnswer)
         {
-            // יש לממש את הלוגיקה לכרטיס הידעת
+            DidYouKnowCard didYouKnowCard = (DidYouKnowCard)card;
+            if (selectedAnswer == didYouKnowCard.CorrectAnswer)
+            {
+                this.currentBalance += 300; // מוסיף כסף אם התשובה נכונה
+            }
         }
-
+    
+        
         // מוצאת את המיקום הקרוב ביותר לפי סוג הכרטיס
         private int FindNearestPosition(string type)
         {
@@ -212,13 +215,13 @@ namespace KidzBizzServer.BL
             switch (type)
             {
                 case "ידעת":
-                    positions = new int[] { };
+                    positions = new int[] { 8, 18, 23, 33, 39 };
                     break;
-                case "תיבת הפתעה":
-                    positions = new int[] { 6, 15, 21, 30, 37 };
+                case "הפתעה":
+                    positions = new int[] { 6, 16, 26, 36 };
                     break;
-                case "פקודה":
-                    positions = new int[] { 2, 9, 13, 19, 32, 38 };
+                case "סיכוי":
+                    positions = new int[] { 3, 13, 21, 28, 37 };
                     break;
                 default:
                     positions = new int[] { };
@@ -227,6 +230,7 @@ namespace KidzBizzServer.BL
 
             return positions.Where(p => p > currentPosition).OrderBy(p => p).FirstOrDefault();
         }
+
 
         // מזיז את השחקן למיקום החדש
         private void MoveToPosition(int targetPosition)

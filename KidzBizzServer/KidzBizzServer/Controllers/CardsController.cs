@@ -49,7 +49,7 @@ namespace KidzBizzServer.Controllers
             }
             Random rnd = new Random();
             int randomCard = rnd.Next(0, cards.Count);
-            return Ok(cards);
+            return Ok(cards[randomCard]);
         }
 
         // GET: api/<CardsController>/surprise
@@ -77,9 +77,23 @@ namespace KidzBizzServer.Controllers
             }
             Random rnd = new Random();
             int randomCard = rnd.Next(0, cards.Count);
-            return Ok(cards);
+            return Ok(cards[randomCard]);
         }
 
+        [HttpPost("didyouknow")]
+        public IActionResult PostDidYouKnow([FromBody] dynamic requestData)
+        {
+            int cardId = requestData.CardId;
+            string selectedAnswer = requestData.SelectedAnswer;
+            int playerId = requestData.PlayerId;
+
+            bool result = Card.CheckDidYouKnowAnswer(cardId, selectedAnswer, playerId);
+            if (result)
+            {
+                return Ok("Correct answer. Player's balance updated.");
+            }
+            return Ok("Incorrect answer. No changes made.");
+        }
 
         ////  GET: api/<CardsController>/applyCommandEffect ***
         //[HttpGet("applyCommandEffect")]

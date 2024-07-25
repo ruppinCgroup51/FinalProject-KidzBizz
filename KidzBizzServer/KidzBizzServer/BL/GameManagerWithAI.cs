@@ -446,16 +446,17 @@ namespace KidzBizzServer.BL
             }
         }
 
-        public void ApplyDidYouKnowCardEffect(int cardId, int playerId)
+        public void ApplyDidYouKnowCardEffect(int cardId, int playerId, string selectedAnswer)
         {
             var card = Card.GetCardById(cardId);
             var player = new Player().Read().FirstOrDefault(p => p.PlayerId == playerId);
 
             if (card is DidYouKnowCard didYouKnowCard)
             {
-                // יש לממש את הלוגיקה לכרטיס הידעת
+                player.ApplyCardEffect(didYouKnowCard, selectedAnswer);
+                player.Update(); // עדכון פרטי השחקן
             }
-        } 
+        }
 
         // פעולה לסיום משחק
         // פעולה לסיום משחק

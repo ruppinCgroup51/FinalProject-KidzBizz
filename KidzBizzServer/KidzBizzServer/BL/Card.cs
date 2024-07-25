@@ -55,30 +55,20 @@
             return dbs.ReadDidYouKnowCards();
         }
 
-        public static Card GetRandomCard()
+        public static bool CheckDidYouKnowAnswer(int cardId, string selectedAnswer, int playerId)
         {
-            var cards = GetAllCards();
-            if (cards == null || cards.Count == 0)
+            var card = GetCardById(cardId);
+            if (card is DidYouKnowCard didYouKnowCard)
             {
-                return null;
+                var player = new Player().Read().FirstOrDefault(p => p.PlayerId == playerId);
+                if (player != null && selectedAnswer == didYouKnowCard.CorrectAnswer)
+                {
+                    player.CurrentBalance += 300; // Adding money for correct answer
+                    player.Update();
+                    return true;
+                }
             }
-
-            var random = new Random();
-            var randomCard = cards[random.Next(cards.Count)];
-
-            DBservices dbs = new DBservices();
-
-            switch (randomCard.Action)
-            {
-                case CardAction.Command:
-                    return dbs.GetCommandCardDetails(randomCard.CardId);
-                case CardAction.Surprise:
-                    return dbs.GetSurpriseCardDetails(randomCard.CardId);
-                case CardAction.DidYouKnow:
-                    return dbs.GetDidYouKnowCardDetails(randomCard.CardId);
-                default:
-                    throw new InvalidOperationException("Unknown card action type");
-            }
+            return false;
         }
     }
 
