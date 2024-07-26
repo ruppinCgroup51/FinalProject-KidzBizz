@@ -49,15 +49,15 @@ export const GameSquare = ({ id, players }) => {
         player.currentPosition !== prevPlayerPositions.current[index]
       ) {
         prevPlayerPositions.current[index] = player.currentPosition;
-        if (squareType !== SquareType.Go) {
+        /*if (squareType !== SquareType.Go) {
           toast(
             `שחקן מספר ${player.playerId} הגעת ל-תא מסוג ${squareTypeClass.get(
               squareType
             )}`,
             { type: "success" }
-          );
+          );*/
         }
-      }
+      //}
     });
   }, [players, id, squareType, squareTypeClass]);
 
