@@ -28,6 +28,12 @@
             return dbs.ReadProperties();
         }
 
+        public Property GetPropertyDetails(int propertyId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetPropertyDetails(propertyId);
+        }
+
         public List<Property> ReadPropertiesByPlayerId(int id)
         {
             DBservices dbs = new DBservices();

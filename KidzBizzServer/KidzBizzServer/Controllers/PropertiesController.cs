@@ -19,6 +19,23 @@ namespace KidzBizzServer.Controllers
         }
 
         [HttpGet]
+        [Route("api/Properties/GetPropertyDetails")]
+        public IActionResult GetPropertyDetails(int propertyId)
+        {
+            Property property = new Property();
+            var p = property.GetPropertyDetails(propertyId);
+            if (p != null)
+            {
+                return Ok(p);
+            }
+            else
+            {
+                return NotFound("Property not found");
+            }
+        }
+
+
+        [HttpGet]
         [Route("ReadPropertiesByPlayerId")]
         public IEnumerable<Property> Get(int id)
         {
