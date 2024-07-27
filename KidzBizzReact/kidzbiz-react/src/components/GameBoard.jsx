@@ -1,12 +1,19 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import UserContext from "./UserContext";
 import { GameSquare } from "./GameSquare";
 import "../css/gameboard.css";
-import { SquareConfigData } from "/src/components/SquareData.jsx";
+import { SquareConfigData } from "./SquareData.jsx";
+import PropertyModal from "./PropertyModal";
 import { faDice, faDollarSign } from "@fortawesome/free-solid-svg-icons";
-import SquareType from "/src/components/SquareType.jsx";
-import SurpriseCardModal from "/src/components/SurpriseCardModal.jsx";
-import ChanceCardModal from "/src/components/ChanceCardModal.jsx";
+import SquareType from "./SquareType.jsx";
+import SurpriseCardModal from "./SurpriseCardModal.jsx";
+import ChanceCardModal from "./ChanceCardModal.jsx";
 import { Modal as BootstrapModal, Button } from "react-bootstrap";
 import {
   FaDiceOne,
@@ -23,16 +30,12 @@ import { toast } from "react-toastify";
 import getBaseApiUrl from "./GetBaseApi";
 import "react-toastify/dist/ReactToastify.css";
 
-// Bind the modal to your app element
 Modal.setAppElement("#root");
 
-export default function GameBoard() {
-  // Create an array representing the squares on the board
+const GameBoard = () => {
   const numSquares = Array.from({ length: 40 }, (_, i) => i + 1);
-  // Get the user from the context
   const user = useContext(UserContext);
 
-  // Define state variables
   const [players, setPlayers] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isRollDiceDisabled, setIsRollDiceDisabled] = useState(false);
@@ -45,34 +48,23 @@ export default function GameBoard() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [cardData, setCardData] = useState(null);
   const [showCard, setShowCard] = useState(false);
+  const [showPropertyModal, setShowPropertyModal] = useState(false);
+  const [currentProperty, setCurrentProperty] = useState(null);
 
-  // Initialize the game when the component mounts
+  const isHandlingSquareLanding = useRef(false);
+
   useEffect(() => {
     setCurrentPlayerIndex(0);
     setIsRollDiceDisabled(false);
     setIsEndTurnDisabled(false);
 
-    // Fetch data function to start the game
     const fetchData = async () => {
       if (!user || !user.userId) {
         console.error("User context is missing userId");
         return;
       }
 
-      // Determine API URL based on environment
-      const setUserApi = () => {
-        if (
-          location.hostname === "localhost" ||
-          location.hostname === "127.0.0.1"
-        ) {
-          return "https://localhost:7034/api/GameManagerWithAI/startnewgame";
-        } else {
-          return "https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/GameManagerWithAI/startnewgame";
-        }
-      };
-
-      const apiUrl = setUserApi();
-
+      const apiUrl = getApiUrl("startnewgame");
       try {
         const response = await fetch(apiUrl, {
           method: "POST",
@@ -80,9 +72,8 @@ export default function GameBoard() {
           body: JSON.stringify(user),
         });
 
-        if (!response.ok) {
+        if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
-        }
 
         const data = await response.json();
         setPlayers(data);
@@ -100,21 +91,19 @@ export default function GameBoard() {
     }
   }, [user]);
 
-  // Function to roll the dice
-  const rollDice = async () => {
-    const setUserApi = () => {
-      if (
-        location.hostname === "localhost" ||
-        location.hostname === "127.0.0.1"
-      ) {
-        return "https://localhost:7034/api/GameManagerWithAI/rolldice";
-      } else {
-        return "https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/GameManagerWithAI/rolldice";
-      }
-    };
+  const getApiUrl = useCallback((endpoint) => {
+    if (
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1"
+    ) {
+      return `https://localhost:7034/api/GameManagerWithAI/${endpoint}`;
+    } else {
+      return `https://proj.ruppin.ac.il/cgroup51/test2/tar1/api/GameManagerWithAI/${endpoint}`;
+    }
+  }, []);
 
-    const apiUrl = setUserApi();
-
+  const rollDice = useCallback(async () => {
+    const apiUrl = getApiUrl("rolldice");
     try {
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -122,9 +111,8 @@ export default function GameBoard() {
         body: JSON.stringify(players[currentPlayerIndex]),
       });
 
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
-      }
 
       const data = await response.json();
       const updatedPlayers = [...players];
@@ -133,38 +121,28 @@ export default function GameBoard() {
     } catch (error) {
       console.error("Error:", error);
     }
-  };
+  }, [currentPlayerIndex, players, getApiUrl]);
 
-  // Handle AI's turn
   useEffect(() => {
-    if (
-      players[currentPlayerIndex] &&
-      players[currentPlayerIndex].user.userId === 1016
-    ) {
-      rollDice().then(() => endTurn());
+    if (players[currentPlayerIndex]?.user.userId === 1016) {
+      rollDice().then(endTurn);
     }
-  }, [currentPlayerIndex, players]);
+  }, [currentPlayerIndex, players, rollDice]);
 
-  // Update local storage whenever the players array changes
   useEffect(() => {
     localStorage.setItem("players", JSON.stringify(players));
   }, [players]);
 
-  // Function to end the current player's turn
-  const endTurn = () => {
-    console.log("Ending turn. Resetting modals.");
-    // Reset modal state when turn ends
+  const endTurn = useCallback(() => {
     setIsModalVisible(false);
     setShowCard(false);
     setModalSquareIsOpen(false);
     setModalContent("");
     setCardData(null);
 
-    const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
-    setCurrentPlayerIndex(nextPlayerIndex);
-  };
+    setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+  }, [players.length]);
 
-  // Handle roll dice button click
   const handleRollDiceClick = async () => {
     setIsRollDiceDisabled(true);
     setIsEndTurnDisabled(false);
@@ -172,9 +150,7 @@ export default function GameBoard() {
     setDisplayDice(players[currentPlayerIndex].user.userId);
   };
 
-  // Handle end turn button click
   const handleEndTurnClick = () => {
-    console.log("Handling end turn click.");
     const updatedPlayers = [...players];
     if (updatedPlayers[currentPlayerIndex].user.userId === 1016) {
       updatedPlayers[currentPlayerIndex].dice1 = 0;
@@ -187,63 +163,42 @@ export default function GameBoard() {
     setDisplayDice(1016);
   };
 
-  // Handle end game button click
   const handleEndGame = () => {
     Navigate("/Lobi");
   };
 
-  // Show card modal
   const handleShowCard = (player, type, data) => {
-    if (currentPlayerIndex !== players.indexOf(player)) {
-      return; // Only show card for the current player
-    }
+    if (currentPlayerIndex !== players.indexOf(player)) return;
     setCardData(data);
-    if (type === "surprise") {
-      setIsModalVisible(true);
-    } else if (type === "chance") {
-      setShowCard(true);
-    }
+    if (type === "surprise") setIsModalVisible(true);
+    else if (type === "chance") setShowCard(true);
   };
 
-  // Close card modal
   const handleCloseCard = () => {
     setIsModalVisible(false);
     setShowCard(false);
     setModalSquareIsOpen(false);
   };
 
-  // Map dice number to icon
   const numberToDiceIcon = (number, size) => {
-    switch (number) {
-      case 1:
-        return <FaDiceOne size={size} />;
-      case 2:
-        return <FaDiceTwo size={size} />;
-      case 3:
-        return <FaDiceThree size={size} />;
-      case 4:
-        return <FaDiceFour size={size} />;
-      case 5:
-        return <FaDiceFive size={size} />;
-      case 6:
-        return <FaDiceSix size={size} />;
-      default:
-        return null;
-    }
+    const diceIcons = {
+      1: <FaDiceOne size={size} />,
+      2: <FaDiceTwo size={size} />,
+      3: <FaDiceThree size={size} />,
+      4: <FaDiceFour size={size} />,
+      5: <FaDiceFive size={size} />,
+      6: <FaDiceSix size={size} />,
+    };
+    return diceIcons[number] || null;
   };
 
-  // Component to display player's properties in a modal
   const PlayerProperties = ({ player }) => {
-    if (!player) {
-      return null;
-    }
-
-    const hasProperties = player.properties && player.properties.length > 0;
+    if (!player) return null;
 
     return (
       <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
         <h2>{player.user.firstName}'s Properties</h2>
-        {hasProperties ? (
+        {player.properties && player.properties.length > 0 ? (
           player.properties.map((property, index) => (
             <div key={index}>
               <p>Property ID: {property.propertyId}</p>
@@ -259,7 +214,6 @@ export default function GameBoard() {
     );
   };
 
-  // Handle landing on a property square
   const handlePropertySquareType = async (position, currentPlayer) => {
     const apiUrl = getBaseApiUrl();
     const fullUrl = `${apiUrl}Properties/CheckPropertyOwnership?propertyId=${position}&playerId=${
@@ -271,28 +225,22 @@ export default function GameBoard() {
     });
     const responseText = await response.text();
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
     const result = JSON.parse(responseText);
     const owner = result.owner;
 
     if (owner === -1) {
-      const wantToBuy = window.confirm(
-        `This property is available. Do you want to buy it?`
-      );
-      if (wantToBuy) {
-        const buyUrl = `${apiUrl}Properties/BuyProperty?PlayerId=${currentPlayer.playerId}&PropertyId=${position}`;
-        const buyResponse = await fetch(buyUrl, { method: "POST" });
-
-        if (buyResponse.ok) {
-          toast("You have successfully bought the property!", {
-            type: "success",
-          });
-        } else {
-          toast("Failed to buy property.", { type: "error" });
-        }
+      // Property has no owner, fetch property details
+      const propertyDetails = await fetchPropertyDetails(position);
+      if (propertyDetails) {
+        setCurrentProperty({
+          propertyId: position,
+          propertyName: propertyDetails.propertyName,
+          propertyPrice: propertyDetails.propertyPrice,
+          currentPlayer,
+        });
+        setShowPropertyModal(true);
       }
     } else if (owner !== currentPlayer.playerId) {
       const rentUrl = `${apiUrl}GameManagerWithAI/payRent`;
@@ -308,13 +256,77 @@ export default function GameBoard() {
 
       if (rentResponse.ok) {
         toast("Rent paid successfully!", { type: "info" });
+        const updatedPlayerResponse = await fetchPlayerData(
+          currentPlayer.playerId
+        );
+        if (updatedPlayerResponse.ok) {
+          const updatedPlayerData = await updatedPlayerResponse.json();
+          updatePlayerDataInState(updatedPlayerData);
+        }
       } else {
         toast("Failed to pay rent.", { type: "error" });
       }
     }
   };
 
-  // Handle landing on a surprise square
+  const fetchPropertyDetails = async (propertyId) => {
+    const apiUrl = getBaseApiUrl();
+    const fullUrl = `${apiUrl}Properties/GetPropertyDetails?propertyId=${propertyId}`;
+    const response = await fetch(fullUrl, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      console.error(`HTTP error! Status: ${response.status}`);
+      return null;
+    }
+
+    return JSON.parse(responseText);
+  };
+
+  const handleBuyProperty = async () => {
+    const { propertyId, currentPlayer } = currentProperty;
+    const apiUrl = getBaseApiUrl();
+    const buyUrl = `${apiUrl}Properties/BuyProperty?PlayerId=${currentPlayer.playerId}&PropertyId=${propertyId}`;
+    const buyResponse = await fetch(buyUrl, { method: "POST" });
+
+    if (buyResponse.ok) {
+      toast("You have successfully bought the property!", { type: "success" });
+      const updatedPlayerResponse = await fetchPlayerData(
+        currentPlayer.playerId
+      );
+      if (updatedPlayerResponse.ok) {
+        const updatedPlayerData = await updatedPlayerResponse.json();
+        updatePlayerDataInState(updatedPlayerData);
+      }
+    } else {
+      toast("Failed to buy property.", { type: "error" });
+    }
+
+    setShowPropertyModal(false);
+  };
+
+  const fetchPlayerData = (playerId) => {
+    const apiUrl = getBaseApiUrl();
+    const fullUrl = `${apiUrl}Players/${playerId}`;
+    return fetch(fullUrl, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+  };
+
+  const updatePlayerDataInState = (updatedPlayerData) => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) =>
+        player.playerId === updatedPlayerData.playerId
+          ? updatedPlayerData
+          : player
+      )
+    );
+  };
+
   const handleSurpriseSquareType = async (position, currentPlayer) => {
     const apiUrl = getBaseApiUrl();
     const fullUrl = `${apiUrl}Cards/surprise`;
@@ -324,16 +336,13 @@ export default function GameBoard() {
     });
     const responseText = await response.text();
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
     const result = JSON.parse(responseText);
     setCardData(result);
     setIsModalVisible(true);
   };
 
-  // Handle landing on a chance square
   const handleChanceSquareType = async (position, currentPlayer) => {
     const apiUrl = getBaseApiUrl();
     const fullUrl = `${apiUrl}Cards/command`;
@@ -343,17 +352,17 @@ export default function GameBoard() {
     });
     const responseText = await response.text();
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
     const result = JSON.parse(responseText);
     setCardData(result);
     setShowCard(true);
   };
 
-  // Handle the player landing on different types of squares
-  const handleSquareLanding = async (currentPlayer) => {
+  const handleSquareLanding = useCallback(async (currentPlayer) => {
+    if (isHandlingSquareLanding.current) return;
+
+    isHandlingSquareLanding.current = true;
     const position = currentPlayer.currentPosition;
     const squareType = SquareConfigData.get(position)?.type;
 
@@ -375,10 +384,10 @@ export default function GameBoard() {
           toast("You passed GO! Collect $200.", { type: "info" });
           break;
         case SquareType.Jail:
-          showModal("You are just visiting jail this time.");
+          toast("You are just visiting jail this time.");
           break;
         case SquareType.GoToJail:
-          showModal("Go to Jail! Move directly to jail.");
+          toast("Go to Jail! Move directly to jail.");
           break;
         default:
           toast(`You landed on a regular square.`, { type: "info" });
@@ -387,23 +396,18 @@ export default function GameBoard() {
     } catch (error) {
       console.error("Error during square landing actions:", error);
       toast("Error handling property action.", { type: "error" });
+    } finally {
+      isHandlingSquareLanding.current = false;
     }
-  };
+  }, []);
 
-  // Show modal with a message
-  const showModal = (message) => {
-    setModalContent(message);
-    setModalSquareIsOpen(true);
-  };
-
-  // Handle player actions when landing on a square
   useEffect(() => {
     const currentPlayer = players[currentPlayerIndex];
     if (currentPlayer) {
       console.log("Current player:", currentPlayer);
       handleSquareLanding(currentPlayer);
     }
-  }, [currentPlayerIndex, players]);
+  }, [currentPlayerIndex, players, handleSquareLanding]);
 
   return (
     <>
@@ -411,7 +415,7 @@ export default function GameBoard() {
         <div className="board">
           {numSquares.map((num) => {
             const playersOnThisSquare = players.filter(
-              (player) => player["currentPosition"] === num
+              (player) => player.currentPosition === num
             );
             return (
               <GameSquare key={num} id={num} players={playersOnThisSquare} />
@@ -483,6 +487,16 @@ export default function GameBoard() {
           cardData={cardData}
         />
       )}
+      {currentProperty && (
+        <PropertyModal
+          show={showPropertyModal}
+          onHide={() => setShowPropertyModal(false)}
+          property={currentProperty}
+          onBuy={handleBuyProperty}
+        />
+      )}
     </>
   );
-}
+};
+
+export default GameBoard;

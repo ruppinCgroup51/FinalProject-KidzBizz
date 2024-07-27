@@ -27,9 +27,11 @@ export const GameSquare = ({ id, players }) => {
     [SquareType.Property, "נכס"],
     [SquareType.DidYouKnow, "הידעת ?"],
   ]);
+
   const prevPlayerPositions = useRef(
     players.map((player) => player.currentPosition)
   );
+
   const getContainerClassName = () => {
     return "container container-" + sectionMap.get(section);
   };
@@ -42,6 +44,29 @@ export const GameSquare = ({ id, players }) => {
     return "game-square-" + id;
   };
 
+  const getAvatarStyle = (position) => {
+    if (position >= 1 && position <= 11) {
+      return {
+        top: "0.1px",
+      };
+    } else if (position > 11 && position <= 21) {
+      return {
+        right: "110px",
+        top:"5px"
+      };
+    } else if (position > 21 && position <= 31) {
+      return {
+        bottom: "70px",
+      };
+    } else if (position > 31 && position <= 40) {
+      return {
+        left: "110px",
+        top:"5px"
+      };
+    }
+    return {};
+  };
+
   useEffect(() => {
     players.forEach((player, index) => {
       if (
@@ -49,15 +74,7 @@ export const GameSquare = ({ id, players }) => {
         player.currentPosition !== prevPlayerPositions.current[index]
       ) {
         prevPlayerPositions.current[index] = player.currentPosition;
-        /*if (squareType !== SquareType.Go) {
-          toast(
-            `שחקן מספר ${player.playerId} הגעת ל-תא מסוג ${squareTypeClass.get(
-              squareType
-            )}`,
-            { type: "success" }
-          );*/
-        }
-      //}
+      }
     });
   }, [players, id, squareType, squareTypeClass]);
 
@@ -65,20 +82,18 @@ export const GameSquare = ({ id, players }) => {
     <div className={getSquareClassName()} id={getSquareId()}>
       <div className={getContainerClassName()}>
         <SquareInfo id={id} />
-        <div className="player-container">
-          {/*render the players on this square */}
-          {players &&
-            players.map((player) => (
-              <div key={player["user"]["userId"]} className="player">
-                {/* {player["user"]["userId"]} */}
-                <img
-                  src={player["user"]["avatarPicture"]}
-                  alt="avatar"
-                  className="avatar"
-                />
-              </div>
-            ))}
-        </div>
+      </div>
+      <div className="player-container">
+        {players &&
+          players.map((player, index) => (
+            <img
+              key={player["user"]["userId"]}
+              src={player["user"]["avatarPicture"]}
+              alt="avatar"
+              className="avatar"
+              style={getAvatarStyle(player.currentPosition)}
+            />
+          ))}
       </div>
     </div>
   );
