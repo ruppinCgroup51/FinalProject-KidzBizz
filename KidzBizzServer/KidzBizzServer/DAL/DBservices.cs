@@ -2167,9 +2167,6 @@ public (decimal, int) GetGameSettings()    // from Game setting table
         return cmd;
     }
 
-
-
-
 }
 
 

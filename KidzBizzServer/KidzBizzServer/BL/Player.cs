@@ -66,6 +66,13 @@ namespace KidzBizzServer.BL
             dbs.UpdatePlayerPosition(this.PlayerId, this.CurrentPosition , this.LastDiceResult);
         }
 
+        public Player GetPlayerDetails(int playerId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetPlayerById(playerId);
+
+        }
+
 
         public Player Update()
         {

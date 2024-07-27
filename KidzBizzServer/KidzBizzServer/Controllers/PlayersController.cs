@@ -51,9 +51,10 @@ namespace KidzBizzServer.Controllers
 
         // GET api/<PlayersController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Player Get(int id)
         {
-            return "value";
+            Player player = new Player();
+            return player.GetPlayerDetails(id);
         }
 
         // POST api/<PlayersController>
