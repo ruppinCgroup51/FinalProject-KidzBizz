@@ -24,6 +24,15 @@ body {
   
 }
 
+.countdown-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(#47b3a1, #d9eed9);
+}
+
+
 .endgameBTN{
   background-color: red;
   color: white;

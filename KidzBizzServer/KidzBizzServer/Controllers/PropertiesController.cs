@@ -19,7 +19,7 @@ namespace KidzBizzServer.Controllers
         }
 
         [HttpGet]
-        [Route("api/Properties/GetPropertyDetails")]
+        [Route("GetPropertyDetails")]
         public IActionResult GetPropertyDetails(int propertyId)
         {
             Property property = new Property();
