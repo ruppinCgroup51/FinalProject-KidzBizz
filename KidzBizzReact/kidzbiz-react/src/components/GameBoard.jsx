@@ -411,6 +411,7 @@ const GameBoard = () => {
 
   return (
     <>
+    <button class="endgameBTN" onClick={handleEndGame}>סיים משחק</button>
       <div className="frame">
         <div className="board">
           {numSquares.map((num) => {
@@ -426,19 +427,20 @@ const GameBoard = () => {
               {players.map((player, index) => (
                 <div key={index} className="player-info">
                   <h3>
-                    שחקן {index + 1} - {player.user.firstName}
+                   {player.user.firstName} - שחקן {index + 1}
                   </h3>
                   <p>
-                    <FontAwesomeIcon icon={faDollarSign} /> Current Money:{" "}
+                    <FontAwesomeIcon icon={faDollarSign} /> כמות כסף:{" "}
                     {player.currentBalance}
+                    <br/>
                   </p>
-                  <button
+                  <button class="propertyBTN"
                     onClick={() => {
                       setSelectedPlayer(player);
                       setIsModalOpen(true);
                     }}
                   >
-                    View Properties
+                    ראה נכסים
                   </button>
                   {player.user.userId === displayDice &&
                     player.dice1 > 0 &&
@@ -451,6 +453,7 @@ const GameBoard = () => {
                 </div>
               ))}
             </div>
+            <br/>
             <div className="center-txt">
               <button
                 onClick={handleRollDiceClick}
@@ -461,11 +464,10 @@ const GameBoard = () => {
               <br />
               <br />
               <button onClick={handleEndTurnClick} disabled={isEndTurnDisabled}>
-                End Turn
+                סיים תור
               </button>
               <br />
               <br />
-              <button onClick={handleEndGame}>End Game</button>
             </div>
           </div>
           <PlayerProperties player={selectedPlayer} />

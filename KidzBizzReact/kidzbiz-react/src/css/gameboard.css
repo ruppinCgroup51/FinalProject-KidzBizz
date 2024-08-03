@@ -14,10 +14,33 @@ body {
   width: 100vw;
   overflow: hidden;
 }
+
+.propertyBTN{
+  background-color: #424fb2;
+  color:white;
+  border-radius: 8px;
+  border-color: black;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  
+}
+
+.endgameBTN{
+  background-color: red;
+  color: white;
+  font-size: 15px;
+  margin: 10px 0;
+  position: absolute;    
+  left: 2%;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .players-info {
-  width: 200px;
-  padding: 10px;
-  margin-left: 10px;
+  width: 400px;
+  color:#3f55ac;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 5px;
+  margin-left: 5px;
   background: #f4f4f4;
   border: 1px solid #ccc;
   border-radius: 8px;
