@@ -133,13 +133,14 @@ export default function Login({ onLogin }) {
         </Link>
       </div>
       <div className="main-div">
-        <h2>Login Page</h2>
-        <form onSubmit={handleSubmit}>
+        <h2 className="header">התחברות</h2>
+        <br/>
+        <form class="form" onSubmit={handleSubmit}>
           <ThemeProvider theme={theme}>
-            <TextField
+            <TextField 
               name="username"
               id="username"
-              label="שם משתמש"
+              label ="שם משתמש"
               variant="standard"
               value={formData.username}
               onChange={handleChange}
@@ -166,12 +167,14 @@ export default function Login({ onLogin }) {
             </ThemeProvider>
 
             <br />
+            <br/>
 
             <Button startIcon={<LockReset />} onClick={handleForgetPassword}>
               שחזור סיסמא
             </Button>
           </ThemeProvider>
           <div>
+            <br/>
             <Button
               variant="contained"
               color="error"
@@ -179,7 +182,7 @@ export default function Login({ onLogin }) {
               type="submit"
               onClick={handleSubmit}
               sx={{
-                fontSize: "30px",
+                fontSize: "20px",
                 padding: "20px",
                 "&:hover": {
                   backgroundColor: "#d32f2f",
@@ -187,7 +190,7 @@ export default function Login({ onLogin }) {
                 },
               }}
             >
-              התחברות
+              התחבר
             </Button>
           </div>
         </form>
