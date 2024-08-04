@@ -13,8 +13,6 @@ namespace KidzBizzServer.BL
         List<Property> properties = new List<Property>();
         int dice1 = 0;
         int dice2 = 0;
-        PlayerStatistics statistics;
-
 
 
         public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties, int dice1, int dice2)
@@ -27,14 +25,11 @@ namespace KidzBizzServer.BL
             this.lastDiceResult = lastDiceResult;
             this.properties = properties;
             this.dice1 = dice1;
-            this.dice2 = dice2;
-            this.statistics = new PlayerStatistics();
-
+            this.dice2 = dice2; 
         }
 
         public Player()
         {
-            this.statistics = new PlayerStatistics();
 
         }
 
@@ -47,10 +42,9 @@ namespace KidzBizzServer.BL
         public int LastDiceResult { get => lastDiceResult; set => lastDiceResult = value; }
         public List<Property> Properties { get => properties; set => properties = value; }
 
-        public int Dice1 { get => dice1; set => dice1 = value; }
+        public int Dice1 { get => dice1; set => dice1 = value; } 
         public int Dice2 { get => dice2; set => dice2 = value; }
 
-        public PlayerStatistics Statistics { get => statistics; set => statistics = value; } // *** הוספה ***
 
 
 
@@ -63,13 +57,13 @@ namespace KidzBizzServer.BL
         public int Insert()
         {
             DBservices dbs = new DBservices();
-            return dbs.InsertPlayer(this);
-
+            return dbs.InsertPlayer(this);  
+             
         }
         public void UpdatePosition()
         {
             DBservices dbs = new DBservices();
-            dbs.UpdatePlayerPosition(this.PlayerId, this.CurrentPosition, this.LastDiceResult);
+            dbs.UpdatePlayerPosition(this.PlayerId, this.CurrentPosition , this.LastDiceResult);
         }
 
         public Player GetPlayerDetails(int playerId)
@@ -111,7 +105,7 @@ namespace KidzBizzServer.BL
             return dbs.ReadPropertiesByPlayerId(playerId);
         }
 
-        public void ApplyCardEffect(Card card, string selectedAnswer = "")
+ public void ApplyCardEffect(Card card, string selectedAnswer = "")
         {
             switch (card.Action)
             {
@@ -217,8 +211,8 @@ namespace KidzBizzServer.BL
                 this.currentBalance += 300; // מוסיף כסף אם התשובה נכונה
             }
         }
-
-
+    
+        
         // מוצאת את המיקום הקרוב ביותר לפי סוג הכרטיס
         private int FindNearestPosition(string type)
         {
@@ -276,31 +270,6 @@ namespace KidzBizzServer.BL
         {
             // לוגיקה להטלת קוביות עם יריב לפי חוקי המשחק
         }
-        public void UpdateStatistics()
-        {
-            DBservices dbs = new DBservices();
-            dbs.UpdatePlayerStatistics(this.playerId, this.statistics);
-        }
-
-        public void IncrementLosses()
-        {
-            statistics.TotalLosses++;
-            UpdateStatistics();
-        }
-
-
-        public void IncrementGamesPlayed()
-        {
-            statistics.TotalGamesPlayed++;
-            UpdateStatistics();
-        }
-
-        public void UpdateMoneyAndProperties(double money, int propertiesCount)
-        {
-            statistics.TotalMoney = ((statistics.TotalMoney * (statistics.TotalGamesPlayed - 1)) + money) / statistics.TotalGamesPlayed;
-            statistics.TotalPropertiesOwned = ((statistics.TotalPropertiesOwned * (statistics.TotalGamesPlayed - 1)) + propertiesCount) / statistics.TotalGamesPlayed;
-            UpdateStatistics();
-        }
     }
 }
 
@@ -308,7 +277,5 @@ namespace KidzBizzServer.BL
 
 
 
-
-
-
+    
 

@@ -591,15 +591,6 @@ public class DBservices
             player.PlayerStatus = dataReader["PlayerStatus"].ToString();
             player.LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]);
             player.Properties = ReadPropertiesByPlayerId(player.PlayerId);
-            player.Statistics = new PlayerStatistics
-            {
-                TotalWins = Convert.ToInt32(dataReader["TotalWins"]),
-                TotalLosses = Convert.ToInt32(dataReader["TotalLosses"]),
-                TotalGamesPlayed = Convert.ToInt32(dataReader["TotalGamesPlayed"]),
-                TotalMoney = Convert.ToDouble(dataReader["TotalMoney"]),
-                TotalPropertiesOwned = Convert.ToInt32(dataReader["TotalPropertiesOwned"])
-            };
-
             players.Add(player);
         }
         if (con != null)
@@ -609,9 +600,8 @@ public class DBservices
         }
         return players;
     }
-    //--------------------------------------------------------------------------------------------------
-    // This method adds a property to a player
-    //--------------------------------------------------------------------------------------------------
+
+    // this method AddPropertyToPlayer
     public int AddPropertyToPlayer(int playerId, int propertyId)
     {
         SqlConnection con;
@@ -720,17 +710,12 @@ public class DBservices
         cmd.CommandType = CommandType.StoredProcedure; // סוג הפקודה
 
         // הוספת פרמטרים לפקודה
-
         cmd.Parameters.AddWithValue("@PlayerId", player.PlayerId);
         cmd.Parameters.AddWithValue("@CurrentPosition", player.CurrentPosition);
         cmd.Parameters.AddWithValue("@CurrentBalance", player.CurrentBalance);
         cmd.Parameters.AddWithValue("@PlayerStatus", player.PlayerStatus);
         cmd.Parameters.AddWithValue("@LastDiceResult", player.LastDiceResult);
-        cmd.Parameters.AddWithValue("@TotalWins", player.Statistics.TotalWins);
-        cmd.Parameters.AddWithValue("@TotalLosses", player.Statistics.TotalLosses);
-        cmd.Parameters.AddWithValue("@TotalGamesPlayed", player.Statistics.TotalGamesPlayed);
-        cmd.Parameters.AddWithValue("@TotalMoney", player.Statistics.TotalMoney);
-        cmd.Parameters.AddWithValue("@TotalPropertiesOwned", player.Statistics.TotalPropertiesOwned);
+
         return cmd;
     }
     //--------------------------------------------------------------------------------------------------
@@ -764,15 +749,7 @@ public class DBservices
                     CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]),
                     CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]),
                     PlayerStatus = dataReader["PlayerStatus"].ToString(),
-                    LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]),
-                    Statistics = new PlayerStatistics
-                    {
-                        TotalWins = Convert.ToInt32(dataReader["TotalWins"]),
-                        TotalLosses = Convert.ToInt32(dataReader["TotalLosses"]),
-                        TotalGamesPlayed = Convert.ToInt32(dataReader["TotalGamesPlayed"]),
-                        TotalMoney = Convert.ToDouble(dataReader["TotalMoney"]),
-                        TotalPropertiesOwned = Convert.ToInt32(dataReader["TotalPropertiesOwned"])
-                    }
+                    LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"])
                 };
             }
         }
@@ -803,51 +780,6 @@ public class DBservices
 
         return cmd;
     }
-
-    //-------------------------------------------------------------------------------------------------
-    // This method updates player statistics
-    //-------------------------------------------------------------------------------------------------
-    public void UpdatePlayerStatistics(int playerId, PlayerStatistics statistics)
-    {
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB");
-        }
-        catch (Exception ex)
-        {
-            throw (ex);
-        }
-
-        cmd = new SqlCommand("KBSP_UpdatePlayerStatistics", con);
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Parameters.AddWithValue("@PlayerId", playerId);
-        cmd.Parameters.AddWithValue("@TotalWins", statistics.TotalWins);
-        cmd.Parameters.AddWithValue("@TotalLosses", statistics.TotalLosses);
-        cmd.Parameters.AddWithValue("@TotalGamesPlayed", statistics.TotalGamesPlayed);
-        cmd.Parameters.AddWithValue("@TotalMoney", statistics.TotalMoney);
-        cmd.Parameters.AddWithValue("@TotalPropertiesOwned", statistics.TotalPropertiesOwned);
-
-        try
-        {
-            cmd.ExecuteNonQuery();
-        }
-        catch (Exception ex)
-        {
-            throw (ex);
-        }
-        finally
-        {
-            if (con != null)
-            {
-                con.Close();
-            }
-        }
-    }
-
-
     //-------------------------------------------------------------------------------------------------
     // !!! PROPERTY !!!
     //-------------------------------------------------------------------------------------------------
@@ -2234,7 +2166,6 @@ public (decimal, int) GetGameSettings()    // from Game setting table
 
         return cmd;
     }
-
 
 }
 
