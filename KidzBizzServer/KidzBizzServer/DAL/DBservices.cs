@@ -720,23 +720,18 @@ public class DBservices
         cmd.CommandType = CommandType.StoredProcedure; // סוג הפקודה
 
         // הוספת פרמטרים לפקודה
-
         cmd.Parameters.AddWithValue("@PlayerId", player.PlayerId);
         cmd.Parameters.AddWithValue("@CurrentPosition", player.CurrentPosition);
         cmd.Parameters.AddWithValue("@CurrentBalance", player.CurrentBalance);
         cmd.Parameters.AddWithValue("@PlayerStatus", player.PlayerStatus);
         cmd.Parameters.AddWithValue("@LastDiceResult", player.LastDiceResult);
-        cmd.Parameters.AddWithValue("@TotalWins", player.Statistics.TotalWins);
-        cmd.Parameters.AddWithValue("@TotalLosses", player.Statistics.TotalLosses);
-        cmd.Parameters.AddWithValue("@TotalGamesPlayed", player.Statistics.TotalGamesPlayed);
-        cmd.Parameters.AddWithValue("@TotalMoney", player.Statistics.TotalMoney);
-        cmd.Parameters.AddWithValue("@TotalPropertiesOwned", player.Statistics.TotalPropertiesOwned);
+
         return cmd;
     }
     //--------------------------------------------------------------------------------------------------
     // This method return player by id
     //--------------------------------------------------------------------------------------------------
-     public Player GetPlayerById(int playerId)
+    public Player GetPlayerById(int playerId)
     {
         SqlConnection con;
         SqlCommand cmd;
