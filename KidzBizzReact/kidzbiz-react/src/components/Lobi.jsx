@@ -85,6 +85,7 @@ export default function Lobi() {
             flexDirection: "row-reverse",
           }}
         >
+          
           <Avatar alt="User avatar" src={user.avatarPicture} sx={{ ml: 2 }} />
           <Box
             sx={{
@@ -93,10 +94,11 @@ export default function Lobi() {
               alignItems: "flex-end",
             }}
           >
-            <Typography variant="h6">{user.username}</Typography>
-            <Typography variant="subtitle2" color="text.secondary">
-              שלום,
+            
+            <Typography variant="h5" color="text.secondary">
+              שלום
             </Typography>
+            <Typography variant="h6">{user.username}</Typography>
             <Box
               sx={{
                 display: "flex",
@@ -104,8 +106,9 @@ export default function Lobi() {
                 flexDirection: "row-reverse",
               }}
             >
+              
+              <Typography variant="h6">מקום 36</Typography>
               <EmojiEventsIcon color="action" />
-              <Typography variant="body2">מקום 36</Typography>
             </Box>
           </Box>
         </Box>

@@ -5,20 +5,20 @@ const PropertyModal = ({ show, onHide, property, onBuy }) => {
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>Property Available</Modal.Title>
+        <Modal.Title>נכס זמין לרכישה</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Property ID: {property.propertyId}</p>
-        <p>Property Name: {property.propertyName}</p>
-        <p>Property Price: {property.propertyPrice}</p>
-        <p>Do you want to buy this property?</p>
+        <p>מספר נכס: {property.propertyId}</p>
+        <p>שם נכס: {property.propertyName}</p>
+        <p>מחיר נכס:{property.propertyPrice}</p>
+        <p>האם אתה מעוניין לרכוש נכס זה?</p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
-          No
+          לא
         </Button>
         <Button variant="primary" onClick={onBuy}>
-          Yes
+          כן
         </Button>
       </Modal.Footer>
     </Modal>

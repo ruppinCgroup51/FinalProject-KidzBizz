@@ -24,17 +24,21 @@ import {
   FaDiceSix,
 } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Navigate } from "react-router-dom";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 import getBaseApiUrl from "./GetBaseApi";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom';
+
 
 Modal.setAppElement("#root");
 
 const GameBoard = () => {
   const numSquares = Array.from({ length: 40 }, (_, i) => i + 1);
   const user = useContext(UserContext);
+  const navigate = useNavigate();
+  const [countdown, setCountdown] = useState(5); // Countdown from 5 seconds
+  const [gameStarted, setGameStarted] = useState(false);
 
   const [players, setPlayers] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -164,7 +168,7 @@ const GameBoard = () => {
   };
 
   const handleEndGame = () => {
-    Navigate("/Lobi");
+    navigate("/Lobi");  // Navigate to the "/Lobi" route when this function is called
   };
 
   const handleShowCard = (player, type, data) => {
@@ -272,19 +276,23 @@ const GameBoard = () => {
   const fetchPropertyDetails = async (propertyId) => {
     const apiUrl = getBaseApiUrl();
     const fullUrl = `${apiUrl}Properties/GetPropertyDetails?propertyId=${propertyId}`;
-    const response = await fetch(fullUrl, {
-      method: "GET",
-      headers: { Accept: "application/json" },
-    });
-    const responseText = await response.text();
-
-    if (!response.ok) {
-      console.error(`HTTP error! Status: ${response.status}`);
-      return null;
+    try {
+      const response = await fetch(fullUrl, {
+        method: "GET",
+        headers: { "Accept": "application/json" }
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      return await response.json();  // Directly parsing as JSON
+    } catch (error) {
+      console.error("Failed to fetch property details:", error.message);
+      return null;  // Optionally return more specific error information
     }
-
-    return JSON.parse(responseText);
   };
+  
 
   const handleBuyProperty = async () => {
     const { propertyId, currentPlayer } = currentProperty;
@@ -408,9 +416,51 @@ const GameBoard = () => {
       handleSquareLanding(currentPlayer);
     }
   }, [currentPlayerIndex, players, handleSquareLanding]);
+  
+  useEffect(() => {
+    let timerId;
+    if (countdown > 0 && !gameStarted) {
+      timerId = setTimeout(() => setCountdown(countdown - 1), 1000);
+    } else {
+      setGameStarted(true);
+      // Game initialization logic here
+    }
+    return () => clearTimeout(timerId);
+  }, [countdown, gameStarted]);
+
+  const renderCountdown = () => {
+    const radius = 45;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = ((5 - countdown) / 5) * circumference;
+
+    return (
+      <div className="countdown-container">
+        <svg width="100" height="100">
+          <circle
+            r={radius}
+            cx="50"
+            cy="50"
+            fill="transparent"
+            stroke="#4caf50"
+            strokeWidth="10"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            transform="rotate(-90 50 50)"
+          />
+          <text x="50" y="50" fill="white" textAnchor="middle" dy="8" fontSize="20">{countdown}</text>
+        </svg>
+      </div>
+    );
+  };
+
+  if (!gameStarted) {
+    return renderCountdown();
+  }
+
 
   return (
     <>
+    <button class="endgameBTN" onClick={handleEndGame}>סיים משחק</button>
       <div className="frame">
         <div className="board">
           {numSquares.map((num) => {
@@ -426,19 +476,20 @@ const GameBoard = () => {
               {players.map((player, index) => (
                 <div key={index} className="player-info">
                   <h3>
-                    שחקן {index + 1} - {player.user.firstName}
+                   {player.user.firstName} - שחקן {index + 1}
                   </h3>
                   <p>
-                    <FontAwesomeIcon icon={faDollarSign} /> Current Money:{" "}
+                    <FontAwesomeIcon icon={faDollarSign} /> כמות כסף:{" "}
                     {player.currentBalance}
+                    <br/>
                   </p>
-                  <button
+                  <button class="propertyBTN"
                     onClick={() => {
                       setSelectedPlayer(player);
                       setIsModalOpen(true);
                     }}
                   >
-                    View Properties
+                    ראה נכסים
                   </button>
                   {player.user.userId === displayDice &&
                     player.dice1 > 0 &&
@@ -451,6 +502,7 @@ const GameBoard = () => {
                 </div>
               ))}
             </div>
+            <br/>
             <div className="center-txt">
               <button
                 onClick={handleRollDiceClick}
@@ -461,11 +513,10 @@ const GameBoard = () => {
               <br />
               <br />
               <button onClick={handleEndTurnClick} disabled={isEndTurnDisabled}>
-                End Turn
+                סיים תור
               </button>
               <br />
               <br />
-              <button onClick={handleEndGame}>End Game</button>
             </div>
           </div>
           <PlayerProperties player={selectedPlayer} />

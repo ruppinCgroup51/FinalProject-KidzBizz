@@ -26,10 +26,9 @@ body {
     height: 40px;
 
 }
-h2{
+.header{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 50px;
-    color: red;
-    font-family: Jazz LET, fantasy;
 }
 
 #forget-password-button{

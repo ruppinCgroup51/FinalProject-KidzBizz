@@ -7,7 +7,7 @@ const SurpriseCardModal = ({ card, onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Surprise Card</h2>
+        <h2>קלף הפתעה</h2>
         <p>Card ID: {card.cardId}</p>
         <p>{card.description}</p>
         <p>Amount: {card.amount}</p>
