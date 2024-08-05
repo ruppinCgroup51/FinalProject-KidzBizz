@@ -730,14 +730,14 @@ public class DBservices
 
         try
         {
-            con = connect("myProjDB"); // יצירת חיבור למסד הנתונים
+            con = connect("myProjDB"); // Create a connection to the database
         }
         catch (Exception ex)
         {
             throw (ex);
         }
 
-        cmd = CreateGetPlayerByIdCommandWithStoredProcedure("KBSP_GetPlayerById", con, playerId);
+        cmd = CreateGetPlayerByIdCommandWithStoredProcedure("KBSP_GetPlayerDetalis", con, playerId);
 
         try
         {
@@ -746,11 +746,20 @@ public class DBservices
             {
                 player = new Player
                 {
+
                     PlayerId = Convert.ToInt32(dataReader["PlayerId"]),
                     CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]),
                     CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]),
                     PlayerStatus = dataReader["PlayerStatus"].ToString(),
-                    LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"])
+                    LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]),
+                    User = new User
+                    {
+                        Username = dataReader["Username"].ToString(),
+                        AvatarPicture = dataReader["AvatarPicture"].ToString(),
+                        UserId = Convert.ToInt32(dataReader["UserId"])
+                    },
+                    // Include other properties as needed
+                    Properties = ReadPropertiesByPlayerId(Convert.ToInt32(dataReader["PlayerId"]))
                 };
             }
         }
@@ -768,6 +777,7 @@ public class DBservices
 
         return player;
     }
+
 
     private SqlCommand CreateGetPlayerByIdCommandWithStoredProcedure(String spName, SqlConnection con, int playerId)
     {
