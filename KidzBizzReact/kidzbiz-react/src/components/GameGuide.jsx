@@ -12,33 +12,36 @@ export default function GameGuide() {
   return (
     <div className="game-guide-overlay"> {/* Overlay container */}
       <div className="game-guide-modal"> {/* Modal container */}
-        <h1>Game Guide</h1>
+        <h1>מדריך משחק</h1>
         {/*הכנסתי מלל בנתיים לראות איך זה נראה*/}
         <p>
-        The KidzBizz Monopoly game is a game where you learn about money, economics and finance.<br/>
-        In the game you buy, rent or sell valuable assets, answer questions about finance, earn money and get rich. The richest participant of all - wins in the end.<br/><br/>
+        <br/>
+        המשחק "מונופול של קידזביז" הוא משחק שבו לומדים על כסף, כלכלה ופיננסים. במשחק, קונים, משכירים או מוכרים נכסים חשובים, עונים על שאלות בנושא פיננסים, מרוויחים כסף ומתעשרים. מי שהכי עשיר בסוף המשחק - הוא המנצח! 
+<br/>
+<br/>
+במהלך המשחק, אתם יכולים לראות את לוח המשחק, את המיקום של השחקנים על הלוח, את הנכסים שקניתם ואת הכסף שיש לכם כרגע.
+<br/>
+<br/>
+בהתחלת המשחק, כל שחקן יקבל 1,500 שקלים כדי להתחיל איתם. <br/>
+כל שחקן מתחיל במקום שנקרא "צא", וכל סיבוב מתקדם על הלוח לפי התוצאה של קוביית המשחק.
+<br/>
+כששחקן מגיע למשבצת של "נכס", הוא יכול לבחור אם הוא רוצה לקנות את הנכס או לא. <br/> שימו לב! בעלי הנכסים גובים דמי שכירות מהשחקנים האחרים שנעצרים על הנכסים שלהם, לכן כדאי לקנות כמה שיותר נכסים. 
+<br/>
+כששחקן מגיע למשבצת של "בית כלא", הוא חייב להיכנס לכלא ולהישאר שם תור אחד שלם.<br/>
 
-At any given moment in the game, you can see the game board, the position of the players on the board, the assets you have purchased and your current capital.<br/>
-At the beginning of the game, 1,500 NIS will be distributed to each player.<br/>
-Each player starts in the "through a plate" slot, and each round moves around the board according to the result of his dice roll.<br/>
+על לוח המשחק מפוזרים גם קלפי הפתעה וקלפי סיכוי. השחקן חייב תמיד למלא את מה שכתוב על קלפי ההפתעה והמשימה, גם אם זה אומר להישלח לכלא 😣.<br/>
+בנוסף, יש גם קלפי "ידע" שמפוזרים על הלוח. קלפים אלו מכילים מידע לימודי על כלכלה ופיננסים. אחרי קריאת הקלף, השחקן יכול לבחור אם הוא רוצה לענות על שאלה בנושא ולזכות בכסף.
 <br/>
-When a player reaches the "property" slot, he chooses whether to buy the property or not.<br/>
-Note! Property owners collect rent from the other participants who stay on their properties, so you should purchase as many properties as possible.<br/>
-When a player reaches the "pay taxes" slot he will have to pay taxes according to his assets.<br/>
-When a player reaches the "share purchase" slot, he will have to purchase a share according to the shares available in the market.<br/>
-When a player reaches a "prison" slot, he must enter the prison and stay there for a full turn.<br/>
 <br/>
-Surprise cards and command cards are scattered around the board, the player must always fill in what is written on the "surprise" cards and the "command" cards, even if it means being sent to prison 😣<br/>
-"Knowledge" cards are also scattered around the board. These cards contain educational information about economics and finance.<br/>
-After reading the card, a player can choose if they want to answer a question about it and win money.<br/>
-Note  ! The more money you have, the more your chance of winning the game increases, so be focused and answer as many questions as possible 😀<br/>
-When a player goes bankrupt, he is out of the game.<br/>
+שימו לב! ככל שיש לכם יותר כסף, כך גדלים הסיכויים שלכם לנצח במשחק, אז היו מרוכזים וענו על כמה שיותר שאלות 😀
 <br/>
-The goal of the game is to be the last player to go bankrupt.<br/>
-The richest player - wins the game 👏
+כששחקן פושט רגל, הוא יוצא מהמשחק.<br/>
+המטרה במשחק היא להיות השחקן האחרון שלא פשט רגל. <br/>
+השחקן הכי עשיר - מנצח במשחק 👏.
+     
 
         </p>
-        <button onClick={handleClose}>Close</button> {/* Close button to navigate back to Lobi */}
+        <button onClick={handleClose}>סגור</button> {/* Close button to navigate back to Lobi */}
       </div>
     </div>
   );
