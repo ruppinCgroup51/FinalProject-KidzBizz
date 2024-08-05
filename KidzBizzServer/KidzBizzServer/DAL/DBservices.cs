@@ -591,15 +591,6 @@ public class DBservices
             player.PlayerStatus = dataReader["PlayerStatus"].ToString();
             player.LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]);
             player.Properties = ReadPropertiesByPlayerId(player.PlayerId);
-            player.Statistics = new PlayerStatistics
-            {
-                TotalWins = Convert.ToInt32(dataReader["TotalWins"]),
-                TotalLosses = Convert.ToInt32(dataReader["TotalLosses"]),
-                TotalGamesPlayed = Convert.ToInt32(dataReader["TotalGamesPlayed"]),
-                TotalMoney = Convert.ToDouble(dataReader["TotalMoney"]),
-                TotalPropertiesOwned = Convert.ToInt32(dataReader["TotalPropertiesOwned"])
-            };
-
             players.Add(player);
         }
         if (con != null)
@@ -759,15 +750,7 @@ public class DBservices
                     CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]),
                     CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]),
                     PlayerStatus = dataReader["PlayerStatus"].ToString(),
-                    LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]),
-                    Statistics = new PlayerStatistics
-                    {
-                        TotalWins = Convert.ToInt32(dataReader["TotalWins"]),
-                        TotalLosses = Convert.ToInt32(dataReader["TotalLosses"]),
-                        TotalGamesPlayed = Convert.ToInt32(dataReader["TotalGamesPlayed"]),
-                        TotalMoney = Convert.ToDouble(dataReader["TotalMoney"]),
-                        TotalPropertiesOwned = Convert.ToInt32(dataReader["TotalPropertiesOwned"])
-                    }
+                    LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"])
                 };
             }
         }
