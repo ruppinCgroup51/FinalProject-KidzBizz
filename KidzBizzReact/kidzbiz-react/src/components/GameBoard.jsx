@@ -200,21 +200,22 @@ const GameBoard = () => {
     if (!player) return null;
 
     return (
-      <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-        <h2>{player.user.firstName}'s Properties</h2>
-        {player.properties && player.properties.length > 0 ? (
+      <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} style={{ maxWidth: '600px', width: '50%', margin: 'auto', position: 'relative' }}>
+      <h2 style={{ position: 'relative',textAlign: 'right',color:'red', fontFamily: 'cursive'}}>{player.user.firstName} הנכסים של </h2>
+      {player.properties && player.properties.length > 0 ? (
           player.properties.map((property, index) => (
-            <div key={index}>
-              <p>Property ID: {property.propertyId}</p>
-              <p>Property Name: {property.propertyName}</p>
-              <p>Property Price: {property.propertyPrice}</p>
-            </div>
+              <div key={index} style={{ color:'black', textAlign:'right'}}>
+                  <p>מזהה נכס: {property.propertyId}</p>
+                  <p>שם נכס: {property.propertyName}</p>
+                  <p>מחיר נכס: {property.propertyPrice}</p>
+              </div>
           ))
-        ) : (
-          <p>No properties</p>
-        )}
-        <button onClick={() => setIsModalOpen(false)}>Close</button>
-      </Modal>
+      ) : (
+          <p style={{ position: 'relative',textAlign: 'right',color:'black'}}>אין נכסים</p>
+      )}
+      <button style={{ position: 'absolute', left: '10px', bottom: '10px' , color:'white', backgroundColor:'red'}} onClick={() => setIsModalOpen(false)}>סגור</button>
+  </Modal>
+  
     );
   };
 
