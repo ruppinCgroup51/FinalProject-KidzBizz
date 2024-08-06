@@ -54,13 +54,13 @@
 //            switch (PlayerType)
 //            {
 //                case PlayerType.Conservative:
-                    
+
 //                    break;
 //                case PlayerType.Adventurous:
-                   
+
 //                    break;
 //                case PlayerType.Balanced:
-                    
+
 //                    break;
 //            }
 //        }
@@ -145,3 +145,39 @@
 //        public double Beta4 { get; set; }
 //    }
 //}
+
+using System;
+using System.Collections.Generic;
+
+namespace KidzBizzServer.BL
+{
+    public class AIPlayer : Player
+    {
+        public AIPlayer()
+        {
+        }
+
+        public AIPlayer(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties, int dice1, int dice2, int playerType)
+            : base(playerId, user, currentPosition, currentBalance, playerStatus, lastDiceResult, properties, dice1, dice2, playerType)
+        {
+        }
+
+        public void PerformAIAction()
+        {
+            // לוגיקה לביצוע פעולה של השחקן האוטומטי
+        }
+
+        public void GainExtraTurn()
+        {
+            // לוגיקה לקבלת תור נוסף
+            Console.WriteLine("זכית בתור נוסף!");
+        }
+
+        public void SkipNextTurn()
+        {
+            // לוגיקה לדילוג על התור הבא
+            Console.WriteLine("הפסדת תור!");
+        }
+    }
+}
+

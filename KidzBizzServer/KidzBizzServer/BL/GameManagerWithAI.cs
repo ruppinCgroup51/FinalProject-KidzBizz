@@ -403,6 +403,7 @@ namespace KidzBizzServer.BL
 
 
         // מתודה לטיפול בפתיחת כרטיס
+
         public void HandleCardAction(int cardId, int playerId, string selectedAnswer, int currentPosition)
         {
             var card = Card.GetCardById(cardId);
@@ -427,22 +428,18 @@ namespace KidzBizzServer.BL
             }
         }
 
-        // פונקציה לעדכון פרטי השחקן
         private void UpdatePlayerDetails(double price)
         {
             if (currentPlayerIndex == 0)
             {
-                // עדכון פרטי השחקן
                 player.CurrentBalance -= price;
             }
             else
             {
-                // עדכון פרטי AIPlayer
                 aiPlayer.CurrentBalance -= price;
             }
         }
 
-        // מימוש השפעות של כרטיס פקודה
         public void ApplyCommandCardEffect(CommandCard card, Player player, int currentPosition)
         {
             if (card.Description.Contains("הרווחת"))
@@ -473,10 +470,14 @@ namespace KidzBizzServer.BL
                 player.CurrentPosition = nearestCommandSlot;
                 player.UpdatePosition();
             }
+            else if (card.Description.Contains("זכית בתור כפול") || card.Description.Contains("זכית בתור נוסף"))
+            {
+                GrantExtraTurn(player);
+                DisruptMarket(player);
+            }
             player.Update();
         }
 
-        // מימוש השפעות של כרטיס הפתעה
         public void ApplySurpriseCardEffect(SurpriseCard card, Player player, int currentPosition)
         {
             if (card.Description.Contains("קבל") || card.Description.Contains("הרוויח") || card.Description.Contains("הרווחת") || card.Description.Contains("הרווח"))
@@ -503,10 +504,14 @@ namespace KidzBizzServer.BL
                 player.CurrentPosition = nearestSurpriseSlot;
                 player.UpdatePosition();
             }
+            else if (card.Description.Contains("זכית בתור כפול") || card.Description.Contains("זכית בתור נוסף"))
+            {
+                GrantExtraTurn(player);
+                DisruptMarket(player);
+            }
             player.Update();
         }
 
-        // מימוש השפעות של כרטיס הידעת
         public void ApplyDidYouKnowCardEffect(DidYouKnowCard card, Player player, string selectedAnswer, int currentPosition)
         {
             if (selectedAnswer == card.CorrectAnswer)
@@ -519,10 +524,14 @@ namespace KidzBizzServer.BL
                 player.CurrentPosition = nearestDidYouKnowSlot;
                 player.UpdatePosition();
             }
+            else if (card.Description.Contains("זכית בתור כפול") || card.Description.Contains("זכית בתור נוסף"))
+            {
+                GrantExtraTurn(player);
+                DisruptMarket(player);
+            }
             player.Update();
         }
 
-        // פונקציה למציאת המשבצת הקרובה ביותר בהתאם לסוג המשבצת
         public int FindNearestSlot(int currentPosition, string slotType)
         {
             int[] slots;
@@ -539,7 +548,6 @@ namespace KidzBizzServer.BL
                     slots = new int[] { 8, 18, 23, 26, 33, 39 };
                     break;
 
-                    break;
                 default:
                     slots = new int[] { };
                     break;
@@ -548,8 +556,26 @@ namespace KidzBizzServer.BL
             return slots.Where(p => p > currentPosition).OrderBy(p => p).FirstOrDefault();
         }
 
+        private void GrantExtraTurn(Player currentPlayer)
+        {
+            if (currentPlayer.PlayerId == player.PlayerId)
+            {
+                player.GainExtraTurn();
+                aiPlayer.SkipNextTurn();
+            }
+            else
+            {
+                aiPlayer.GainExtraTurn();
+                player.SkipNextTurn();
+            }
+        }
 
-
+        private void DisruptMarket(Player currentPlayer)
+        {
+            Player otherPlayer = (currentPlayer.PlayerId == player.PlayerId) ? aiPlayer : player;
+            otherPlayer.SkipNextTurn();
+            currentPlayer.GainExtraTurn();
+        }
 
         // פעולה להפסקת משחקc
         public void PauseGame()
