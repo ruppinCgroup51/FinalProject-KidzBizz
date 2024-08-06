@@ -10,6 +10,7 @@ namespace KidzBizzServer.BL
         double currentBalance;
         string playerStatus;
         int lastDiceResult;
+        int playerType;
         List<Property> properties = new List<Property>();
         int dice1 = 0;
         int dice2 = 0;
@@ -17,7 +18,7 @@ namespace KidzBizzServer.BL
 
 
 
-        public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties, int dice1, int dice2)
+        public Player(int playerId, User user, int currentPosition, double currentBalance, string playerStatus, int lastDiceResult, List<Property> properties, int dice1, int dice2, int playerType)
         {
             this.playerId = playerId;
             this.user = user;
@@ -29,7 +30,7 @@ namespace KidzBizzServer.BL
             this.dice1 = dice1;
             this.dice2 = dice2;
             this.statistics = new PlayerStatistics();
-
+            this.playerType = playerType;
         }
 
         public Player()
@@ -49,6 +50,8 @@ namespace KidzBizzServer.BL
 
         public int Dice1 { get => dice1; set => dice1 = value; }
         public int Dice2 { get => dice2; set => dice2 = value; }
+
+        public int PlayerType { get => playerType; set => playerType = value; }
 
         public PlayerStatistics Statistics { get => statistics; set => statistics = value; } // *** הוספה ***
 

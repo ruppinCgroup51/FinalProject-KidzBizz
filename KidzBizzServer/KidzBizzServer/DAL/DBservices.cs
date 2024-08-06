@@ -548,6 +548,7 @@ public class DBservices
         cmd.Parameters.AddWithValue("@CurrentBalance", player.CurrentBalance);
         cmd.Parameters.AddWithValue("@PlayerStatus", player.PlayerStatus);
         cmd.Parameters.AddWithValue("@LastDiceResult", player.LastDiceResult);
+        cmd.Parameters.AddWithValue("@PlayerType", player.PlayerType);
 
         return cmd;
     }
@@ -589,6 +590,7 @@ public class DBservices
             player.CurrentPosition = Convert.ToInt32(dataReader["CurrentPosition"]);
             player.CurrentBalance = Convert.ToDouble(dataReader["CurrentBalance"]);
             player.PlayerStatus = dataReader["PlayerStatus"].ToString();
+            player.PlayerType = Convert.ToInt32(dataReader["PlayerType"]);
             player.LastDiceResult = Convert.ToInt32(dataReader["LastDiceResult"]);
             player.Properties = ReadPropertiesByPlayerId(player.PlayerId);
             players.Add(player);

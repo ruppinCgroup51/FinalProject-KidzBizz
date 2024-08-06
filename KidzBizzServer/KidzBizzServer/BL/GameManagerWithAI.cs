@@ -6,13 +6,13 @@ namespace KidzBizzServer.BL
     public class GameManagerWithAI
     {
         Player player = new Player();
-        AIPlayer aiPlayer = new AIPlayer();
+        Player aiPlayer = new Player();
         int currentPlayerIndex;
         int diceRoll;
         Game game = new Game();
 
 
-        public GameManagerWithAI(Player player, AIPlayer aiPlayer, int currentPlayerIndex, int diceRoll, Game game)
+        public GameManagerWithAI(Player player, Player aiPlayer, int currentPlayerIndex, int diceRoll, Game game)
         {
             Player = player;
             AiPlayer = aiPlayer;
@@ -27,7 +27,7 @@ namespace KidzBizzServer.BL
         }
 
         public Player Player { get => player; set => player = value; }
-        public AIPlayer AiPlayer { get => aiPlayer; set => aiPlayer = value; }
+        public Player AiPlayer { get => aiPlayer; set => aiPlayer = value; }
         public int CurrentPlayerIndex { get => currentPlayerIndex; set => currentPlayerIndex = value; }
         public int DiceRoll { get => diceRoll; set => diceRoll = value; }
 
@@ -63,6 +63,7 @@ namespace KidzBizzServer.BL
                 CurrentPosition = currentLocation,
                 PlayerStatus = "Active",
                 LastDiceResult = 0,
+                PlayerType = 0
 
             };
 
@@ -85,8 +86,7 @@ namespace KidzBizzServer.BL
                 CurrentPosition = currentLocation,
                 PlayerStatus = "Active",
                 LastDiceResult = 0,
-
-
+                PlayerType = new Random().Next(1, 4)
             };
 
             aiPlayer.Insert();
@@ -305,34 +305,34 @@ namespace KidzBizzServer.BL
         }
 
         //האם הנכס שייך למישהו אחר ? לעבור על מערך הנכסים ולבדוק אם קיים.
-        private bool IsPropertyOwnedByOtherPlayer(Property property)
-        {
-            // Check if the property belongs to the other player
-            if (currentPlayerIndex == 0)
-            {
-                // Check if the property exists in the AI player's list of properties
-                //foreach (var property in aiPlayer.Properties)
-                //{
-                //    if (property.PropertyId == property.PropertyId)
-                //    {
-                //        return true; // Property belongs to the AI player
-                //    }
-                //}
-            }
-            else
-            {
-                // Check if the property exists in the player's list of properties
-                //foreach (var property in player.Properties)
-                //{
-                //    if (property.PropertyId == property.PropertyId)
-                //    {
-                //        return true; // Property belongs to the player
-                //    }
-                //}
-            }
+        //private bool IsPropertyOwnedByOtherPlayer(Property property)
+        //{
+        //    // Check if the property belongs to the other player
+        //    if (currentPlayerIndex == 0)
+        //    {
+        //        // Check if the property exists in the AI player's list of properties
+        //        //foreach (var property in aiPlayer.Properties)
+        //        //{
+        //        //    if (property.PropertyId == property.PropertyId)
+        //        //    {
+        //        //        return true; // Property belongs to the AI player
+        //        //    }
+        //        //}
+        //    }
+        //    else
+        //    {
+        //        // Check if the property exists in the player's list of properties
+        //        //foreach (var property in player.Properties)
+        //        //{
+        //        //    if (property.PropertyId == property.PropertyId)
+        //        //    {
+        //        //        return true; // Property belongs to the player
+        //        //    }
+        //        //}
+        //    }
 
-            return false; // Property does not belong to the other player
-        }
+        //    return false; // Property does not belong to the other player
+        //}
 
 
         //בהתאם למיקום לקבל את הנכס שדרכתי עליו,להביא את הדירות מהדאטה בייס
@@ -383,17 +383,17 @@ namespace KidzBizzServer.BL
         //}
 
         // מימוש פונקציה הסתברותית ששחקן האיהיי יקנה את הנכס
-        private void ActivateAIPlayerFunctionForProperty(Property property)
-        {
-            // Implement logic for AI player's actions when landing on an property slot
-        }
+        //private void ActivateAIPlayerFunctionForProperty(Property property)
+        //{
+        //    // Implement logic for AI player's actions when landing on an property slot
+        //}
 
 
-        //מימוש פונקציה הסתברותית ששחקן האיהי יענה נכון על כרטיס הידעת
-        private void ActivateAIPlayerFunctionForKnowledge()
-        {
-            // Implement logic for AI player's actions when landing on a knowledge slot
-        }
+        ////מימוש פונקציה הסתברותית ששחקן האיהי יענה נכון על כרטיס הידעת
+        //private void ActivateAIPlayerFunctionForKnowledge()
+        //{
+        //    // Implement logic for AI player's actions when landing on a knowledge slot
+        //}
 
 
         //בכל מקום שנבצע שינוי של כסף נקרא לפונקציה זו
