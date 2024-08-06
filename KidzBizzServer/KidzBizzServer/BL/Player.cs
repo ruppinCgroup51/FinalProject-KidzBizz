@@ -35,7 +35,6 @@ namespace KidzBizzServer.BL
 
         public Player()
         {
-            this.statistics = new PlayerStatistics();
 
         }
 

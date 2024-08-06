@@ -45,31 +45,48 @@ namespace KidzBizzServer.Controllers
                 return BadRequest($"Error rolling dice: {ex.Message}");
             }
         }
-
-        [HttpPost("payRent")]
-        public IActionResult PayRent([FromBody] JsonElement jsonData)
+        // פעולה לפתיחת כרטיס
+        [HttpPost("opencard")]
+        public IActionResult OpenCard([FromBody] CardActionRequest request)
         {
             try
             {
-                int playerId = jsonData.GetProperty("playerId").GetInt32();
-                int propertyOwnerId = jsonData.GetProperty("propertyOwnerId").GetInt32();
-                int propertyId = jsonData.GetProperty("propertyId").GetInt32();
-
                 GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
-                gameManagerWithAI.PayRent(playerId, propertyOwnerId, propertyId);
-                return Ok("Rent paid successfully.");
+                var card = Card.GetCardById(request.CardId);
+
+                // בדיקה אם הכרטיס הוא מסוג "הידעת" ושהתשובה לא ריקה
+                if (card is DidYouKnowCard && string.IsNullOrEmpty(request.SelectedAnswer))
+                {
+                    return BadRequest("Selected answer is required for 'Did You Know' cards.");
+                }
+
+                gameManagerWithAI.HandleCardAction(request.CardId, request.PlayerId, request.SelectedAnswer);
+                return Ok("Card action handled successfully.");
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error: {ex.Message}");
+                return BadRequest($"Error handling card action: {ex.Message}");
             }
         }
 
         // GET api/<GameManagerWithAIController>/5
         [HttpGet("GetById/{id}")]
-        public string Get(int id)
+        public IActionResult GetById(int id)
         {
-            return "value";
+            try
+            {
+                DBservices dbs = new DBservices();
+                var player = dbs.GetPlayerById(id);
+                if (player == null)
+                {
+                    return NotFound($"Player with ID {id} not found.");
+                }
+                return Ok(player);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error retrieving player: {ex.Message}");
+            }
         }
 
         // POST api/<GameManagerWithAIController>
@@ -90,4 +107,10 @@ namespace KidzBizzServer.Controllers
         {
         }
     }
+}
+public class CardActionRequest
+{
+    public int CardId { get; set; }
+    public int PlayerId { get; set; }
+    public string SelectedAnswer { get; set; }
 }

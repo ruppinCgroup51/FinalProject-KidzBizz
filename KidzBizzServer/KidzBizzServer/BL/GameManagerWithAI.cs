@@ -194,7 +194,7 @@ namespace KidzBizzServer.BL
         }
 
         //כל הפעולות שנבצע על לוח המשחק SWITCH CASE
-        private void HandleSlotActions(int currentPos, string slot)
+        public void HandleSlotActions(int currentPos, string slot)
         {
             switch (currentPos)
             {
@@ -289,6 +289,30 @@ namespace KidzBizzServer.BL
                 default:
                     // Handle other slot types
                     break;
+            }
+        }
+        // מתודה לטיפול בפתיחת כרטיס
+        public void HandleCardAction(int cardId, int playerId, string selectedAnswer)
+        {
+            var card = Card.GetCardById(cardId);
+            var player = new Player().GetPlayerDetails(playerId);
+
+            if (player == null)
+            {
+                throw new Exception("Player not found.");
+            }
+
+            if (card is CommandCard commandCard)
+            {
+                ApplyCommandCardEffect(commandCard, player);
+            }
+            else if (card is SurpriseCard surpriseCard)
+            {
+                ApplySurpriseCardEffect(surpriseCard, player);
+            }
+            else if (card is DidYouKnowCard didYouKnowCard)
+            {
+                ApplyDidYouKnowCardEffect(didYouKnowCard, player, selectedAnswer);
             }
         }
 
@@ -412,55 +436,68 @@ namespace KidzBizzServer.BL
                                                   // Update other AIPlayer details as needed
             }
         }
-        public void ApplyCommandCardEffect(int cardId, int playerId)
+        public void ApplyCommandCardEffect(CommandCard card, Player player)
         {
-            var card = Card.GetCardById(cardId);
-            var player = new Player().Read().FirstOrDefault(p => p.PlayerId == playerId);
-
-            if (card is CommandCard commandCard)
+            if (card.Description.Contains("הרווחת"))
             {
-                if (commandCard.Description.Contains("הרוויח"))
-                {
-                    player.CurrentBalance += commandCard.Amount;
-                }
-                else if (commandCard.Description.Contains("שלם"))
-                {
-                    player.CurrentBalance -= commandCard.Amount;
-                }
-                player.Update();
+                player.CurrentBalance += card.Amount;
             }
+            else if (card.Description.Contains("הרוויח"))
+            {
+                player.CurrentBalance -= card.Amount;
+            }
+            else if (card.Description.Contains("שלם"))
+            {
+                player.CurrentBalance -= card.Amount;
+            }
+            else if (card.Description.Contains("הפסדת"))
+            {
+                // בדיקה אם תיאור הכרטיס מכיל אחוזים
+                var match = System.Text.RegularExpressions.Regex.Match(card.Description, @"(\d+(\.\d+)?)%");
+                if (match.Success)
+                {
+                    double percentage = double.Parse(match.Groups[1].Value);
+                    double lossAmount = player.CurrentBalance * (percentage / 100.0);
+                    player.CurrentBalance -= lossAmount;
+                }
+            }
+            player.Update();
         }
 
-        public void ApplySurpriseCardEffect(int cardId, int playerId)
+        public void ApplySurpriseCardEffect(SurpriseCard card, Player player)
         {
-            var card = Card.GetCardById(cardId);
-            var player = new Player().Read().FirstOrDefault(p => p.PlayerId == playerId);
-
-            if (card is SurpriseCard surpriseCard)
+            if (card.Description.Contains("קבל") || card.Description.Contains("הרוויח") || card.Description.Contains("הרווחת") || card.Description.Contains("הרווח"))
             {
-                if (surpriseCard.Description.Contains("קבל") || surpriseCard.Description.Contains("הרוויח"))
-                {
-                    player.CurrentBalance += surpriseCard.Amount;
-                }
-                else if (surpriseCard.Description.Contains("שלם") || surpriseCard.Description.Contains("השקיעו") || surpriseCard.Description.Contains("הפסדת"))
-                {
-                    player.CurrentBalance -= surpriseCard.Amount;
-                }
-                player.Update();
+                player.CurrentBalance += card.Amount;
             }
+            else if (card.Description.Contains("שלם"))
+            {
+                player.CurrentBalance -= card.Amount;
+            }
+            else if (card.Description.Contains("הפסדת"))
+            {
+                // בדיקה אם תיאור הכרטיס מכיל אחוזים
+                var match = System.Text.RegularExpressions.Regex.Match(card.Description, @"(\d+(\.\d+)?)%");
+                if (match.Success)
+                {
+                    double percentage = double.Parse(match.Groups[1].Value);
+                    double lossAmount = player.CurrentBalance * (percentage / 100.0);
+                    player.CurrentBalance -= lossAmount;
+                }
+            }
+            player.Update();
         }
 
-        public void ApplyDidYouKnowCardEffect(int cardId, int playerId, string selectedAnswer)
+        // מימוש השפעות של כרטיס הידעת
+        public void ApplyDidYouKnowCardEffect(DidYouKnowCard card, Player player, string selectedAnswer)
         {
-            var card = Card.GetCardById(cardId);
-            var player = new Player().Read().FirstOrDefault(p => p.PlayerId == playerId);
-
-            if (card is DidYouKnowCard didYouKnowCard)
+            if (selectedAnswer == card.CorrectAnswer)
             {
-                player.ApplyCardEffect(didYouKnowCard, selectedAnswer);
-                player.Update(); // עדכון פרטי השחקן
+                player.CurrentBalance += 300; // מוסיף כסף אם התשובה נכונה
             }
+            player.Update(); // עדכון פרטי השחקן
         }
+
 
         // פעולה לסיום משחק
         // פעולה לסיום משחק
