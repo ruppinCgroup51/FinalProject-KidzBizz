@@ -46,6 +46,7 @@ namespace KidzBizzServer.Controllers
             }
         }
         // פעולה לפתיחת כרטיס
+
         [HttpPost("opencard")]
         public IActionResult OpenCard([FromBody] CardActionRequest request)
         {
@@ -60,7 +61,7 @@ namespace KidzBizzServer.Controllers
                     return BadRequest("Selected answer is required for 'Did You Know' cards.");
                 }
 
-                gameManagerWithAI.HandleCardAction(request.CardId, request.PlayerId, request.SelectedAnswer);
+                gameManagerWithAI.HandleCardAction(request.CardId, request.PlayerId, request.SelectedAnswer, request.CurrentPosition);
                 return Ok("Card action handled successfully.");
             }
             catch (Exception ex)
@@ -68,6 +69,10 @@ namespace KidzBizzServer.Controllers
                 return BadRequest($"Error handling card action: {ex.Message}");
             }
         }
+
+
+
+
 
         // GET api/<GameManagerWithAIController>/5
         [HttpGet("GetById/{id}")]
@@ -113,4 +118,5 @@ public class CardActionRequest
     public int CardId { get; set; }
     public int PlayerId { get; set; }
     public string SelectedAnswer { get; set; }
+    public int CurrentPosition { get; set; }
 }

@@ -193,6 +193,8 @@ namespace KidzBizzServer.BL
             }
         }
 
+
+
         //כל הפעולות שנבצע על לוח המשחק SWITCH CASE
         public void HandleSlotActions(int currentPos, string slot)
         {
@@ -291,31 +293,7 @@ namespace KidzBizzServer.BL
                     break;
             }
         }
-        // מתודה לטיפול בפתיחת כרטיס
-        public void HandleCardAction(int cardId, int playerId, string selectedAnswer)
-        {
-            var card = Card.GetCardById(cardId);
-            var player = new Player().GetPlayerDetails(playerId);
-
-            if (player == null)
-            {
-                throw new Exception("Player not found.");
-            }
-
-            if (card is CommandCard commandCard)
-            {
-                ApplyCommandCardEffect(commandCard, player);
-            }
-            else if (card is SurpriseCard surpriseCard)
-            {
-                ApplySurpriseCardEffect(surpriseCard, player);
-            }
-            else if (card is DidYouKnowCard didYouKnowCard)
-            {
-                ApplyDidYouKnowCardEffect(didYouKnowCard, player, selectedAnswer);
-            }
-        }
-
+       
 
         //פונקציה שמדלגת על 3 טורות
         private void SkipTurns(int turnsToSkip)
@@ -327,6 +305,7 @@ namespace KidzBizzServer.BL
                 currentPlayerIndex = (currentPlayerIndex + 1) % 2;
             }
         }
+
 
         //האם הנכס שייך למישהו אחר ? לעבור על מערך הנכסים ולבדוק אם קיים.
         //private bool IsPropertyOwnedByOtherPlayer(Property property)
@@ -421,22 +400,50 @@ namespace KidzBizzServer.BL
 
 
         //בכל מקום שנבצע שינוי של כסף נקרא לפונקציה זו
+
+
+        // מתודה לטיפול בפתיחת כרטיס
+        public void HandleCardAction(int cardId, int playerId, string selectedAnswer, int currentPosition)
+        {
+            var card = Card.GetCardById(cardId);
+            var player = new Player().GetPlayerDetails(playerId);
+
+            if (player == null)
+            {
+                throw new Exception("Player not found.");
+            }
+
+            if (card is CommandCard commandCard)
+            {
+                ApplyCommandCardEffect(commandCard, player, currentPosition);
+            }
+            else if (card is SurpriseCard surpriseCard)
+            {
+                ApplySurpriseCardEffect(surpriseCard, player, currentPosition);
+            }
+            else if (card is DidYouKnowCard didYouKnowCard)
+            {
+                ApplyDidYouKnowCardEffect(didYouKnowCard, player, selectedAnswer, currentPosition);
+            }
+        }
+
+        // פונקציה לעדכון פרטי השחקן
         private void UpdatePlayerDetails(double price)
         {
             if (currentPlayerIndex == 0)
             {
-                // Update player details
-                player.CurrentBalance -= price; // For example, deduct 100 from the player's balance
-                                                // Update other player details as needed
+                // עדכון פרטי השחקן
+                player.CurrentBalance -= price;
             }
             else
             {
-                // Update AIPlayer details
-                aiPlayer.CurrentBalance -= price; // For example, deduct 100 from the AI player's balance
-                                                  // Update other AIPlayer details as needed
+                // עדכון פרטי AIPlayer
+                aiPlayer.CurrentBalance -= price;
             }
         }
-        public void ApplyCommandCardEffect(CommandCard card, Player player)
+
+        // מימוש השפעות של כרטיס פקודה
+        public void ApplyCommandCardEffect(CommandCard card, Player player, int currentPosition)
         {
             if (card.Description.Contains("הרווחת"))
             {
@@ -452,7 +459,6 @@ namespace KidzBizzServer.BL
             }
             else if (card.Description.Contains("הפסדת"))
             {
-                // בדיקה אם תיאור הכרטיס מכיל אחוזים
                 var match = System.Text.RegularExpressions.Regex.Match(card.Description, @"(\d+(\.\d+)?)%");
                 if (match.Success)
                 {
@@ -461,10 +467,17 @@ namespace KidzBizzServer.BL
                     player.CurrentBalance -= lossAmount;
                 }
             }
+            else if (card.Description.Contains("התקדם למשבצת הפקודה הקרובה"))
+            {
+                int nearestCommandSlot = FindNearestSlot(currentPosition, "פקודה");
+                player.CurrentPosition = nearestCommandSlot;
+                player.UpdatePosition();
+            }
             player.Update();
         }
 
-        public void ApplySurpriseCardEffect(SurpriseCard card, Player player)
+        // מימוש השפעות של כרטיס הפתעה
+        public void ApplySurpriseCardEffect(SurpriseCard card, Player player, int currentPosition)
         {
             if (card.Description.Contains("קבל") || card.Description.Contains("הרוויח") || card.Description.Contains("הרווחת") || card.Description.Contains("הרווח"))
             {
@@ -476,7 +489,6 @@ namespace KidzBizzServer.BL
             }
             else if (card.Description.Contains("הפסדת"))
             {
-                // בדיקה אם תיאור הכרטיס מכיל אחוזים
                 var match = System.Text.RegularExpressions.Regex.Match(card.Description, @"(\d+(\.\d+)?)%");
                 if (match.Success)
                 {
@@ -485,61 +497,57 @@ namespace KidzBizzServer.BL
                     player.CurrentBalance -= lossAmount;
                 }
             }
+            else if (card.Description.Contains("התקדם למשבצת הפתעה הקרובה"))
+            {
+                int nearestSurpriseSlot = FindNearestSlot(currentPosition, "הפתעה");
+                player.CurrentPosition = nearestSurpriseSlot;
+                player.UpdatePosition();
+            }
             player.Update();
         }
 
         // מימוש השפעות של כרטיס הידעת
-        public void ApplyDidYouKnowCardEffect(DidYouKnowCard card, Player player, string selectedAnswer)
+        public void ApplyDidYouKnowCardEffect(DidYouKnowCard card, Player player, string selectedAnswer, int currentPosition)
         {
             if (selectedAnswer == card.CorrectAnswer)
             {
-                player.CurrentBalance += 300; // מוסיף כסף אם התשובה נכונה
+                player.CurrentBalance += 300;
             }
-            player.Update(); // עדכון פרטי השחקן
+            else if (card.Description.Contains("התקדם למשבצת הידעת הקרובה"))
+            {
+                int nearestDidYouKnowSlot = FindNearestSlot(currentPosition, "ידעת");
+                player.CurrentPosition = nearestDidYouKnowSlot;
+                player.UpdatePosition();
+            }
+            player.Update();
         }
 
+        // פונקציה למציאת המשבצת הקרובה ביותר בהתאם לסוג המשבצת
+        public int FindNearestSlot(int currentPosition, string slotType)
+        {
+            int[] slots;
 
-        // פעולה לסיום משחק
-        // פעולה לסיום משחק
-        //public void EndGame()
-        //{
-        //    game.GameStatus = "Completed"; // עדכון סטטוס המשחק להושלם
+            switch (slotType)
+            {
+                case "פקודה":
+                    slots = new int[] { 3, 13, 21, 28, 37 };
+                    break;
+                case "הפתעה":
+                    slots = new int[] { 6, 16, 26, 36 };
+                    break;
+                case "ידעת":
+                    slots = new int[] { 8, 18, 23, 26, 33, 39 };
+                    break;
 
-        //    // קביעת מי המנצח על פי כמות הכסף והנכסים
-        //    string winner = DetermineWinner();
-        //    Console.WriteLine($"המשחק הסתיים. המנצח הוא {winner}.");
+                    break;
+                default:
+                    slots = new int[] { };
+                    break;
+            }
 
-        //    // שמירת פרטי המשחק או פעולות נוספות לסגירת המשחק
-        //}
+            return slots.Where(p => p > currentPosition).OrderBy(p => p).FirstOrDefault();
+        }
 
-        //private string DetermineWinner()
-        //{
-        //    // קודם כל בדיקה לפי כסף
-        //    if (player.CurrentBalance > aiPlayer.CurrentBalance)
-        //    {
-        //        return player.User.Username; // שם משתמש של השחקן האנושי אם יש לו יותר כסף
-        //    }
-        //    else if (aiPlayer.CurrentBalance > player.CurrentBalance)
-        //    {
-        //        return "מחשב"; // או כל שם שנתתם ל-AIPlayer
-        //    }
-        //    else
-        //    {
-        //        // במקרה של שוויון בכסף, בודקים על פי נכסים
-        //        if (player.Properties.Count > aiPlayer.Properties.Count)
-        //        {
-        //            return player.User.Username; // השחקן עם יותר נכסים מנצח
-        //        }
-        //        else if (aiPlayer.Properties.Count > player.Properties.Count)
-        //        {
-        //            return "מחשב";
-        //        }
-        //        else
-        //        {
-        //            return "שוויון"; // האם להכניס אצלנו מצב כזה?
-        //        }
-        //    }
-        //}
 
 
 
