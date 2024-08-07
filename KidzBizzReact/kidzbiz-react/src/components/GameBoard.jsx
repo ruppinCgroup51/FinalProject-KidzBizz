@@ -54,7 +54,8 @@ const GameBoard = () => {
   const [showCard, setShowCard] = useState(false);
   const [showPropertyModal, setShowPropertyModal] = useState(false);
   const [currentProperty, setCurrentProperty] = useState(null);
-  const [gameId, SetGameId] = useState(0)
+  const [gameId, SetGameId] = useState(0);
+
 
   const isHandlingSquareLanding = useRef(false);
 
@@ -262,6 +263,8 @@ const GameBoard = () => {
   };
 
   const handlePropertySquareType = async (position, currentPlayer) => {
+    
+    
     const apiUrl = getBaseApiUrl();
     const fullUrl = `${apiUrl}Properties/CheckPropertyOwnership?propertyId=${position}&playerId=${
       currentPlayer.playerId
@@ -289,7 +292,7 @@ const GameBoard = () => {
         });
         setShowPropertyModal(true);
       }
-    } else if (owner !== currentPlayer.playerId) {
+    } /*else if (owner !== currentPlayer.playerId) {
       const rentUrl = `${apiUrl}GameManagerWithAI/payRent`;
       const rentResponse = await fetch(rentUrl, {
         method: "POST",
@@ -302,8 +305,8 @@ const GameBoard = () => {
       });
 
       if (rentResponse.ok) {
-        toast("Rent paid successfully!", { type: "info" });
-        const updatedPlayerResponse = await fetchPlayerData(
+       /* toast("Rent paid successfully!", { type: "info" });*/
+        /*const updatedPlayerResponse = await fetchPlayerData(
           currentPlayer.playerId
         );
         if (updatedPlayerResponse.ok) {
@@ -313,7 +316,7 @@ const GameBoard = () => {
       } else {
         toast("Failed to pay rent.", { type: "error" });
       }
-    }
+    }*/
   };
 
   const fetchPropertyDetails = async (propertyId) => {
