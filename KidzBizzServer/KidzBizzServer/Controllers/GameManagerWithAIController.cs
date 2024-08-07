@@ -70,8 +70,21 @@ namespace KidzBizzServer.Controllers
             }
         }
 
-
-
+        [HttpPost("updateplayerposition")]
+        public IActionResult UpdatePlayerPosition([FromBody] PositionUpdateRequest request)
+        {
+            try
+            {
+                GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
+                var player = gameManagerWithAI.Player.PlayerId == request.PlayerId ? gameManagerWithAI.Player : gameManagerWithAI.AiPlayer;
+                gameManagerWithAI.HandleSlotActions(request.CurrentPosition, player);
+                return Ok("Player position updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error updating player position: {ex.Message}");
+            }
+        }
 
 
         // GET api/<GameManagerWithAIController>/5
@@ -118,5 +131,11 @@ public class CardActionRequest
     public int CardId { get; set; }
     public int PlayerId { get; set; }
     public string SelectedAnswer { get; set; }
+    public int CurrentPosition { get; set; }
+}
+
+public class PositionUpdateRequest
+{
+    public int PlayerId { get; set; }
     public int CurrentPosition { get; set; }
 }
