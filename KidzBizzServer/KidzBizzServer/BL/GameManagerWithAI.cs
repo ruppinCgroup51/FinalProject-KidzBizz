@@ -35,7 +35,7 @@ namespace KidzBizzServer.BL
         public Game Game { get => game; set => game = value; }
 
         // פעולה להפעלת משחק חדש
-        public List<Player> StartNewGame(User user)
+        public (int gameId, List<Player> players) StartNewGame(User user)
         {
             DBservices dbs = new DBservices();
 
@@ -52,7 +52,7 @@ namespace KidzBizzServer.BL
             };
 
             // Insert the game into the database
-            game.InsertGame(); // Assuming this method exists and returns game ID
+           int gameId =  game.InsertGame(); // Assuming this method exists and returns game ID
 
 
             // Create players
@@ -94,13 +94,15 @@ namespace KidzBizzServer.BL
 
             // Randomly decide who starts first
             currentPlayerIndex = new Random().Next(0, 2);
-            return new List<Player> { player, aiPlayer };
+            return (gameId, new List<Player> { player, aiPlayer });
         }
 
 
 
-        public void EndGame()
+        public Player EndGame(int gameId, Player player, Player aiPlayer)
         {
+            DBservices dbs = new DBservices();
+            Game game = dbs.GetGameById(gameId);
 
             game.GameDuration = (DateTime.Now - game.GameTimestamp).ToString("g");
             game.GameStatus = "Completed";
@@ -116,10 +118,15 @@ namespace KidzBizzServer.BL
             string winner = DetermineWinner(); // Implement this method to decide based on game logic
             Console.WriteLine($"The game has ended. The winner is {winner}.");
 
-            if (winner == "Player")
+            if (winner == "Player" || winner == "Draw")
             {
-                player.User.Score += 100; // Update score for human player
+                player.User.Score += 200; // Update score for human player
                 player.Update();
+                return player;
+            }
+            else
+            {
+                return aiPlayer;
             }
 
         }

@@ -44,5 +44,28 @@ namespace KidzBizzServer.Controllers
         public void Delete(int id)
         {
         }
+
+        [HttpGet]
+        [Route("api/game/{gameId}")]
+        public IActionResult GetGameById(int gameId)
+        {
+            try
+            {
+                DBservices dbs = new DBservices();
+                Game game = dbs.GetGameById(gameId);
+
+                if (game == null)
+                {
+                    return NotFound(new { message = "Game not found." });
+                }
+
+                return Ok(game);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"An error occurred: {ex.Message}" });
+            }
+        }
+
     }
 }

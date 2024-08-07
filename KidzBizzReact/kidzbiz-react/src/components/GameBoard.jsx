@@ -54,6 +54,7 @@ const GameBoard = () => {
   const [showCard, setShowCard] = useState(false);
   const [showPropertyModal, setShowPropertyModal] = useState(false);
   const [currentProperty, setCurrentProperty] = useState(null);
+  const [gameId, SetGameId] = useState(0)
 
   const isHandlingSquareLanding = useRef(false);
 
@@ -80,16 +81,20 @@ const GameBoard = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
-        setPlayers(data);
+        setPlayers(data.players);
+        SetGameId(data.gameId);
         localStorage.setItem("players", JSON.stringify(data));
+        localStorage.setItem("gameId", data.gameId);
       } catch (error) {
         console.error("Error:", error);
       }
     };
 
     const storedPlayers = localStorage.getItem("players");
-    if (storedPlayers) {
+    const storedGameId = localStorage.getItem("gameId");
+    if (storedPlayers && storedGameId) {
       setPlayers(JSON.parse(storedPlayers));
+      SetGameId(storedGameId);
     } else {
       fetchData();
     }
@@ -167,9 +172,46 @@ const GameBoard = () => {
     setDisplayDice(1016);
   };
 
-  const handleEndGame = () => {
-    navigate("/Lobi");  // Navigate to the "/Lobi" route when this function is called
+
+  const handleEndGame = async () => {
+    try {
+      // Assuming players array has player and AI player at specific indexes
+      const playerId = players[0]?.playerId; // Assuming the first player is the human player
+      const playerAI = players[1]?.playerId; // Assuming the second player is the AI player
+      const gameIdInt = parseInt(gameId, 10);
+  
+      // Construct the API URL with query parameters
+      const apiUrl = getApiUrl(`api/endgame?gameId=${gameIdInt}&PlayerId=${playerId}&PlayerAI=${playerAI}`);
+  
+      // Call the API to end the game
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      // Check if the response is okay
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      // Get the response data
+      const winner = await response.json();
+  
+      // Display a message with the winner's name or other details
+      alert(`The game has ended. The winner is ${winner.user.username}.`);
+  
+      // After displaying the message, navigate back to the lobby
+      navigate("/Lobi");
+    } catch (error) {
+      console.error("Error ending game:", error);
+      alert("An error occurred while trying to end the game.");
+    }
   };
+  
+  
+  
 
   const handleShowCard = (player, type, data) => {
     if (currentPlayerIndex !== players.indexOf(player)) return;

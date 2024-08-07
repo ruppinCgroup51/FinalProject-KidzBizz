@@ -1,5 +1,6 @@
 ﻿using KidzBizzServer.BL;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -23,14 +24,40 @@ namespace KidzBizzServer.Controllers
             try
             {
                 GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
-                var players = gameManagerWithAI.StartNewGame(user);
-                return Ok(players);
+                var (gameId, players) = gameManagerWithAI.StartNewGame(user);
+                return Ok(new { gameId, players});
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error starting game: {ex.Message}");
             }
         }
+
+        [HttpPost]
+        [Route("api/endgame")]
+        public IActionResult EndGame(int gameId, int PlayerId, int PlayerAI)
+        {
+            try
+            {
+                Player player = new Player();
+                Player aiPlayer = new Player();
+                // Assuming request contains gameId, player, and aiPlayer info
+                player = player.GetPlayerDetails(PlayerId);
+                aiPlayer = aiPlayer.GetPlayerDetails(PlayerAI);
+
+                GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
+
+                Player winner = gameManagerWithAI.EndGame(gameId, player, aiPlayer);
+
+
+                return Ok(winner);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"An error occurred: {ex.Message}" });
+            }
+        }
+
 
         [HttpPost("rolldice")]
         public IActionResult RollDice([FromBody] Player player)
@@ -70,6 +97,24 @@ namespace KidzBizzServer.Controllers
             }
         }
 
+        [HttpPost("payRent")]
+        public IActionResult PayRent(int playerId, int propertyOwnerId, int propertyId)
+        {
+            try
+            {
+                //int playerId = jsonData.GetProperty("playerId").GetInt32();
+                //int propertyOwnerId = jsonData.GetProperty("propertyOwnerId").GetInt32();
+                //int propertyId = jsonData.GetProperty("propertyId").GetInt32();
+
+                GameManagerWithAI gameManagerWithAI = new GameManagerWithAI();
+                gameManagerWithAI.PayRent(playerId, propertyOwnerId, propertyId);
+                return Ok("Rent paid successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
 
 
 

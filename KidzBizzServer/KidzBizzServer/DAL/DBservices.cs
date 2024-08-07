@@ -794,10 +794,73 @@ public class DBservices
         return cmd;
     }
 
-    //-------------------------------------------------------------------------------------------------
-    // This method updates player statistics
-    //-------------------------------------------------------------------------------------------------
-    public void UpdatePlayerStatistics(int playerId, PlayerStatistics statistics)
+        // Method to get a game by ID
+        public Game GetGameById(int gameId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            Game game = null;
+
+            try
+            {
+                con = connect("myProjDB"); // Create a connection to the database
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+
+            cmd = CreateGetGameByIdCommandWithStoredProcedure("KBSP_GetGameDetails", con, gameId);
+
+            try
+            {
+                SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                if (dataReader.Read())
+                {
+                    game = new Game
+                    {
+                        GameId = Convert.ToInt32(dataReader["GameId"]),
+                        NumberOfPlayers = Convert.ToInt32(dataReader["NumberOfPlayers"]),
+                        GameDuration = dataReader["GameDuration"].ToString(),
+                        GameStatus = dataReader["GameStatus"].ToString(),
+                        GameTimestamp = Convert.ToDateTime(dataReader["GameTimestamp"]),
+                        // Include other properties as needed
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+            return game;
+        }
+
+        private SqlCommand CreateGetGameByIdCommandWithStoredProcedure(String spName, SqlConnection con, int gameId)
+        {
+            SqlCommand cmd = new SqlCommand();
+
+            cmd.Connection = con;
+            cmd.CommandText = spName;
+            cmd.CommandTimeout = 10;
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@GameId", gameId);
+
+            return cmd;
+        }
+
+
+        //-------------------------------------------------------------------------------------------------
+        // This method updates player statistics
+        //-------------------------------------------------------------------------------------------------
+        public void UpdatePlayerStatistics(int playerId, PlayerStatistics statistics)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1196,57 +1259,69 @@ public class DBservices
     {
         SqlConnection con;
         SqlCommand cmd;
+        int gameId = 0; // Variable to store the game ID
 
         try
         {
-            con = connect("myProjDB"); // create the connection
+            con = connect("myProjDB"); // Create the connection
         }
         catch (Exception ex)
         {
-            // write to log
             throw (ex);
         }
 
-        cmd = CreateInsertGameWithStoredProcedure("KBSP_InsertGame", con, game);             // create the command
+        cmd = CreateInsertGameWithStoredProcedure("KBSP_InsertGameReturnId", con, game); // Create the command
 
         try
         {
-            int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            return numEffected;
+            SqlParameter outputIdParam = new SqlParameter("@GameId", SqlDbType.Int)
+            {
+                Direction = ParameterDirection.Output
+            };
+            cmd.Parameters.Add(outputIdParam);
+
+            cmd.ExecuteNonQuery(); // Execute the command
+
+            gameId = (int)outputIdParam.Value; // Capture the returned game ID
         }
         catch (Exception ex)
         {
-            // write to log
             throw (ex);
         }
         finally
         {
             if (con != null)
             {
-                // close the db connection
-                con.Close();
+                con.Close(); // Close the db connection
             }
         }
+
+        return gameId; // Return the game ID
     }
+
 
     private SqlCommand CreateInsertGameWithStoredProcedure(String spName, SqlConnection con, Game game)
     {
-        SqlCommand cmd = new SqlCommand(); // create the command object
+        SqlCommand cmd = new SqlCommand(); // Create the command object
 
-        cmd.Connection = con;              // assign the connection to the command object
+        cmd.Connection = con; // Assign the connection to the command object
 
-        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandText = spName; // Can be Select, Insert, Update, Delete 
 
-        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandTimeout = 10; // Time to wait for the execution' The default is 30 seconds
 
-        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // The type of the command, can also be text
 
         cmd.Parameters.AddWithValue("@NumberOfPlayers", game.NumberOfPlayers);
         cmd.Parameters.AddWithValue("@GameDuration", game.GameDuration); // Assuming seconds is a suitable unit
-
         cmd.Parameters.AddWithValue("@GameStatus", game.GameStatus);
-
         cmd.Parameters.AddWithValue("@GameTimestamp", game.GameTimestamp);
+
+        //SqlParameter outputIdParam = new SqlParameter("@GameId", SqlDbType.Int)
+        //{
+        //    Direction = ParameterDirection.Output
+        //};
+        //cmd.Parameters.Add(outputIdParam);
 
         return cmd;
     }

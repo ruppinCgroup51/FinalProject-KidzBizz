@@ -46,6 +46,13 @@
             DBservices dbs = new DBservices();
             return dbs.ReadGames();
         }
+
+        public Game GetById(int gameId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetGameById(gameId);
+
+        }
     }
 
 }
