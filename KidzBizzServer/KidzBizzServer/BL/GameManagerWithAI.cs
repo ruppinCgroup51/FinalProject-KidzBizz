@@ -12,6 +12,8 @@ namespace KidzBizzServer.BL
         Game game = new Game();
         bool skipNextTurn;
         bool extraTurn;
+        List<PrisonUser> prisonUsers = new List<PrisonUser>(); // הוספת רשימת אסירים
+
 
         public GameManagerWithAI(Player player, Player aiPlayer, int currentPlayerIndex, int diceRoll, Game game)
         {
@@ -201,217 +203,28 @@ namespace KidzBizzServer.BL
             }
         }
 
-
-
-        //כל הפעולות שנבצע על לוח המשחק SWITCH CASE
-        public void HandleSlotActions(int currentPos, string slot)
+        // מתודה קיימת לטיפול בנחיתה על משבצות מיוחדות
+        public void HandleSlotActions(int currentPos, Player currentPlayer)
         {
             switch (currentPos)
             {
-                case 0: // when enter the "GO" slot the user gets 200 NIS
-                    // Add NIS 200 to the player's balance
-                    if (currentPlayerIndex == 0)
-                    {
-                        player.CurrentBalance += 200;
-                    }
-                    else
-                    {
-                        aiPlayer.CurrentBalance += 200;
-                    }
+                case 0:
+                    currentPlayer.CurrentBalance += 200;
                     break;
-
-                //case "מלונות": // when we know the index of hotel we will change it 
-                //    // Check if the property is available for purchase
-                //    if (currentPlayerIndex == 0)
-                //    {
-                //        // Determine the property the player landed on based on their current position
-                //        Property property = GetPropertyAtPosition(currentPosition);
-
-                //        // Check if the property belongs to the other player
-                //        if (IsPropertyOwnedByOtherPlayer(property))
-                //        {
-                //            // Deduct 10% of the property value from the current player's balance
-                //            int rentAmount = (int)(property.PropertyPrice * 0.1);
-                //            player.CurrentBalance -= rentAmount;
-
-                //            // Add the rent amount to the other player's balance
-                //            aiPlayer.CurrentBalance += rentAmount;
-                //        }
-                //        else
-                //        {
-                //            // Prompt the player to buy or not
-                //            // For example, you could implement a UI prompt or return a boolean from a function
-                //            bool shouldBuy = AskPlayerToBuyProperty(property);
-                //            if (shouldBuy)
-                //            {
-                //                // Deduct the property price from the player's balance and add the property to their list
-                //                player.CurrentBalance -= property.Price;
-                //                player.Properties.Add(property);
-                //            }
-                //        }
-                //    }
-                //    else
-                //    {
-                //        // Activate AI player's functions for handling property
-                //        // This logic should also include checking if the property belongs to the player
-                //        // If not, AI player should decide whether to buy or not
-                //        ActivateAIPlayerFunctionForProperty(currentPosition);
-                //    }
-                //    break;
-
-                //case "הידעת":
-                //    // Decide whether to answer a question
-                //    if (currentPlayerIndex == 0)
-                //    {
-                //        // Prompt the player to answer a question
-                //        // For example, you could implement a UI prompt or return a boolean from a function
-                //        bool shouldAnswer = AskPlayerToAnswerQuestion();
-                //        if (shouldAnswer)
-                //        {
-                //            // Display question to the player and handle correct answer
-                //            bool answeredCorrectly = DisplayAndCheckQuestion();
-                //            if (answeredCorrectly)
-                //            {
-                //                // Win money if answered correctly
-                //                player.CurrentBalance += 100; // For example, add NIS 100
-                //            }
-                //        }
-                //    }
-                //    else
-                //    {
-                //        // Activate AI player's functions for handling knowledge slot
-                //        ActivateAIPlayerFunctionForKnowledge();
-                //    }
-                //    break;
-
-                //נניח שתא מס' 30 זה הכלא אז נפעיל את הפונקציה לעשות סקיפ ל3 טורות
-                case 15:
-                    if ((currentPlayerIndex == 0 && player.CurrentPosition == 30) || (currentPlayerIndex == 1 && aiPlayer.CurrentPosition == 30))
-                    {
-
-                        SkipTurns(3);
-
-                    }
+                case 11:
+                    currentPlayer.MoveToJail();
+                    currentPlayer.CurrentPosition = 30;
+                    AddPrisonUser(game.GameId, currentPlayer.PlayerId);
                     break;
-
-                // Add other cases for different slot types as needed
-
+                case 30:
+                    currentPlayer.MoveToJail();
+                    AddPrisonUser(game.GameId, currentPlayer.PlayerId);
+                    break;
                 default:
-                    // Handle other slot types
                     break;
             }
+            currentPlayer.UpdatePosition();
         }
-       
-
-        //פונקציה שמדלגת על 3 טורות
-        private void SkipTurns(int turnsToSkip)
-        {
-            // Logic to skip turns for the current player
-            // For example, you can increment currentPlayerIndex to move to the next player
-            for (int i = 0; i < turnsToSkip; i++)
-            {
-                currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-            }
-        }
-
-
-        //האם הנכס שייך למישהו אחר ? לעבור על מערך הנכסים ולבדוק אם קיים.
-        //private bool IsPropertyOwnedByOtherPlayer(Property property)
-        //{
-        //    // Check if the property belongs to the other player
-        //    if (currentPlayerIndex == 0)
-        //    {
-        //        // Check if the property exists in the AI player's list of properties
-        //        //foreach (var property in aiPlayer.Properties)
-        //        //{
-        //        //    if (property.PropertyId == property.PropertyId)
-        //        //    {
-        //        //        return true; // Property belongs to the AI player
-        //        //    }
-        //        //}
-        //    }
-        //    else
-        //    {
-        //        // Check if the property exists in the player's list of properties
-        //        //foreach (var property in player.Properties)
-        //        //{
-        //        //    if (property.PropertyId == property.PropertyId)
-        //        //    {
-        //        //        return true; // Property belongs to the player
-        //        //    }
-        //        //}
-        //    }
-
-        //    return false; // Property does not belong to the other player
-        //}
-
-
-        //בהתאם למיקום לקבל את הנכס שדרכתי עליו,להביא את הדירות מהדאטה בייס
-        //private Property GetPropertyAtPosition(int position)
-        //{
-        //    // Placeholder logic to retrieve property based on position
-        //    // You need to implement the actual logic to map positions to propertys
-        //    // This could involve accessing a predefined list of propertys or querying a database
-
-        //    // For demonstration purposes, let's assume propertys are predefined
-        //    // and we have a list of propertys where each property corresponds to a specific position
-
-        //    // Example hardcoded list of propertys (for demonstration only)
-        //    //List<Property> propertys = new List<Property>
-        //    //  {
-
-        //    //         new Property { PropertyId = 1, Name = "Park Lane", Price = 350 },
-        //    //           new Property { PropertyId = 2, Name = "Mayfair", Price = 400 },
-        //    //        // Add more propertys as needed
-        //    //     };
-
-        //    // Retrieve the property at the specified position
-        //    // Assuming position is 0-based index
-        //    //int index = position % propertys.Count; // Modulo operation to handle circular board
-        //    //return propertys[index];
-        //}
-
-
-        // מימוש פונקציה שתשאל את השחקן האם לקנות את הנכס
-        //private bool AskPlayerToBuyProperty(Property property)
-        //{
-        //    // Implement logic to prompt the player to buy or not (e.g., show a UI dialog)
-        //    // Return true if the player chooses to buy, false otherwise
-        //}
-
-
-        //private bool AskPlayerToAnswerQuestion()
-        //{
-        //    // Implement logic to prompt the player to answer a question (e.g., show a UI dialog)
-        //    // Return true if the player chooses to answer, false otherwise
-        //}
-
-        //מימוש פונקציה שתראה על המסך את השאלה לשחקן
-        //private bool DisplayAndCheckQuestion()
-        //{
-        //    // Implement logic to display a question to the player and check if they answered correctly
-        //    // Return true if the player answers correctly, false otherwise
-        //}
-
-        // מימוש פונקציה הסתברותית ששחקן האיהיי יקנה את הנכס
-        //private void ActivateAIPlayerFunctionForProperty(Property property)
-        //{
-        //    // Implement logic for AI player's actions when landing on an property slot
-        //}
-
-
-        ////מימוש פונקציה הסתברותית ששחקן האיהי יענה נכון על כרטיס הידעת
-        //private void ActivateAIPlayerFunctionForKnowledge()
-        //{
-        //    // Implement logic for AI player's actions when landing on a knowledge slot
-        //}
-
-
-        //בכל מקום שנבצע שינוי של כסף נקרא לפונקציה זו
-
-
-        // מתודה לטיפול בפתיחת כרטיס
-
 
         public void HandleCardAction(int cardId, int playerId, string selectedAnswer, int currentPosition)
         {
@@ -437,33 +250,22 @@ namespace KidzBizzServer.BL
             }
         }
 
-        private void UpdatePlayerDetails(double price)
-        {
-            if (currentPlayerIndex == 0)
-            {
-                player.CurrentBalance -= price;
-            }
-            else
-            {
-                aiPlayer.CurrentBalance -= price;
-            }
-        }
-
         public void ApplyCommandCardEffect(CommandCard card, Player player, int currentPosition)
         {
-            if (card.Description.Contains("הרווחת"))
+            if (card.Description.Contains("לך לכלא"))
+            {
+                player.MoveToJail();
+                AddPrisonUser(game.GameId, player.PlayerId);
+                player.CurrentPosition = 30;
+                player.UpdatePosition();
+            }
+            else if (card.Description.Contains("הרווחת"))
             {
                 player.CurrentBalance += card.Amount;
             }
             else if (card.Description.Contains("הרוויח"))
             {
                 player.CurrentBalance -= card.Amount;
-            }
-            else if (card.Description.Contains("לך לכלא"))
-            {
-                SkipTurns(3);
-                player.CurrentPosition = 30; 
-                player.UpdatePosition();
             }
             else if (card.Description.Contains("שלם"))
             {
@@ -487,14 +289,13 @@ namespace KidzBizzServer.BL
             }
             else if (card.Description.Contains("זכית בתור כפול") || card.Description.Contains("זכית בתור נוסף"))
             {
-                GrantExtraTurn(player);
                 if (currentPlayerIndex == 0)
                 {
-                    extraTurn = true;
+                    GrantExtraTurn(player);
                 }
                 else
                 {
-                    skipNextTurn = true;
+                    GrantExtraTurn(aiPlayer);
                 }
             }
             player.Update();
@@ -528,7 +329,6 @@ namespace KidzBizzServer.BL
             }
             else if (card.Description.Contains("זכית בתור כפול") || card.Description.Contains("זכית בתור נוסף"))
             {
-
                 GrantExtraTurn(player);
                 if (currentPlayerIndex == 0)
                 {
@@ -554,7 +354,7 @@ namespace KidzBizzServer.BL
                 player.CurrentPosition = nearestDidYouKnowSlot;
                 player.UpdatePosition();
             }
-         
+
             player.Update();
         }
 
@@ -609,19 +409,9 @@ namespace KidzBizzServer.BL
             }
         }
 
-        private void ExecuteTurn()
+        private void AddPrisonUser(int gameId, int playerId)
         {
-            if (skipNextTurn)
-            {
-                currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-                skipNextTurn = false;
-            }
-            else if (!extraTurn)
-            {
-                currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-            }
-
-            extraTurn = false;
+            prisonUsers.Add(new PrisonUser(gameId, playerId, "In Jail"));
         }
 
         // פעולה להפסקת משחקc

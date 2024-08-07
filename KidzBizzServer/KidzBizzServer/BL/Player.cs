@@ -111,17 +111,6 @@ namespace KidzBizzServer.BL
         }
 
 
-
-        // מזיז את השחקן למיקום החדש
-        private void MoveToPosition(int targetPosition)
-        {
-            int steps = targetPosition - this.CurrentPosition;
-            this.CurrentPosition = steps;
-            UpdatePosition();
-        }
-        // מדלג על התור הבא
-
-
         public void GainExtraTurn()
         {
             // לוגיקה לקבלת תור נוסף
@@ -135,13 +124,26 @@ namespace KidzBizzServer.BL
         }
 
         // משחק קוביות עם יריב
-        private void PlayDiceWithRival()
+    
+
+        public bool IsInJail { get; set; }  // האם השחקן בכלא
+
+        public void MoveToJail()
         {
-            // לוגיקה להטלת קוביות עם יריב לפי חוקי המשחק
+            CurrentPosition = 30;
+            IsInJail = true;
         }
 
+        public bool TryToGetOutOfJail(int dice1, int dice2)
+        {
+            if (dice1 == dice2)  // אם השחקן זרק דאבל
+            {
+                IsInJail = false;  // משתחרר מהכלא
+                return true;
+            }
+            return false;
+        }
 
-      
     }
 }
 
