@@ -125,7 +125,7 @@ namespace KidzBizzServer.BL
         public void GainExtraTurn()
         {
             // לוגיקה לקבלת תור נוסף
-            Console.WriteLine($"קיבל תור נוסף'!");
+            Console.WriteLine("זכית בתור נוסף!");
         }
 
         public void SkipNextTurn()

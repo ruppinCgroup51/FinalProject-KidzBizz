@@ -10,7 +10,8 @@ namespace KidzBizzServer.BL
         int currentPlayerIndex;
         int diceRoll;
         Game game = new Game();
-
+        bool skipNextTurn;
+        bool extraTurn;
 
         public GameManagerWithAI(Player player, Player aiPlayer, int currentPlayerIndex, int diceRoll, Game game)
         {
@@ -404,6 +405,7 @@ namespace KidzBizzServer.BL
 
         // מתודה לטיפול בפתיחת כרטיס
 
+
         public void HandleCardAction(int cardId, int playerId, string selectedAnswer, int currentPosition)
         {
             var card = Card.GetCardById(cardId);
@@ -450,6 +452,12 @@ namespace KidzBizzServer.BL
             {
                 player.CurrentBalance -= card.Amount;
             }
+            else if (card.Description.Contains("לך לכלא"))
+            {
+                SkipTurns(3);
+                player.CurrentPosition = 30; 
+                player.UpdatePosition();
+            }
             else if (card.Description.Contains("שלם"))
             {
                 player.CurrentBalance -= card.Amount;
@@ -473,7 +481,14 @@ namespace KidzBizzServer.BL
             else if (card.Description.Contains("זכית בתור כפול") || card.Description.Contains("זכית בתור נוסף"))
             {
                 GrantExtraTurn(player);
-                DisruptMarket(player);
+                if (currentPlayerIndex == 0)
+                {
+                    extraTurn = true;
+                }
+                else
+                {
+                    skipNextTurn = true;
+                }
             }
             player.Update();
         }
@@ -490,7 +505,7 @@ namespace KidzBizzServer.BL
             }
             else if (card.Description.Contains("הפסדת"))
             {
-                var match = System.Text.RegularExpressions.Regex.Match(card.Description, @"(\d+(\.\d+)?)%");
+                var match = System.Text.RegularExpressions.Regex.Match(card.Description, @"(\ד+(\.\ד+)?)%");
                 if (match.Success)
                 {
                     double percentage = double.Parse(match.Groups[1].Value);
@@ -506,8 +521,16 @@ namespace KidzBizzServer.BL
             }
             else if (card.Description.Contains("זכית בתור כפול") || card.Description.Contains("זכית בתור נוסף"))
             {
+
                 GrantExtraTurn(player);
-                DisruptMarket(player);
+                if (currentPlayerIndex == 0)
+                {
+                    extraTurn = true;
+                }
+                else
+                {
+                    skipNextTurn = true;
+                }
             }
             player.Update();
         }
@@ -524,11 +547,7 @@ namespace KidzBizzServer.BL
                 player.CurrentPosition = nearestDidYouKnowSlot;
                 player.UpdatePosition();
             }
-            else if (card.Description.Contains("זכית בתור כפול") || card.Description.Contains("זכית בתור נוסף"))
-            {
-                GrantExtraTurn(player);
-                DisruptMarket(player);
-            }
+         
             player.Update();
         }
 
@@ -547,7 +566,6 @@ namespace KidzBizzServer.BL
                 case "ידעת":
                     slots = new int[] { 8, 18, 23, 26, 33, 39 };
                     break;
-
                 default:
                     slots = new int[] { };
                     break;
@@ -560,21 +578,43 @@ namespace KidzBizzServer.BL
         {
             if (currentPlayer.PlayerId == player.PlayerId)
             {
-                player.GainExtraTurn();
-                aiPlayer.SkipNextTurn();
+                extraTurn = true;
+                Console.WriteLine("קיבלת תור נוסף!");
             }
             else
             {
-                aiPlayer.GainExtraTurn();
-                player.SkipNextTurn();
+                extraTurn = true;
+                Console.WriteLine("AI קיבל תור נוסף!");
             }
         }
 
-        private void DisruptMarket(Player currentPlayer)
+        private void SkipNextTurn(Player currentPlayer)
         {
-            Player otherPlayer = (currentPlayer.PlayerId == player.PlayerId) ? aiPlayer : player;
-            otherPlayer.SkipNextTurn();
-            currentPlayer.GainExtraTurn();
+            if (currentPlayer.PlayerId == player.PlayerId)
+            {
+                skipNextTurn = true;
+                Console.WriteLine("השחקן קיבל דילוג תור!");
+            }
+            else
+            {
+                skipNextTurn = true;
+                Console.WriteLine("AI קיבל דילוג תור!");
+            }
+        }
+
+        private void ExecuteTurn()
+        {
+            if (skipNextTurn)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+                skipNextTurn = false;
+            }
+            else if (!extraTurn)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+            }
+
+            extraTurn = false;
         }
 
         // פעולה להפסקת משחקc
