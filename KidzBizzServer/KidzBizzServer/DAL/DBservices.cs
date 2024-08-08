@@ -758,7 +758,14 @@ public class DBservices
                     {
                         Username = dataReader["Username"].ToString(),
                         AvatarPicture = dataReader["AvatarPicture"].ToString(),
-                        UserId = Convert.ToInt32(dataReader["UserId"])
+                        UserId = Convert.ToInt32(dataReader["UserId"]),
+                        Gender = dataReader["Gender"].ToString(),
+                        DateOfBirth = Convert.ToDateTime(dataReader["DateOfBirth"]),
+                        FirstName = dataReader["FirstName"].ToString(),
+                        LastName = dataReader["LastName"].ToString(),
+                        Score = Convert.ToInt32(dataReader["Score"]),
+                        Password = dataReader["Password"].ToString()
+
                     },
                     // Include other properties as needed
                     Properties = ReadPropertiesByPlayerId(Convert.ToInt32(dataReader["PlayerId"]))

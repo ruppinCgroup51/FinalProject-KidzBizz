@@ -134,13 +134,13 @@ export default function Login({ onLogin }) {
       </div>
       <div className="main-div">
         <h2 className="header">התחברות</h2>
-        <br/>
-        <form class="form" onSubmit={handleSubmit}>
+        <br />
+        <form className="form" onSubmit={handleSubmit}>
           <ThemeProvider theme={theme}>
-            <TextField 
+            <TextField
               name="username"
               id="username"
-              label ="שם משתמש"
+              label="שם משתמש"
               variant="standard"
               value={formData.username}
               onChange={handleChange}
@@ -167,14 +167,14 @@ export default function Login({ onLogin }) {
             </ThemeProvider>
 
             <br />
-            <br/>
+            <br />
 
             <Button startIcon={<LockReset />} onClick={handleForgetPassword}>
               שחזור סיסמא
             </Button>
           </ThemeProvider>
           <div>
-            <br/>
+            <br />
             <Button
               variant="contained"
               color="error"
